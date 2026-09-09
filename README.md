@@ -58,8 +58,10 @@ e2e/              Playwright tests (added later)
 
 Custom auth only. Do not add Supabase Auth, Firebase Auth, or Clerk. Supabase is used only as the hosted Postgres database.
 
-1. Create a project at [supabase.com](https://supabase.com). In **Project Settings > Database > Connection string**, copy the **Session pooler** URL (port 5432).
-2. Set both `DATABASE_URL` and `DIRECT_URL` in `.env` to that Session pooler URL. Use the same values on Vercel. (Avoid the 6543 transaction pooler — `?pgbouncer=true` pins `connection_limit=1` and the admin dashboard's parallel queries then time out.)
+1. Create a project at [supabase.com](https://supabase.com). In **Project Settings > Database > Connection string**, copy both the **Transaction pooler** URL (port 6543) and the **Session pooler** URL (port 5432).
+2. In `.env` (and on Vercel, same values):
+   - `DATABASE_URL` = the 6543 URL, with `?pgbouncer=true&connection_limit=10&pool_timeout=20`. The explicit `connection_limit` matters — without it Prisma pins the pool to 1 and the admin dashboard times out. Don't use the 5432 URL here; it caps at 15 clients.
+   - `DIRECT_URL` = the 5432 URL (used only by `prisma migrate` / `prisma studio`).
 3. Create the first migration, apply the schema, and seed the catalog:
 
    ```bash
