@@ -1,0 +1,65 @@
+{
+  "categories": [
+    {
+      "id": "cat_milk_dairy",
+      "name": "Milk & Dairy",
+      "slug": "milk-and-dairy",
+      "description": "Milk, yoghurt, butter, cheese, and other dairy staples."
+    },
+    {
+      "id": "cat_rice_grains",
+      "name": "Rice & Grains",
+      "slug": "rice-and-grains",
+      "description": "Rice, maize, semolina, oats, and everyday grains."
+    },
+    {
+      "id": "cat_nuts_spreads",
+      "name": "Nuts & Spreads",
+      "slug": "nuts-and-spreads",
+      "description": "Groundnuts, cashews, peanut butter, chocolate spreads, and jams."
+    },
+    {
+      "id": "cat_cooking_oil",
+      "name": "Cooking Oil",
+      "slug": "cooking-oil",
+      "description": "Vegetable, palm, groundnut, and olive oils for the kitchen."
+    },
+    {
+      "id": "cat_bakery_pastries",
+      "name": "Bakery & Pastries",
+      "slug": "bakery-and-pastries",
+      "description": "Fresh bread, buns, cakes, and morning pastries."
+    },
+    {
+      "id": "cat_baby_food",
+      "name": "Baby & Children's Food",
+      "slug": "baby-and-childrens-food",
+      "description": "Infant formula, cereals, purees, and snacks for little ones."
+    },
+    {
+      "id": "cat_personal_care",
+      "name": "Personal Care & Body Care",
+      "slug": "personal-care-and-body-care",
+      "description": "Soap, lotion, oral care, and everyday grooming essentials."
+    },
+    {
+      "id": "cat_household_essentials",
+      "name": "Household Essentials",
+      "slug": "household-essentials",
+      "description": "Cleaning supplies, detergents, tissue, and home basics."
+    },
+    {
+      "id": "cat_drinks_beverages",
+      "name": "Drinks & Beverages",
+      "slug": "drinks-and-beverages",
+      "description": "Water, juice, soft drinks, tea, coffee, and cocoa."
+    },
+    {
+      "id": "cat_other_groceries",
+      "name": "Other Groceries",
+      "slug": "other-groceries",
+      "description": "Everything else for the pantry and the shopping list."
+    }
+  ],
+  "products": []
+}

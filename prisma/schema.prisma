@@ -1,0 +1,397 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+enum WholesaleStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum OrderChannel {
+  RETAIL
+  WHOLESALE
+}
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String?
+  googleId         String?   @unique
+  name             String
+  phone            String?
+  avatarUrl        String?   @db.Text
+  avatarPublicId   String?
+  role             UserRole  @default(CUSTOMER)
+  referralCode     String?   @unique
+  referredById     String?
+  referredBy       User?     @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals        User[]    @relation("UserReferrals")
+  points           Int       @default(0)
+  referralRewarded Boolean   @default(false)
+  welcomedAt       DateTime?
+  wholesaleStatus  WholesaleStatus @default(NONE)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  sessions         Session[]
+  orders           Order[]
+  reviews          Review[]
+  testimonials     Testimonial[]
+  addresses        Address[]
+  wishlistItems    WishlistItem[]
+  notifications    Notification[]
+  cakeBookings     CakeBooking[]
+  wholesaleApplication WholesaleApplication?
+  adminActivity    AdminActivity[]
+  chatThreads      ChatThread[]
+
+  @@index([referredById])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  userAgent String?  @db.Text
+  ipAddress String?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?  @db.Text
+  products    Product[]
+}
+
+model Product {
+  id          String         @id @default(cuid())
+  name        String
+  slug        String         @unique
+  description String         @db.Text
+  priceCents  Int
+  // Optional flat wholesale unit price. Null = not sold wholesale.
+  wholesalePriceCents Int?
+  unit        String
+  inStock     Boolean        @default(true)
+  stockCount  Int            @default(0)
+  lowStockAt  Int            @default(5)
+  featured    Boolean        @default(false)
+  // For drinks: the flavour names a shopper can pick from (JSON array of strings).
+  flavors     Json?
+  categoryId  String
+  category    Category       @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  orderItems  OrderItem[]
+  reviews     Review[]
+  wishlistItems WishlistItem[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([categoryId])
+  @@index([featured])
+}
+
+model ProductImage {
+  id                 String  @id @default(cuid())
+  productId          String
+  product            Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url                String  @db.Text
+  alt                String
+  cloudinaryPublicId String?
+  resourceType       String  @default("image")
+  sortOrder          Int     @default(0)
+
+  @@index([productId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  RECEIVED
+  CANCELLED
+}
+
+enum FulfillmentMethod {
+  DELIVERY
+  PICKUP
+}
+
+model Order {
+  id            String            @id @default(cuid())
+  orderNumber   String            @unique
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status        OrderStatus       @default(PENDING)
+  channel       OrderChannel      @default(RETAIL)
+  fulfillment   FulfillmentMethod
+  fullName      String
+  phone         String
+  address       String?           @db.Text
+  notes          String?           @db.Text
+  subtotalCents  Int
+  deliveryCents  Int
+  discountCents  Int               @default(0)
+  pointsRedeemed Int               @default(0)
+  totalCents     Int
+  acceptedAt    DateTime?
+  receivedAt    DateTime?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  items         OrderItem[]
+  reviews       Review[]
+  testimonial   Testimonial?
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String?
+  product    Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name       String
+  slug       String
+  unit       String
+  imageUrl   String?  @db.Text
+  priceCents Int
+  quantity   Int
+  // For drink lines: { "Orange": 6, "Cocktail": 3 } — sums to `quantity`.
+  flavors    Json?
+
+  @@index([orderId])
+}
+
+model HeroSettings {
+  id                String   @id @default("hero")
+  kicker            String
+  headline          String
+  rotatingLines     Json
+  lead              String   @db.Text
+  primaryCtaLabel   String
+  primaryCtaHref    String
+  secondaryCtaLabel String
+  secondaryCtaHref  String
+  updatedAt         DateTime @updatedAt
+}
+
+model HeroImage {
+  id                 String  @id @default(cuid())
+  url                String  @db.Text
+  alt                String
+  cloudinaryPublicId String?
+  sortOrder          Int     @default(0)
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  rating    Int
+  comment   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([orderId, productId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orderId   String   @unique
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  rating    Int
+  message   String   @db.Text
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([published])
+}
+
+model Address {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label     String
+  fullName  String
+  phone     String
+  line      String   @db.Text
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model WishlistItem {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  body      String    @db.Text
+  href      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
+}
+
+/// A photo + details for the Nipz Pretty Cakes & Pastries showcase page.
+model CakeItem {
+  id                 String   @id @default(cuid())
+  name               String
+  description        String   @db.Text
+  category           String   @default("Cakes")
+  priceCents         Int?
+  priceNote          String?
+  imageUrl           String   @db.Text
+  cloudinaryPublicId String?
+  featured           Boolean  @default(false)
+  available          Boolean  @default(true)
+  sortOrder          Int      @default(0)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([sortOrder])
+  @@index([category])
+}
+
+enum CakeBookingStatus {
+  NEW
+  CONTACTED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+/// A customer request to order a custom cake or pastry from the Nipz page.
+model CakeBooking {
+  id             String            @id @default(cuid())
+  reference      String            @unique
+  userId         String?
+  user           User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  fullName       String
+  phone          String
+  email          String?
+  occasion       String?
+  flavor         String?
+  servings       String?
+  eventDate      DateTime?
+  fulfillment    FulfillmentMethod @default(PICKUP)
+  budgetCents    Int?
+  details        String            @db.Text
+  status         CakeBookingStatus @default(NEW)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+/// A customer's request for a wholesale account, reviewed by shop staff.
+model WholesaleApplication {
+  id           String          @id @default(cuid())
+  userId       String          @unique
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  businessName String
+  businessType String
+  phone        String
+  location     String
+  note         String?         @db.Text
+  status       WholesaleStatus @default(PENDING)
+  reviewedAt   DateTime?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([status])
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+}
+
+/// One shop-assistant conversation, tied to a signed-in user or an anonymous cookie id.
+model ChatThread {
+  id        String        @id @default(cuid())
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  anonId    String?
+  title     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  messages  ChatMessage[]
+
+  @@index([userId, updatedAt])
+  @@index([anonId, updatedAt])
+}
+
+/// A single turn in a shop-assistant conversation.
+model ChatMessage {
+  id        String     @id @default(cuid())
+  threadId  String
+  thread    ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  role      ChatRole
+  content   String     @db.Text
+  toolTrace Json?
+  createdAt DateTime   @default(now())
+
+  @@index([threadId, createdAt])
+}
+
+/// An audit-log entry for an important action taken by shop staff in the admin.
+model AdminActivity {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String
+  entityId   String?
+  summary    String   @db.Text
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([actorId])
+}
