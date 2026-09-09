@@ -43,7 +43,7 @@ export async function listProducts(categorySlug?: string, query?: string) {
       where: {
         ...(categorySlug ? { category: { slug: categorySlug } } : {}),
         ...(normalizedQuery
-          ? { name: { contains: normalizedQuery } }
+          ? { name: { contains: normalizedQuery, mode: "insensitive" } }
           : {}),
       },
       include: {

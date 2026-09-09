@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3005",
-    "build": "next build --webpack",
+    "build": "prisma generate && prisma migrate deploy && next build --webpack",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest",

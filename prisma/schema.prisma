@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum UserRole {
@@ -26,36 +27,36 @@ enum OrderChannel {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  email            String    @unique
-  passwordHash     String?
-  googleId         String?   @unique
-  name             String
-  phone            String?
-  avatarUrl        String?   @db.Text
-  avatarPublicId   String?
-  role             UserRole  @default(CUSTOMER)
-  referralCode     String?   @unique
-  referredById     String?
-  referredBy       User?     @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
-  referrals        User[]    @relation("UserReferrals")
-  points           Int       @default(0)
-  referralRewarded Boolean   @default(false)
-  welcomedAt       DateTime?
-  wholesaleStatus  WholesaleStatus @default(NONE)
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  sessions         Session[]
-  orders           Order[]
-  reviews          Review[]
-  testimonials     Testimonial[]
-  addresses        Address[]
-  wishlistItems    WishlistItem[]
-  notifications    Notification[]
-  cakeBookings     CakeBooking[]
+  id                   String                @id @default(cuid())
+  email                String                @unique
+  passwordHash         String?
+  googleId             String?               @unique
+  name                 String
+  phone                String?
+  avatarUrl            String?               @db.Text
+  avatarPublicId       String?
+  role                 UserRole              @default(CUSTOMER)
+  referralCode         String?               @unique
+  referredById         String?
+  referredBy           User?                 @relation("UserReferrals", fields: [referredById], references: [id], onDelete: SetNull)
+  referrals            User[]                @relation("UserReferrals")
+  points               Int                   @default(0)
+  referralRewarded     Boolean               @default(false)
+  welcomedAt           DateTime?
+  wholesaleStatus      WholesaleStatus       @default(NONE)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  sessions             Session[]
+  orders               Order[]
+  reviews              Review[]
+  testimonials         Testimonial[]
+  addresses            Address[]
+  wishlistItems        WishlistItem[]
+  notifications        Notification[]
+  cakeBookings         CakeBooking[]
   wholesaleApplication WholesaleApplication?
-  adminActivity    AdminActivity[]
-  chatThreads      ChatThread[]
+  adminActivity        AdminActivity[]
+  chatThreads          ChatThread[]
 
   @@index([referredById])
 }
@@ -78,33 +79,33 @@ model Category {
   id          String    @id @default(cuid())
   name        String
   slug        String    @unique
-  description String?  @db.Text
+  description String?   @db.Text
   products    Product[]
 }
 
 model Product {
-  id          String         @id @default(cuid())
-  name        String
-  slug        String         @unique
-  description String         @db.Text
-  priceCents  Int
+  id                  String         @id @default(cuid())
+  name                String
+  slug                String         @unique
+  description         String         @db.Text
+  priceCents          Int
   // Optional flat wholesale unit price. Null = not sold wholesale.
   wholesalePriceCents Int?
-  unit        String
-  inStock     Boolean        @default(true)
-  stockCount  Int            @default(0)
-  lowStockAt  Int            @default(5)
-  featured    Boolean        @default(false)
+  unit                String
+  inStock             Boolean        @default(true)
+  stockCount          Int            @default(0)
+  lowStockAt          Int            @default(5)
+  featured            Boolean        @default(false)
   // For drinks: the flavour names a shopper can pick from (JSON array of strings).
-  flavors     Json?
-  categoryId  String
-  category    Category       @relation(fields: [categoryId], references: [id])
-  images      ProductImage[]
-  orderItems  OrderItem[]
-  reviews     Review[]
-  wishlistItems WishlistItem[]
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
+  flavors             Json?
+  categoryId          String
+  category            Category       @relation(fields: [categoryId], references: [id])
+  images              ProductImage[]
+  orderItems          OrderItem[]
+  reviews             Review[]
+  wishlistItems       WishlistItem[]
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
 
   @@index([categoryId])
   @@index([featured])
@@ -136,29 +137,29 @@ enum FulfillmentMethod {
 }
 
 model Order {
-  id            String            @id @default(cuid())
-  orderNumber   String            @unique
-  userId        String
-  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  status        OrderStatus       @default(PENDING)
-  channel       OrderChannel      @default(RETAIL)
-  fulfillment   FulfillmentMethod
-  fullName      String
-  phone         String
-  address       String?           @db.Text
+  id             String            @id @default(cuid())
+  orderNumber    String            @unique
+  userId         String
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         OrderStatus       @default(PENDING)
+  channel        OrderChannel      @default(RETAIL)
+  fulfillment    FulfillmentMethod
+  fullName       String
+  phone          String
+  address        String?           @db.Text
   notes          String?           @db.Text
   subtotalCents  Int
   deliveryCents  Int
   discountCents  Int               @default(0)
   pointsRedeemed Int               @default(0)
   totalCents     Int
-  acceptedAt    DateTime?
-  receivedAt    DateTime?
-  createdAt     DateTime          @default(now())
-  updatedAt     DateTime          @updatedAt
-  items         OrderItem[]
-  reviews       Review[]
-  testimonial   Testimonial?
+  acceptedAt     DateTime?
+  receivedAt     DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  items          OrderItem[]
+  reviews        Review[]
+  testimonial    Testimonial?
 
   @@index([userId])
   @@index([createdAt])
@@ -307,23 +308,23 @@ enum CakeBookingStatus {
 
 /// A customer request to order a custom cake or pastry from the Nipz page.
 model CakeBooking {
-  id             String            @id @default(cuid())
-  reference      String            @unique
-  userId         String?
-  user           User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
-  fullName       String
-  phone          String
-  email          String?
-  occasion       String?
-  flavor         String?
-  servings       String?
-  eventDate      DateTime?
-  fulfillment    FulfillmentMethod @default(PICKUP)
-  budgetCents    Int?
-  details        String            @db.Text
-  status         CakeBookingStatus @default(NEW)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id          String            @id @default(cuid())
+  reference   String            @unique
+  userId      String?
+  user        User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  fullName    String
+  phone       String
+  email       String?
+  occasion    String?
+  flavor      String?
+  servings    String?
+  eventDate   DateTime?
+  fulfillment FulfillmentMethod @default(PICKUP)
+  budgetCents Int?
+  details     String            @db.Text
+  status      CakeBookingStatus @default(NEW)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
 
   @@index([userId])
   @@index([status])

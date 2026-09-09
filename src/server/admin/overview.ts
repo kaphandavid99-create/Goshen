@@ -200,7 +200,7 @@ export async function getKpis(range: ResolvedRange) {
     prisma.product.count({ where: { stockCount: { gt: 0 } } }),
     prisma.product.count({ where: { stockCount: { lte: 0 } } }),
     prisma.$queryRaw<{ n: bigint }[]>`
-      SELECT COUNT(*) AS n FROM Product WHERE stockCount > 0 AND stockCount <= lowStockAt`,
+      SELECT COUNT(*) AS n FROM "Product" WHERE "stockCount" > 0 AND "stockCount" <= "lowStockAt"`,
     prisma.user.aggregate({ _sum: { points: true } }),
     prisma.order.aggregate({
       _sum: { pointsRedeemed: true },
@@ -369,13 +369,13 @@ export async function getTopProducts(range: ResolvedRange, take = 5) {
       },
     }),
     prisma.$queryRaw<{ productId: string; revenue: bigint }[]>`
-      SELECT oi.productId AS productId, SUM(oi.priceCents * oi.quantity) AS revenue
-      FROM OrderItem oi
-      JOIN \`Order\` o ON o.id = oi.orderId
-      WHERE oi.productId IN (${Prisma.join(ids)})
-        AND o.status <> 'CANCELLED'
-        AND o.createdAt >= ${range.start} AND o.createdAt < ${range.end}
-      GROUP BY oi.productId`,
+      SELECT oi."productId" AS "productId", SUM(oi."priceCents" * oi."quantity") AS revenue
+      FROM "OrderItem" oi
+      JOIN "Order" o ON o.id = oi."orderId"
+      WHERE oi."productId" IN (${Prisma.join(ids)})
+        AND o.status::text <> 'CANCELLED'
+        AND o."createdAt" >= ${range.start} AND o."createdAt" < ${range.end}
+      GROUP BY oi."productId"`,
   ]);
 
   const byId = new Map(products.map((p) => [p.id, p]));
@@ -431,10 +431,10 @@ export async function getStockAlerts(take = 8) {
   const rows = await prisma.$queryRaw<
     { id: string; name: string; slug: string; stockCount: number; lowStockAt: number }[]
   >`
-    SELECT id, name, slug, stockCount, lowStockAt
-    FROM Product
-    WHERE stockCount <= lowStockAt
-    ORDER BY stockCount ASC, name ASC
+    SELECT id, name, slug, "stockCount", "lowStockAt"
+    FROM "Product"
+    WHERE "stockCount" <= "lowStockAt"
+    ORDER BY "stockCount" ASC, name ASC
     LIMIT ${take}`;
 
   if (rows.length === 0) return [];
@@ -509,11 +509,11 @@ export async function getCustomerOverview(range: ResolvedRange) {
         where: { role: "CUSTOMER", createdAt: { gte: range.start, lt: range.end } },
       }),
       prisma.$queryRaw<{ n: bigint }[]>`
-        SELECT COUNT(DISTINCT userId) AS n FROM \`Order\` WHERE status <> 'CANCELLED'`,
+        SELECT COUNT(DISTINCT "userId") AS n FROM "Order" WHERE status::text <> 'CANCELLED'`,
       prisma.$queryRaw<{ n: bigint }[]>`
         SELECT COUNT(*) AS n FROM (
-          SELECT userId FROM \`Order\` WHERE status <> 'CANCELLED'
-          GROUP BY userId HAVING COUNT(*) > 1
+          SELECT "userId" FROM "Order" WHERE status::text <> 'CANCELLED'
+          GROUP BY "userId" HAVING COUNT(*) > 1
         ) t`,
       prisma.order.aggregate({ _sum: { totalCents: true }, where: NOT_CANCELLED }),
       prisma.user.findMany({
@@ -606,7 +606,7 @@ export async function getAdminAlerts() {
       prisma.order.count({ where: { status: "PENDING" } }),
       prisma.product.count({ where: { stockCount: { lte: 0 } } }),
       prisma.$queryRaw<{ n: bigint }[]>`
-        SELECT COUNT(*) AS n FROM Product WHERE stockCount > 0 AND stockCount <= lowStockAt`,
+        SELECT COUNT(*) AS n FROM "Product" WHERE "stockCount" > 0 AND "stockCount" <= "lowStockAt"`,
       prisma.user.count({ where: { role: "CUSTOMER", createdAt: { gte: todayStart } } }),
       prisma.wholesaleApplication.count({ where: { status: "PENDING" } }),
       prisma.cakeBooking.count({ where: { status: "NEW" } }),

@@ -6,7 +6,7 @@ Production e-commerce platform for a premium grocery store. Authentication will 
 
 - **Frontend:** Next.js (App Router), React, TypeScript, Tailwind CSS
 - **Backend:** Next.js Route Handlers
-- **Database:** MySQL 9.7 + Prisma (browse and edit in MySQL Workbench)
+- **Database:** PostgreSQL (Supabase) + Prisma (browse and edit in the Supabase table editor or `npm run db:studio`)
 - **Auth:** Custom sessions, bcrypt password hashes, HTTP-only cookies, CSRF tokens
 - **Images (next):** Cloudinary
 - **Validation:** Zod
@@ -56,27 +56,26 @@ e2e/              Playwright tests (added later)
 
 ## Authentication
 
-Custom auth only. Do not add Supabase Auth, Firebase Auth, or Clerk.
+Custom auth only. Do not add Supabase Auth, Firebase Auth, or Clerk. Supabase is used only as the hosted Postgres database.
 
-1. Open **MySQL Workbench** and connect to `Local instance MySQL97` (`localhost:3306`, user `root`).
-2. Run `prisma/workbench-setup.sql` to create the `goshen_provision` schema.
-3. Set `DATABASE_URL` in `.env` to `mysql://root:YOUR_PASSWORD@localhost:3306/goshen_provision`.
-4. Apply the schema and seed the catalog:
+1. Create a project at [supabase.com](https://supabase.com). In **Project Settings > Database > Connection string**, copy the **Session pooler** URL (port 5432).
+2. Set both `DATABASE_URL` and `DIRECT_URL` in `.env` to that Session pooler URL. Use the same values on Vercel. (Avoid the 6543 transaction pooler — `?pgbouncer=true` pins `connection_limit=1` and the admin dashboard's parallel queries then time out.)
+3. Create the first migration, apply the schema, and seed the catalog:
 
    ```bash
-   npx prisma migrate deploy
+   npx prisma migrate dev --name init
    npm run db:seed
    ```
 
-5. Open `/register` to create an account. Sessions are stored in the database and sent as the `goshen_session` HTTP-only cookie.
+4. Open `/register` to create an account, or sign in as the seeded admin (`admin@goshen.local` / `GoshenAdmin1!`). Sessions are stored in the database and sent as the `goshen_session` HTTP-only cookie.
 
-After seeding, Workbench shows `Category`, `Product`, `User`, `Session`, `Order`, and `OrderItem` under `goshen_provision`.
+After seeding, the Supabase table editor shows `Category`, `Product`, `User`, `Session`, `Order`, and `OrderItem`.
 
 The shop at `/shop` also renders from bundled seed data when the database is empty or unavailable. The basket is stored in the browser with Zustand.
 
 Protected routes (`/account`, `/admin`, `/checkout`) are gated in `src/proxy.ts`. Role checks use `requireRole()` on the server.
 
-MySQL is required for sign-in, registration, and placing orders. The rest of the site still renders without it.
+The database is required for sign-in, registration, and placing orders. The rest of the site still renders without it.
 
 ## Scripts
 
