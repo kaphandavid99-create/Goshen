@@ -10,6 +10,7 @@ import {
   IconArrowRight,
   IconGift,
   IconLeaf,
+  IconPin,
   IconShield,
   IconTag,
   IconTruck,
@@ -89,10 +90,17 @@ export function HomeHero({ content }: { content: HeroContent }) {
         return;
       }
 
+      const reduce =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const revealEls = ".hero-kicker, .hero-lead, .hero-cta, .hero-trust";
+
       gsap.set(staticChars, { yPercent: 110, autoAlpha: 0 });
       gsap.set(phrases, { autoAlpha: 0 });
       gsap.set(phrases[0], { autoAlpha: 1 });
       gsap.set(".hero-rule", { scaleX: 0, transformOrigin: "left center" });
+      gsap.set(".hero-kicker", reduce ? {} : { autoAlpha: 0, y: 10 });
+      gsap.set(revealEls, reduce ? { autoAlpha: 1, y: 0 } : { autoAlpha: 0, y: 18 });
 
       const intro = gsap.timeline({
         defaults: { ease: "power3.out" },
@@ -100,6 +108,7 @@ export function HomeHero({ content }: { content: HeroContent }) {
       });
 
       intro
+        .to(".hero-kicker", { autoAlpha: 1, y: 0, duration: 0.45 }, 0)
         .to(staticChars, {
           yPercent: 0,
           autoAlpha: 1,
@@ -118,6 +127,14 @@ export function HomeHero({ content }: { content: HeroContent }) {
           "-=0.35",
         )
         .to(".hero-rule", { scaleX: 1, duration: 0.45, ease: "power2.out" }, "-=0.28");
+
+      if (!reduce) {
+        intro.to(
+          revealEls,
+          { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5 },
+          "-=0.15",
+        );
+      }
 
       if (phrases.length < 2) {
         return;
@@ -166,7 +183,10 @@ export function HomeHero({ content }: { content: HeroContent }) {
     <section ref={root} className="border-b border-border bg-background">
       <div className="page-wrap grid grid-cols-1 items-center gap-6 py-8 sm:gap-8 sm:py-10 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0 lg:py-16">
         <div className="hero-copy min-w-0 lg:col-start-1 lg:row-start-1">
-          <p className="hero-kicker kicker">{content.kicker}</p>
+          <p className="hero-kicker">
+            <IconPin className="size-3.5 shrink-0" aria-hidden />
+            <span>{content.kicker}</span>
+          </p>
           <h1 className="hero-title">
             <span className="sr-only">
               {content.headline} {loopLines.join(" ")}
@@ -188,13 +208,11 @@ export function HomeHero({ content }: { content: HeroContent }) {
             </span>
           </h1>
           <span className="hero-rule" aria-hidden="true" />
-          <p className="hero-lead mt-4 max-w-xl text-sm leading-6 text-muted-foreground sm:mt-5 sm:text-base sm:leading-7">
-            {content.lead}
-          </p>
+          <p className="hero-lead">{content.lead}</p>
         </div>
 
         <motion.div
-          className="hero-media relative aspect-[16/10] w-full overflow-hidden sm:aspect-[4/3] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-h-none lg:self-center"
+          className="hero-media relative aspect-[16/10] w-full overflow-hidden sm:aspect-[4/3] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-h-none lg:self-start"
           initial={{ opacity: 0, scale: 1.06, y: 18 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 1.05, ease: [0.22, 1, 0.36, 1], delay: 0.12 }}
@@ -202,30 +220,32 @@ export function HomeHero({ content }: { content: HeroContent }) {
           <HeroMedia images={content.images} />
         </motion.div>
 
-        <div className="hero-actions min-w-0 lg:col-start-1 lg:row-start-2 lg:mt-8">
-          <div className="flex flex-col gap-3 min-[420px]:flex-row min-[420px]:flex-wrap">
+        <div className="hero-actions min-w-0 lg:col-start-1 lg:row-start-2 lg:mt-9">
+          <div className="hero-cta-row">
             <Link
               href={content.primaryCtaHref}
-              className="hero-cta btn btn-primary w-full min-[420px]:w-auto"
+              className="hero-cta btn btn-primary"
             >
               {content.primaryCtaLabel}
-              <IconArrowRight className="size-4" />
+              <IconArrowRight className="hero-cta-arrow size-4" />
             </Link>
             <Link
               href={content.secondaryCtaHref}
-              className="hero-cta btn btn-outline w-full min-[420px]:w-auto"
+              className="hero-cta btn btn-outline"
             >
               <IconGift className="size-4 text-accent" />
               {content.secondaryCtaLabel}
             </Link>
           </div>
-          <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-3 text-xs text-foreground sm:mt-10 sm:gap-x-4 sm:text-sm lg:grid-cols-4">
+          <ul className="hero-trust-list">
             {trustKeys.map((key, index) => {
               const Icon = trustIcons[index];
               return (
-                <li key={key} className="hero-trust flex min-w-0 items-start gap-2">
-                  <Icon className="mt-0.5 size-4 shrink-0 text-primary" />
-                  <span className="leading-snug">{t.home.trust[key]}</span>
+                <li key={key} className="hero-trust">
+                  <span className="hero-trust-icon">
+                    <Icon className="size-4" />
+                  </span>
+                  <span>{t.home.trust[key]}</span>
                 </li>
               );
             })}
