@@ -1,6 +1,6 @@
 import "server-only";
 
-import webpush from "web-push";
+import type WebPush from "web-push";
 import { prisma } from "@/lib/db/prisma";
 import { env, isPushConfigured } from "@/lib/env";
 
@@ -11,26 +11,35 @@ export type PushPayload = {
   tag?: string | null;
 };
 
+let webpushModule: typeof WebPush | null = null;
 let vapidReady = false;
 
-function ensureVapid() {
-  if (vapidReady || !isPushConfigured()) {
-    return isPushConfigured();
+// web-push pulls in Node-only deps; load it lazily so a problem loading it can
+// only ever affect an actual send, never a route that merely imports this file.
+async function getWebPush() {
+  if (!isPushConfigured()) {
+    return null;
   }
-  webpush.setVapidDetails(
-    env.vapidSubject,
-    env.vapidPublicKey,
-    env.vapidPrivateKey,
-  );
-  vapidReady = true;
-  return true;
+  if (!webpushModule) {
+    webpushModule = (await import("web-push")).default;
+  }
+  if (!vapidReady) {
+    webpushModule.setVapidDetails(
+      env.vapidSubject,
+      env.vapidPublicKey,
+      env.vapidPrivateKey,
+    );
+    vapidReady = true;
+  }
+  return webpushModule;
 }
 
 // Fan a notification out to every device the user has subscribed. Best effort:
 // failures never bubble up to the caller, and endpoints the push service has
 // retired (404/410) are pruned so they don't pile up.
 export async function sendPushToUser(userId: string, payload: PushPayload) {
-  if (!ensureVapid()) {
+  const webpush = await getWebPush();
+  if (!webpush) {
     return;
   }
 

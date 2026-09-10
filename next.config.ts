@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // The Cloudinary Node SDK reads its own package.json by relative path for
   // analytics; bundling it breaks that and throws "Must supply sdk_semver".
-  serverExternalPackages: ["cloudinary", "web-push"],
+  serverExternalPackages: ["cloudinary"],
   experimental: {
     proxyClientMaxBodySize: "40mb",
   },

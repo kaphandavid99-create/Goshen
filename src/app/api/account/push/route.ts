@@ -3,39 +3,47 @@ import { isPushConfigured } from "@/lib/env";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
 import { jsonError } from "@/server/auth/request";
-import { sendPushToUser } from "@/server/notifications/push";
 import { pushSubscriptionSchema } from "@/validators/push";
+
+export const runtime = "nodejs";
+
+function serverError(error: unknown) {
+  const detail =
+    error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+  console.error("push route failed", error);
+  return jsonError(detail, 500);
+}
 
 // Save (or refresh) the push endpoint for the current device.
 export async function POST(request: Request) {
-  if (!(await assertCsrf(request))) {
-    return jsonError("Invalid or missing CSRF token.", 403);
-  }
-  if (!isPushConfigured()) {
-    return jsonError("Push notifications are not set up on the server.", 503);
-  }
-
-  const user = await getCurrentUser();
-  if (!user) {
-    return jsonError("Sign in to enable alerts.", 401);
-  }
-
-  let body: unknown;
   try {
-    body = await request.json();
-  } catch {
-    return jsonError("Invalid request body.", 400);
-  }
+    if (!(await assertCsrf(request))) {
+      return jsonError("Invalid or missing CSRF token.", 403);
+    }
+    if (!isPushConfigured()) {
+      return jsonError("Push notifications are not set up on the server.", 503);
+    }
 
-  const parsed = pushSubscriptionSchema.safeParse(body);
-  if (!parsed.success) {
-    return jsonError("That push subscription looks malformed.", 422);
-  }
+    const user = await getCurrentUser();
+    if (!user) {
+      return jsonError("Sign in to enable alerts.", 401);
+    }
 
-  const { endpoint, keys } = parsed.data;
-  const userAgent = request.headers.get("user-agent")?.slice(0, 400) ?? null;
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError("Invalid request body.", 400);
+    }
 
-  try {
+    const parsed = pushSubscriptionSchema.safeParse(body);
+    if (!parsed.success) {
+      return jsonError("That push subscription looks malformed.", 422);
+    }
+
+    const { endpoint, keys } = parsed.data;
+    const userAgent = request.headers.get("user-agent")?.slice(0, 400) ?? null;
+
     await prisma.pushSubscription.upsert({
       where: { endpoint },
       create: {
@@ -52,67 +60,75 @@ export async function POST(request: Request) {
         userAgent,
       },
     });
-  } catch {
-    return jsonError("Unable to save your subscription.", 503);
-  }
 
-  return Response.json({ ok: true });
+    return Response.json({ ok: true });
+  } catch (error) {
+    return serverError(error);
+  }
 }
 
 // Remove one device's endpoint (called on unsubscribe).
 export async function DELETE(request: Request) {
-  if (!(await assertCsrf(request))) {
-    return jsonError("Invalid or missing CSRF token.", 403);
-  }
-
-  const user = await getCurrentUser();
-  if (!user) {
-    return jsonError("Sign in to update alerts.", 401);
-  }
-
-  let body: unknown;
   try {
-    body = await request.json();
-  } catch {
-    return jsonError("Invalid request body.", 400);
-  }
+    if (!(await assertCsrf(request))) {
+      return jsonError("Invalid or missing CSRF token.", 403);
+    }
 
-  const endpoint =
-    body && typeof body === "object" && "endpoint" in body
-      ? String((body as { endpoint: unknown }).endpoint)
-      : "";
-  if (!endpoint) {
-    return jsonError("Missing endpoint.", 400);
-  }
+    const user = await getCurrentUser();
+    if (!user) {
+      return jsonError("Sign in to update alerts.", 401);
+    }
 
-  try {
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return jsonError("Invalid request body.", 400);
+    }
+
+    const endpoint =
+      body && typeof body === "object" && "endpoint" in body
+        ? String((body as { endpoint: unknown }).endpoint)
+        : "";
+    if (!endpoint) {
+      return jsonError("Missing endpoint.", 400);
+    }
+
     await prisma.pushSubscription.deleteMany({
       where: { endpoint, userId: user.id },
     });
-  } catch {
-    return jsonError("Unable to update your subscription.", 503);
-  }
 
-  return Response.json({ ok: true });
+    return Response.json({ ok: true });
+  } catch (error) {
+    return serverError(error);
+  }
 }
 
 // Send a test alert to the current user's devices.
 export async function PUT(request: Request) {
-  if (!(await assertCsrf(request))) {
-    return jsonError("Invalid or missing CSRF token.", 403);
+  try {
+    if (!(await assertCsrf(request))) {
+      return jsonError("Invalid or missing CSRF token.", 403);
+    }
+    if (!isPushConfigured()) {
+      return jsonError("Push notifications are not set up on the server.", 503);
+    }
+
+    const user = await getCurrentUser();
+    if (!user) {
+      return jsonError("Sign in to test alerts.", 401);
+    }
+
+    const { sendPushToUser } = await import("@/server/notifications/push");
+    await sendPushToUser(user.id, {
+      title: "Goshen alerts are on",
+      body: "This is how order and reward updates will reach your phone.",
+      url: "/account/notifications",
+      tag: "push-test",
+    });
+
+    return Response.json({ ok: true });
+  } catch (error) {
+    return serverError(error);
   }
-
-  const user = await getCurrentUser();
-  if (!user) {
-    return jsonError("Sign in to test alerts.", 401);
-  }
-
-  await sendPushToUser(user.id, {
-    title: "Goshen alerts are on",
-    body: "This is how order and reward updates will reach your phone.",
-    url: "/account/notifications",
-    tag: "push-test",
-  });
-
-  return Response.json({ ok: true });
 }
