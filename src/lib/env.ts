@@ -1,5 +1,11 @@
 const DEFAULT_SESSION_MAX_AGE = 60 * 60 * 24 * 14;
 
+// Env values pasted into a dashboard often arrive wrapped in quotes or with a
+// stray newline; strip those so keys like VAPID don't fail validation.
+function readClean(name: string, fallback = "") {
+  return (process.env[name] ?? fallback).trim().replace(/^["']|["']$/g, "");
+}
+
 function readNumber(name: string, fallback: number) {
   const raw = process.env[name];
   if (!raw) {
@@ -27,11 +33,12 @@ export const env = {
   googleClientSecret: (process.env.GOOGLE_CLIENT_SECRET ?? "").trim(),
   geminiApiKey: (process.env.GEMINI_API_KEY ?? "").trim(),
   assistantModel: (process.env.ASSISTANT_MODEL ?? "gemini-2.5-flash").trim(),
-  vapidPublicKey: (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "").trim(),
-  vapidPrivateKey: (process.env.VAPID_PRIVATE_KEY ?? "").trim(),
-  vapidSubject: (
-    process.env.VAPID_SUBJECT ?? "mailto:kaphandavid99@gmail.com"
-  ).trim(),
+  vapidPublicKey: readClean("NEXT_PUBLIC_VAPID_PUBLIC_KEY"),
+  vapidPrivateKey: readClean("VAPID_PRIVATE_KEY"),
+  vapidSubject: readClean(
+    "VAPID_SUBJECT",
+    "mailto:kaphandavid99@gmail.com",
+  ),
 };
 
 export function isCloudinaryConfigured() {
