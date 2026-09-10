@@ -283,6 +283,33 @@ export const en = {
     networkError: "Network error. Try again.",
     placingOrder: "Placing order…",
     placeOrder: "Place order",
+    payment: "Payment",
+    payCash: "Pay on delivery or pickup (cash)",
+    payMomo: "Pay now with MTN MoMo",
+    momoNumber: "MTN MoMo number",
+    momoHint:
+      "You'll get a prompt on this number to approve the payment with your PIN.",
+    pointsCashOnly: "Points can only be used on cash orders.",
+    payAmountMomo: (amount: string) => `Pay ${amount} with MoMo`,
+  },
+
+  pay: {
+    kicker: "Payment",
+    amount: "Amount",
+    checkPhone: "Check your phone",
+    checkPhoneHint:
+      "Approve the MTN MoMo payment request with your PIN. This page updates on its own.",
+    stillPending: "Still waiting for approval",
+    stillPendingHint:
+      "It's taking longer than usual. Approve it on your phone, or check the order later — we'll notify you once it clears.",
+    keepWaiting: "Keep waiting",
+    goToOrder: "Go to the order",
+    paid: "Payment received — taking you to your order.",
+    failed: "Payment didn't go through",
+    tryAgain: "Try again",
+    cancelOrder: "Cancel this order",
+    error: "Something went wrong. Try again.",
+    finishPayment: "Finish payment →",
   },
 
   about: {
@@ -869,6 +896,7 @@ export const en = {
   },
 
   orderStatus: {
+    AWAITING_PAYMENT: "Awaiting payment",
     PENDING: "Pending",
     CONFIRMED: "Confirmed",
     RECEIVED: "Received",

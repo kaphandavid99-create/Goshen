@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/layout/page-intro";
 import { WholesaleCheckoutForm } from "@/components/wholesale/wholesale-checkout-form";
+import { isMomoConfigured } from "@/lib/env";
 import { getDict } from "@/lib/i18n/server";
 import { getAccountProfile } from "@/server/account/hub";
 import { requireApprovedWholesale } from "@/server/wholesale/access";
@@ -25,6 +26,7 @@ export default async function WholesaleCheckoutPage() {
       <WholesaleCheckoutForm
         defaultName={profile?.name ?? user.name}
         defaultPhone={profile?.phone ?? ""}
+        momoAvailable={isMomoConfigured()}
       />
     </main>
   );

@@ -1,10 +1,12 @@
 import "server-only";
 
 import { Prisma } from "@prisma/client";
-import { randomInt } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { WHOLESALE_MIN_ORDER_CENTS } from "@/lib/constants";
+import { env } from "@/lib/env";
 import { prisma } from "@/lib/db/prisma";
 import { createNotification } from "@/server/account/notifications";
+import { requestToPay } from "@/server/payments/momo";
 import type { WholesaleCheckoutInput } from "@/validators/wholesale";
 
 function createOrderNumber() {
@@ -62,6 +64,8 @@ export async function createWholesaleOrder(
     throw new WholesaleOrderError("BELOW_MIN_ORDER");
   }
 
+  const momo = input.paymentMethod === "MOMO";
+
   for (let attempt = 0; attempt < 5; attempt += 1) {
     try {
       const order = await prisma.$transaction(async (tx) => {
@@ -69,6 +73,7 @@ export async function createWholesaleOrder(
           data: {
             userId,
             channel: "WHOLESALE",
+            status: momo ? "AWAITING_PAYMENT" : "PENDING",
             fulfillment: input.fulfillment,
             fullName: input.fullName,
             phone: input.phone,
@@ -89,19 +94,58 @@ export async function createWholesaleOrder(
             totalCents: subtotalCents,
             orderNumber: createOrderNumber(),
             items: { create: lines },
+            payment: {
+              create: {
+                method: momo ? "MOMO" : "CASH",
+                amountCents: subtotalCents,
+                currency: momo ? env.momoCurrency : "XAF",
+                phone: momo
+                  ? (input.momoPhone?.replace(/\D/g, "") ?? null)
+                  : null,
+                momoReferenceId: momo ? randomUUID() : null,
+              },
+            },
           },
-          include: { items: true },
+          include: { items: true, payment: true },
         });
 
-        await createNotification(tx, {
-          userId,
-          title: "Wholesale order placed",
-          body: `${created.orderNumber} is with the shop. They'll confirm pricing and arrange delivery.`,
-          href: `/account/orders/${created.id}`,
-        });
+        if (!momo) {
+          await createNotification(tx, {
+            userId,
+            title: "Wholesale order placed",
+            body: `${created.orderNumber} is with the shop. They'll confirm pricing and arrange delivery.`,
+            href: `/account/orders/${created.id}`,
+          });
+        }
 
         return created;
       });
+
+      if (momo && order.payment?.momoReferenceId) {
+        try {
+          await requestToPay({
+            referenceId: order.payment.momoReferenceId,
+            amount: order.totalCents,
+            phone: order.payment.phone ?? "",
+            externalId: order.orderNumber,
+            payerMessage: `Goshen wholesale ${order.orderNumber}`,
+            payeeNote: `Goshen wholesale ${order.orderNumber}`,
+          });
+        } catch (error) {
+          await prisma.payment
+            .update({
+              where: { id: order.payment.id },
+              data: {
+                status: "FAILED",
+                failureReason:
+                  error instanceof Error
+                    ? error.message.slice(0, 300)
+                    : "Could not reach MoMo",
+              },
+            })
+            .catch(() => undefined);
+        }
+      }
 
       return order;
     } catch (error) {

@@ -24,22 +24,29 @@ export async function getAdminOverview() {
     outOfStock,
     recentOrders,
   ] = await Promise.all([
-    prisma.order.count(),
+    prisma.order.count({ where: { status: { not: "AWAITING_PAYMENT" } } }),
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.order.count({ where: { status: "CONFIRMED" } }),
     prisma.order.count({ where: { status: "RECEIVED" } }),
-    prisma.order.count({ where: { createdAt: { gte: today } } }),
+    prisma.order.count({
+      where: {
+        createdAt: { gte: today },
+        status: { not: "AWAITING_PAYMENT" },
+      },
+    }),
     prisma.order.aggregate({
       _sum: { totalCents: true },
-      where: { status: { not: "CANCELLED" } },
+      where: { status: { notIn: ["CANCELLED", "AWAITING_PAYMENT"] } },
     }),
     prisma.user.count({ where: { role: "CUSTOMER" } }),
     prisma.product.count(),
     prisma.product.count({ where: { inStock: false } }),
     prisma.order.findMany({
       take: 8,
+      where: { status: { not: "AWAITING_PAYMENT" } },
       orderBy: { createdAt: "desc" },
       include: {
+        payment: { select: { method: true, status: true } },
         user: { select: { name: true, email: true } },
         items: {
           include: {
@@ -74,9 +81,10 @@ export async function getAdminOverview() {
 
 export async function listAdminOrders(status?: OrderStatus) {
   return prisma.order.findMany({
-    where: status ? { status } : {},
+    where: status ? { status } : { status: { not: "AWAITING_PAYMENT" } },
     orderBy: { createdAt: "desc" },
     include: {
+      payment: { select: { method: true, status: true, paidAt: true } },
       user: { select: { name: true, email: true } },
       items: {
         include: {
@@ -117,6 +125,7 @@ export async function getAdminOrder(orderId: string) {
   return prisma.order.findUnique({
     where: { id: orderId },
     include: {
+      payment: true,
       user: { select: { name: true, email: true, phone: true, avatarUrl: true } },
       items: {
         include: {

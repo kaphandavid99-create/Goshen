@@ -25,7 +25,10 @@ export async function getCustomerDashboard(userId: string) {
     .catch(() => null);
 
   const orders = await listOrdersForUser(userId);
-  const active = orders.filter((order) => order.status !== "CANCELLED");
+  const active = orders.filter(
+    (order) =>
+      order.status !== "CANCELLED" && order.status !== "AWAITING_PAYMENT",
+  );
   const pending = active.filter((order) => order.status === "PENDING");
   const spent = active.reduce((total, order) => total + order.totalCents, 0);
   const itemCount = active.reduce(

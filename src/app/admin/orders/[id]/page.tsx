@@ -117,6 +117,24 @@ export default async function AdminOrderPage({
             value={order.fulfillment === "DELIVERY" ? "Delivery" : "Pickup"}
           />
           <Row label="Account email" value={order.user.email} />
+          <Row
+            label="Payment"
+            value={
+              order.payment
+                ? order.payment.method === "MOMO"
+                  ? order.payment.status === "SUCCEEDED"
+                    ? `MTN MoMo · paid${
+                        order.payment.paidAt
+                          ? ` ${order.payment.paidAt.toISOString().slice(0, 10)}`
+                          : ""
+                      }`
+                    : order.payment.status === "FAILED"
+                      ? `MTN MoMo · not completed`
+                      : "MTN MoMo · awaiting payment"
+                  : "Cash on delivery / pickup"
+                : "Cash on delivery / pickup"
+            }
+          />
           <Row label="Address" value={order.address ?? "Pickup at the shop"} />
           <Row label="Notes" value={order.notes ?? "None"} />
         </dl>

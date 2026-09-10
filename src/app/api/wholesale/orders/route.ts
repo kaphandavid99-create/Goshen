@@ -42,7 +42,15 @@ export async function POST(request: Request) {
           id: order.id,
           orderNumber: order.orderNumber,
           totalCents: order.totalCents,
+          status: order.status,
         },
+        payment: order.payment
+          ? {
+              id: order.payment.id,
+              method: order.payment.method,
+              status: order.payment.status,
+            }
+          : null,
       },
       { status: 201 },
     );

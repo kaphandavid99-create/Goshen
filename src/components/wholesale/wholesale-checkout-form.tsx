@@ -17,9 +17,11 @@ type FieldErrors = Record<string, string[] | undefined>;
 export function WholesaleCheckoutForm({
   defaultName,
   defaultPhone,
+  momoAvailable,
 }: {
   defaultName: string;
   defaultPhone: string;
+  momoAvailable: boolean;
 }) {
   const router = useRouter();
   const { locale, t } = useI18n();
@@ -29,6 +31,8 @@ export function WholesaleCheckoutForm({
   const [fulfillment, setFulfillment] = useState<"DELIVERY" | "PICKUP">(
     "DELIVERY",
   );
+  const [paymentMethod, setPaymentMethod] = useState<"CASH" | "MOMO">("CASH");
+  const [momoPhone, setMomoPhone] = useState(defaultPhone);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [pending, setPending] = useState(false);
@@ -51,6 +55,7 @@ export function WholesaleCheckoutForm({
   const subtotal = wholesaleCartSubtotalCents(items);
   const belowMin = subtotal < WHOLESALE.minOrderCents;
   const blocked = belowMin;
+  const payWithMomo = momoAvailable && paymentMethod === "MOMO";
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -83,6 +88,8 @@ export function WholesaleCheckoutForm({
           phone: String(form.get("phone") ?? ""),
           address: String(form.get("address") ?? ""),
           notes: String(form.get("notes") ?? ""),
+          paymentMethod: payWithMomo ? "MOMO" : "CASH",
+          momoPhone: payWithMomo ? momoPhone : "",
           items: items.map((item) => ({
             productId: item.productId,
             slug: item.slug,
@@ -95,6 +102,7 @@ export function WholesaleCheckoutForm({
         error?: string;
         fieldErrors?: FieldErrors;
         order?: { id: string };
+        payment?: { id: string; method: string; status: string } | null;
       };
 
       if (response.status === 401) {
@@ -109,7 +117,11 @@ export function WholesaleCheckoutForm({
       }
 
       clear();
-      router.push(`/account/orders/${data.order.id}`);
+      if (data.payment?.method === "MOMO") {
+        router.push(`/pay/${data.payment.id}`);
+      } else {
+        router.push(`/account/orders/${data.order.id}`);
+      }
       router.refresh();
     } catch {
       setError(t.wholesale.networkError);
@@ -211,6 +223,56 @@ export function WholesaleCheckoutForm({
           </label>
           <textarea id="notes" name="notes" rows={3} className="field" />
         </div>
+
+        {momoAvailable ? (
+          <fieldset className="space-y-3 border-t border-border pt-4">
+            <legend className="text-sm font-semibold text-primary">
+              {t.checkout.payment}
+            </legend>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="paymentMethod"
+                checked={paymentMethod === "CASH"}
+                onChange={() => setPaymentMethod("CASH")}
+              />
+              {t.checkout.payCash}
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="radio"
+                name="paymentMethod"
+                checked={paymentMethod === "MOMO"}
+                onChange={() => setPaymentMethod("MOMO")}
+              />
+              {t.checkout.payMomo}
+            </label>
+            {payWithMomo ? (
+              <div className="space-y-2">
+                <label htmlFor="momoPhone" className="block text-sm font-medium">
+                  {t.checkout.momoNumber}
+                </label>
+                <input
+                  id="momoPhone"
+                  inputMode="tel"
+                  value={momoPhone}
+                  onChange={(event) => setMomoPhone(event.target.value)}
+                  placeholder="2376XXXXXXXX"
+                  aria-invalid={fieldErrors.momoPhone ? true : undefined}
+                  className="field"
+                />
+                {fieldErrors.momoPhone?.[0] ? (
+                  <p className="text-sm text-accent">
+                    {fieldErrors.momoPhone[0]}
+                  </p>
+                ) : null}
+                <p className="text-xs text-muted-foreground">
+                  {t.checkout.momoHint}
+                </p>
+              </div>
+            ) : null}
+          </fieldset>
+        ) : null}
       </div>
 
       <aside className="card h-fit space-y-4 p-6">
@@ -251,7 +313,11 @@ export function WholesaleCheckoutForm({
           disabled={pending || blocked}
           className="btn btn-primary w-full disabled:opacity-55"
         >
-          {pending ? t.wholesale.placingOrder : t.wholesale.placeWholesaleOrder}
+          {pending
+            ? t.wholesale.placingOrder
+            : payWithMomo
+              ? t.checkout.payAmountMomo(formatPrice(subtotal, locale))
+              : t.wholesale.placeWholesaleOrder}
         </button>
       </aside>
     </form>

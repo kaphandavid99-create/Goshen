@@ -49,8 +49,18 @@ type Series = Awaited<ReturnType<typeof getSalesSeries>>;
 type Status = Awaited<ReturnType<typeof getOrderStatusBreakdown>>;
 type Category = Awaited<ReturnType<typeof getCategorySales>>;
 
-function paymentLabel(status: string) {
-  if (status === "RECEIVED") return { text: "Paid", tone: "text-[var(--delta-up)]" };
+function paymentLabel(
+  status: string,
+  payment?: { method: string; status: string } | null,
+) {
+  if (payment?.method === "MOMO") {
+    if (payment.status === "SUCCEEDED")
+      return { text: "Paid · MoMo", tone: "text-[var(--delta-up)]" };
+    if (payment.status === "FAILED")
+      return { text: "MoMo failed", tone: "text-muted-foreground" };
+    return { text: "Awaiting MoMo", tone: "text-muted-foreground" };
+  }
+  if (status === "RECEIVED") return { text: "Paid · cash", tone: "text-[var(--delta-up)]" };
   if (status === "CANCELLED") return { text: "Voided", tone: "text-muted-foreground" };
   return { text: "On collection", tone: "text-muted-foreground" };
 }
@@ -171,7 +181,7 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
           </thead>
           <tbody>
             {orders.map((o) => {
-              const pay = paymentLabel(o.status);
+              const pay = paymentLabel(o.status, o.payment);
               const count = o.items.reduce((s, i) => s + i.quantity, 0);
               return (
                 <tr key={o.id}>
@@ -213,7 +223,7 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
       {/* stacked cards on mobile */}
       <ul className="space-y-3 sm:hidden">
         {orders.map((o) => {
-          const pay = paymentLabel(o.status);
+          const pay = paymentLabel(o.status, o.payment);
           const count = o.items.reduce((s, i) => s + i.quantity, 0);
           return (
             <li key={o.id} className="rounded-lg border border-border p-3">

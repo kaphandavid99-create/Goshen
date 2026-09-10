@@ -283,6 +283,34 @@ export const fr: Dictionary = {
     networkError: "Erreur réseau. Réessayez.",
     placingOrder: "Envoi de la commande…",
     placeOrder: "Passer la commande",
+    payment: "Paiement",
+    payCash: "Payer à la livraison ou au retrait (espèces)",
+    payMomo: "Payer maintenant avec MTN MoMo",
+    momoNumber: "Numéro MTN MoMo",
+    momoHint:
+      "Vous recevrez une demande sur ce numéro pour approuver le paiement avec votre code PIN.",
+    pointsCashOnly:
+      "Les points ne sont utilisables que sur les commandes en espèces.",
+    payAmountMomo: (amount: string) => `Payer ${amount} avec MoMo`,
+  },
+
+  pay: {
+    kicker: "Paiement",
+    amount: "Montant",
+    checkPhone: "Vérifiez votre téléphone",
+    checkPhoneHint:
+      "Approuvez la demande de paiement MTN MoMo avec votre code PIN. Cette page se met à jour automatiquement.",
+    stillPending: "En attente d'approbation",
+    stillPendingHint:
+      "Cela prend plus de temps que d'habitude. Approuvez-le sur votre téléphone, ou revenez plus tard — nous vous préviendrons dès que c'est validé.",
+    keepWaiting: "Continuer à attendre",
+    goToOrder: "Voir la commande",
+    paid: "Paiement reçu — redirection vers votre commande.",
+    failed: "Le paiement n'a pas abouti",
+    tryAgain: "Réessayer",
+    cancelOrder: "Annuler cette commande",
+    error: "Une erreur s'est produite. Réessayez.",
+    finishPayment: "Terminer le paiement →",
   },
 
   about: {
@@ -871,6 +899,7 @@ export const fr: Dictionary = {
   },
 
   orderStatus: {
+    AWAITING_PAYMENT: "Paiement en attente",
     PENDING: "En attente",
     CONFIRMED: "Confirmée",
     RECEIVED: "Reçue",

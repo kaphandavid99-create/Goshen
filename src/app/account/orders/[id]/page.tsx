@@ -48,6 +48,15 @@ export default async function OrderDetailPage({
         {order.channel === "WHOLESALE" ? t.orders.wholesaleNote : t.orders.payNote}
       </p>
 
+      {order.status === "AWAITING_PAYMENT" && order.payment ? (
+        <Link
+          href={`/pay/${order.payment.id}`}
+          className="btn btn-rose mt-6 inline-flex"
+        >
+          {t.pay.finishPayment}
+        </Link>
+      ) : null}
+
       <section className="card mt-8 p-6">
         <OrderProgress status={order.status} />
       </section>

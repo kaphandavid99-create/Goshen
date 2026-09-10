@@ -34,7 +34,11 @@ export default async function AccountOrdersPage() {
           {orders.map((order) => (
             <li key={order.id}>
               <Link
-                href={`/account/orders/${order.id}`}
+                href={
+                  order.status === "AWAITING_PAYMENT" && order.payment
+                    ? `/pay/${order.payment.id}`
+                    : `/account/orders/${order.id}`
+                }
                 className="card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between"
               >
                 <span>
@@ -54,9 +58,11 @@ export default async function AccountOrdersPage() {
                     {formatPrice(order.totalCents, locale)}
                   </span>
                   <span className="mt-1 block text-muted-foreground">
-                    {order.status === "CONFIRMED"
-                      ? t.account.orders.acceptedConfirm
-                      : orderStatusLabel(order.status, locale)}
+                    {order.status === "AWAITING_PAYMENT"
+                      ? t.pay.finishPayment
+                      : order.status === "CONFIRMED"
+                        ? t.account.orders.acceptedConfirm
+                        : orderStatusLabel(order.status, locale)}
                   </span>
                 </span>
               </Link>

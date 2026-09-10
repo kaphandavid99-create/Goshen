@@ -1,6 +1,7 @@
 import "server-only";
 
 import { Prisma } from "@prisma/client";
+import type { OrderStatus } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { POINT_VALUE_FCFA } from "@/lib/constants";
 
@@ -133,7 +134,13 @@ export function resolveRange(param?: string): ResolvedRange {
 /*  Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
-const NOT_CANCELLED = { status: { not: "CANCELLED" as const } };
+// Excludes cancelled orders and MoMo orders still waiting on payment (which
+// aren't real revenue and the shop never sees).
+const NOT_CANCELLED = {
+  status: {
+    notIn: ["CANCELLED", "AWAITING_PAYMENT"] satisfies OrderStatus[],
+  },
+};
 
 /** Percentage change vs previous period. `null` when there is no baseline. */
 export function pctChange(current: number, previous: number): number | null {
@@ -219,8 +226,15 @@ export async function getKpis(range: ResolvedRange) {
       _sum: { totalCents: true },
       where: { ...NOT_CANCELLED, createdAt: { gte: todayStart } },
     }),
-    prisma.order.count({ where: { createdAt: { gte: range.start, lt: range.end } } }),
-    prisma.order.count({ where: { createdAt: { gte: range.prevStart, lt: range.prevEnd } } }),
+    prisma.order.count({
+      where: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
+    }),
+    prisma.order.count({
+      where: {
+        ...NOT_CANCELLED,
+        createdAt: { gte: range.prevStart, lt: range.prevEnd },
+      },
+    }),
     prisma.order.count({ where: { status: "PENDING" } }),
     prisma.order.count({ where: { status: "RECEIVED" } }),
     prisma.user.count({ where: { role: "CUSTOMER" } }),
@@ -312,6 +326,7 @@ export async function getOrderStatusBreakdown() {
   const rows = await withRetry(() =>
     prisma.order.groupBy({
       by: ["status"],
+      where: { status: { not: "AWAITING_PAYMENT" } },
       _count: { status: true },
       orderBy: { status: "asc" },
     }),
@@ -447,8 +462,10 @@ export async function getRecentOrders(take = 8) {
   return withRetry(() =>
     prisma.order.findMany({
       take,
+      where: { status: { not: "AWAITING_PAYMENT" } },
       orderBy: { createdAt: "desc" },
       include: {
+        payment: { select: { method: true, status: true } },
         user: { select: { name: true, email: true, avatarUrl: true } },
         items: {
           include: {

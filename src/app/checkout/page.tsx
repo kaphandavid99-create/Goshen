@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CheckoutForm } from "@/app/checkout/checkout-form";
 import { PageIntro } from "@/components/layout/page-intro";
+import { isMomoConfigured } from "@/lib/env";
 import { getDict } from "@/lib/i18n/server";
 import { listAddresses, getAccountProfile } from "@/server/account/hub";
 import { getUserPoints } from "@/server/account/referrals";
@@ -30,6 +31,7 @@ export default async function CheckoutPage() {
         defaultPhone={profile?.phone ?? ""}
         points={points}
         addresses={addresses}
+        momoAvailable={isMomoConfigured()}
       />
     </main>
   );

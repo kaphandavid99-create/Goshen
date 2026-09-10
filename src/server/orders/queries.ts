@@ -6,7 +6,7 @@ export async function listOrdersForUser(userId: string) {
   try {
     return await prisma.order.findMany({
       where: { userId },
-      include: { items: true },
+      include: { items: true, payment: { select: { id: true, method: true } } },
       orderBy: { createdAt: "desc" },
     });
   } catch {
@@ -34,6 +34,7 @@ export async function getOrderForUser(userId: string, orderId: string) {
         items: { include: orderItemBundleInclude },
         reviews: true,
         testimonial: true,
+        payment: { select: { id: true, method: true, status: true } },
       },
     });
   } catch {
