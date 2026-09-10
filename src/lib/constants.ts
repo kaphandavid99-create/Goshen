@@ -69,7 +69,7 @@ export const DRINK_FLAVORS = [
 export type DrinkFlavor = (typeof DRINK_FLAVORS)[number];
 
 /** Minimum total value (FCFA) for a wholesale order to be placed. */
-export const WHOLESALE_MIN_ORDER_CENTS = 50_000;
+export const WHOLESALE_MIN_ORDER_CENTS = 10_000;
 
 export const WHOLESALE = {
   href: "/wholesale",
