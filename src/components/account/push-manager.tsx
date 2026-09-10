@@ -5,7 +5,22 @@ import { IconBell, IconCheck } from "@/components/icons";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useT } from "@/lib/i18n/context";
 
-const VAPID_PUBLIC_KEY = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "";
+const VAPID_PUBLIC_KEY = (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "")
+  .trim()
+  .replace(/^["']|["']$/g, "");
+
+function describeError(err: unknown) {
+  if (err instanceof Error && err.message) {
+    return `${err.name}: ${err.message}`;
+  }
+  return String(err);
+}
+
+function sameKey(a: ArrayBuffer | null | undefined, b: Uint8Array) {
+  if (!a) return false;
+  const view = new Uint8Array(a);
+  return view.length === b.length && view.every((byte, i) => byte === b[i]);
+}
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -30,7 +45,7 @@ export function PushManager() {
 
   const syncToServer = useCallback(async (sub: PushSubscription) => {
     const json = sub.toJSON();
-    await fetch("/api/account/push", {
+    const response = await fetch("/api/account/push", {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -45,6 +60,12 @@ export function PushManager() {
         },
       }),
     });
+    if (!response.ok) {
+      const data = (await response.json().catch(() => ({}))) as {
+        error?: string;
+      };
+      throw new Error(data.error ?? `Server responded ${response.status}`);
+    }
   }, []);
 
   useEffect(() => {
@@ -96,21 +117,38 @@ export function PushManager() {
     setBusy(true);
     setError(null);
     try {
-      const permission = await Notification.requestPermission();
-      if (permission !== "granted") {
-        setState(permission === "denied" ? "blocked" : "off");
-        return;
+      if (Notification.permission !== "granted") {
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted") {
+          setState(permission === "denied" ? "blocked" : "off");
+          return;
+        }
       }
 
       const registration = await navigator.serviceWorker.ready;
-      const sub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-      });
+      const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+
+      // Reuse an existing subscription, but drop it first if it was made with a
+      // different VAPID key (otherwise subscribe() throws InvalidStateError).
+      let sub = await registration.pushManager.getSubscription();
+      if (
+        sub &&
+        !sameKey(sub.options.applicationServerKey, applicationServerKey)
+      ) {
+        await sub.unsubscribe();
+        sub = null;
+      }
+      if (!sub) {
+        sub = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey,
+        });
+      }
+
       await syncToServer(sub);
       setState("on");
-    } catch {
-      setError(p.error);
+    } catch (err) {
+      setError(`${p.error} (${describeError(err)})`);
     } finally {
       setBusy(false);
     }
@@ -136,8 +174,8 @@ export function PushManager() {
       }
       setState("off");
       setTested(false);
-    } catch {
-      setError(p.error);
+    } catch (err) {
+      setError(`${p.error} (${describeError(err)})`);
     } finally {
       setBusy(false);
     }
@@ -152,10 +190,15 @@ export function PushManager() {
         credentials: "same-origin",
         headers: { "x-csrf-token": await readCsrf() },
       });
-      if (!response.ok) throw new Error("failed");
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as {
+          error?: string;
+        };
+        throw new Error(data.error ?? `Server responded ${response.status}`);
+      }
       setTested(true);
-    } catch {
-      setError(p.error);
+    } catch (err) {
+      setError(`${p.error} (${describeError(err)})`);
     } finally {
       setBusy(false);
     }
