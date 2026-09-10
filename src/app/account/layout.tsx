@@ -3,7 +3,6 @@ import { AccountNav } from "@/components/account/account-nav";
 import { Avatar } from "@/components/account/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { PageIntro } from "@/components/layout/page-intro";
-import { InstallPrompt } from "@/components/pwa/install-prompt";
 import { getDict } from "@/lib/i18n/server";
 import { countUnreadNotifications } from "@/server/account/hub";
 import { consumeFirstDashboardVisit } from "@/server/account/welcome";
@@ -37,7 +36,6 @@ export default async function AccountLayout({
         <LogoutButton />
       </div>
       <AccountNav unread={unread} />
-      <InstallPrompt />
       <div className="mt-8">{children}</div>
     </div>
   );

@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { StoreChrome } from "@/components/layout/store-chrome";
 import { PageTransition } from "@/components/motion/page-transition";
+import { InstallBanner } from "@/components/pwa/install-banner";
 import { ThemeProvider } from "@/components/theme-provider";
 import { LOCALE_BCP47 } from "@/lib/i18n/config";
 import { LanguageProvider } from "@/lib/i18n/context";
@@ -69,6 +70,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
             <StoreChrome header={<SiteHeader />} footer={<SiteFooter />}>
               <PageTransition>{children}</PageTransition>
             </StoreChrome>
+            <InstallBanner />
           </ThemeProvider>
         </LanguageProvider>
       </body>
