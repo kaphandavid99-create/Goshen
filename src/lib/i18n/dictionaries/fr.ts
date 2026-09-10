@@ -488,6 +488,24 @@ export const fr: Dictionary = {
       empty: "Les mises à jour de commande et alertes de fidélité apparaîtront ici.",
     },
 
+    push: {
+      title: "Alertes sur le téléphone",
+      blurb:
+        "Recevez une alerte sur ce téléphone pour chaque mise à jour de commande, réservation et récompense — même quand Goshen est fermé dans votre navigateur.",
+      loading: "Vérification de cet appareil…",
+      unsupported:
+        "Ce navigateur ne peut pas afficher les alertes. Installez Goshen sur votre écran d'accueil et ouvrez-le depuis là.",
+      blocked:
+        "Les notifications sont bloquées pour Goshen dans les réglages de votre navigateur. Autorisez-les, puis rechargez cette page.",
+      enable: "Activer les alertes",
+      working: "En cours…",
+      on: "Les alertes sont activées sur cet appareil.",
+      disable: "Désactiver",
+      test: "Envoyer une alerte test",
+      testSent: "Envoyée. Elle devrait apparaître sur cet appareil dans un instant.",
+      error: "Une erreur s'est produite. Réessayez.",
+    },
+
     addresses: {
       title: "Adresses enregistrées",
       intro:
@@ -671,6 +689,18 @@ export const fr: Dictionary = {
     unableToPlace: "Impossible de passer la commande.",
     placingOrder: "Envoi de la commande…",
     placeWholesaleOrder: "Passer la commande de gros",
+  },
+
+  pwa: {
+    install: {
+      title: "Ajoutez Goshen à votre téléphone",
+      blurb:
+        "Installez la boutique comme une application — une icône sur l'écran d'accueil, une navigation plein écran et un chargement plus rapide. Sans passer par un store.",
+      action: "Installer l'application",
+      iosHint:
+        "Appuyez sur le bouton Partager dans Safari, puis choisissez « Sur l'écran d'accueil » pour installer Goshen.",
+      dismiss: "Fermer",
+    },
   },
 
   nipz: {

@@ -27,6 +27,11 @@ export const env = {
   googleClientSecret: (process.env.GOOGLE_CLIENT_SECRET ?? "").trim(),
   geminiApiKey: (process.env.GEMINI_API_KEY ?? "").trim(),
   assistantModel: (process.env.ASSISTANT_MODEL ?? "gemini-2.5-flash").trim(),
+  vapidPublicKey: (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "").trim(),
+  vapidPrivateKey: (process.env.VAPID_PRIVATE_KEY ?? "").trim(),
+  vapidSubject: (
+    process.env.VAPID_SUBJECT ?? "mailto:kaphandavid99@gmail.com"
+  ).trim(),
 };
 
 export function isCloudinaryConfigured() {
@@ -41,6 +46,10 @@ export function isGoogleAuthConfigured() {
 
 export function isAssistantConfigured() {
   return Boolean(env.geminiApiKey);
+}
+
+export function isPushConfigured() {
+  return Boolean(env.vapidPublicKey && env.vapidPrivateKey);
 }
 
 export const isProduction = env.nodeEnv === "production";

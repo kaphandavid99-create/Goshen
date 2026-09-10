@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -9,6 +9,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { LOCALE_BCP47 } from "@/lib/i18n/config";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { getLocale } from "@/lib/i18n/server";
+import { APP_NAME, BRAND_COLORS } from "@/lib/constants";
+import { env } from "@/lib/env";
 import "./globals.css";
 
 const inter = Inter({
@@ -21,9 +23,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: BRAND_COLORS.green,
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   return {
+    metadataBase: new URL(env.appUrl),
+    applicationName: APP_NAME,
     title: {
       default: "Goshen",
       template: "%s · Goshen",
@@ -32,6 +40,16 @@ export async function generateMetadata(): Promise<Metadata> {
       locale === "fr"
         ? "Alimentation, maison et soins personnels à New Bell, Bamenda."
         : "Groceries, household, and personal care from New Bell, Bamenda.",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: APP_NAME,
+    },
+    icons: {
+      icon: "/logo.png",
+      shortcut: "/logo.png",
+      apple: "/logo.png",
+    },
   };
 }
 

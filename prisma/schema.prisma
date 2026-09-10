@@ -57,8 +57,24 @@ model User {
   wholesaleApplication WholesaleApplication?
   adminActivity        AdminActivity[]
   chatThreads          ChatThread[]
+  pushSubscriptions    PushSubscription[]
 
   @@index([referredById])
+}
+
+// A browser/device push endpoint for a signed-in user. One row per install —
+// the same person can be subscribed from several phones or browsers at once.
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique @db.Text
+  p256dh    String   @db.Text
+  auth      String   @db.Text
+  userAgent String?  @db.Text
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Session {

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PushManager } from "@/components/account/push-manager";
 import { formatDate } from "@/lib/dates";
 import { getDict, getI18n } from "@/lib/i18n/server";
 import {
@@ -24,6 +25,7 @@ export default async function AccountNotificationsPage() {
   return (
     <section>
       <h2 className="section-title">{t.account.notifications.title}</h2>
+      <PushManager />
       {notifications.length === 0 ? (
         <p className="card mt-4 p-5 text-sm text-muted-foreground">
           {t.account.notifications.empty}

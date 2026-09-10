@@ -485,6 +485,24 @@ export const en = {
       empty: "Order updates and reward alerts will appear here.",
     },
 
+    push: {
+      title: "Phone alerts",
+      blurb:
+        "Get a pop-up on this phone for every order update, booking and reward — even when Goshen is closed in your browser.",
+      loading: "Checking this device…",
+      unsupported:
+        "This browser can't show phone alerts. Install Goshen to your home screen and open it from there.",
+      blocked:
+        "Notifications are blocked for Goshen in your browser settings. Allow them there, then reload this page.",
+      enable: "Turn on alerts",
+      working: "Working…",
+      on: "Alerts are on for this device.",
+      disable: "Turn off",
+      test: "Send a test alert",
+      testSent: "Sent. It should appear on this device in a moment.",
+      error: "Something went wrong. Try again.",
+    },
+
     addresses: {
       title: "Saved addresses",
       intro: "Keep delivery details here and reuse them at checkout.",
@@ -670,6 +688,18 @@ export const en = {
     unableToPlace: "Unable to place the order.",
     placingOrder: "Placing order…",
     placeWholesaleOrder: "Place wholesale order",
+  },
+
+  pwa: {
+    install: {
+      title: "Add Goshen to your phone",
+      blurb:
+        "Install the shop like an app — a home-screen icon, full-screen browsing and faster loads. No app store needed.",
+      action: "Install app",
+      iosHint:
+        "Tap the Share button in Safari, then choose “Add to Home Screen” to install Goshen.",
+      dismiss: "Dismiss",
+    },
   },
 
   nipz: {
