@@ -463,6 +463,24 @@ body {
   opacity: 0.45;
 }
 
+/* Shop catalog grid is 2-up on phones — stack the price and Add button so
+   they don't overflow the narrow card. */
+@media (max-width: 639px) {
+  .shop-grid .product-card {
+    padding: 0.6rem;
+  }
+
+  .shop-grid .product-card-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .shop-grid .product-card-add {
+    justify-content: center;
+  }
+}
+
 /* Compact product cards — used by the homepage "Today's deals" 3-up grid. */
 .deals-grid {
   display: grid;

@@ -119,7 +119,7 @@ export default async function ShopPage({
       {visible.length === 0 ? (
         <p className="mt-12 text-muted-foreground">{t.shop.noProducts}</p>
       ) : (
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="shop-grid mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
           {visible.map((product) => (
             <ProductCard
               key={product.id}
