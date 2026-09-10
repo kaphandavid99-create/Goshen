@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useT } from "@/lib/i18n/context";
 
 export function StarRating({
@@ -14,11 +15,11 @@ export function StarRating({
 
   return (
     <p
-      className="text-sm font-semibold tracking-wide text-accent"
+      className="text-sm font-semibold tracking-wide"
       aria-label={t.rating.outOf(rounded, max)}
     >
-      {"★".repeat(rounded)}
-      {"☆".repeat(max - rounded)}
+      <span className="text-star">{"★".repeat(rounded)}</span>
+      <span className="text-muted-foreground">{"★".repeat(max - rounded)}</span>
     </p>
   );
 }
@@ -33,19 +34,32 @@ export function StarPicker({
   onChange: (value: number) => void;
 }) {
   const t = useT();
+  const [hover, setHover] = useState(0);
+  const active = hover || value;
+
   return (
-    <div className="flex items-center gap-1" role="group" aria-label={t.rating.label}>
+    <div
+      className="flex items-center gap-1"
+      role="group"
+      aria-label={t.rating.label}
+      onMouseLeave={() => setHover(0)}
+    >
       {[1, 2, 3, 4, 5].map((score) => (
         <button
           key={score}
           type="button"
           name={name}
           onClick={() => onChange(score)}
-          className="text-xl leading-none text-accent"
+          onMouseEnter={() => setHover(score)}
+          onFocus={() => setHover(score)}
+          onBlur={() => setHover(0)}
+          className={`text-xl leading-none transition-colors ${
+            score <= active ? "text-star" : "text-muted-foreground"
+          }`}
           aria-pressed={score <= value}
           aria-label={t.rating.nStars(score)}
         >
-          {score <= value ? "★" : "☆"}
+          ★
         </button>
       ))}
     </div>
