@@ -130,6 +130,8 @@ export const fr: Dictionary = {
     removeOne: (flavor: string) => `Retirer un ${flavor}`,
     addOne: (flavor: string) => `Ajouter un ${flavor}`,
     quantityFor: (name: string) => `Quantité pour ${name}`,
+    decreaseQty: (name: string) => `Réduire la quantité de ${name}`,
+    increaseQty: (name: string) => `Augmenter la quantité de ${name}`,
     deliveryAddMore: (amount: string) =>
       ` · ajoutez ${amount} pour la livraison gratuite`,
     open: "Ouvrir le panier",
@@ -406,6 +408,7 @@ export const fr: Dictionary = {
       uploading: "Téléversement…",
       uploadFailed: "Échec du téléversement.",
       photoRemoveError: "Impossible de supprimer la photo.",
+      viewPhoto: "Voir la photo",
       avatarHint:
         "JPG, PNG ou WEBP jusqu'à 5 Mo. Aide la boutique à vous reconnaître.",
     },

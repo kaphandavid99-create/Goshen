@@ -110,21 +110,39 @@ export function CartView() {
                   {t.cart.flavorTotal(item.quantity)}
                 </span>
               ) : (
-                <>
-                  <label className="sr-only" htmlFor={`qty-${item.productId}`}>
-                    {t.cart.quantityFor(item.name)}
-                  </label>
-                  <input
-                    id={`qty-${item.productId}`}
-                    type="number"
-                    min={1}
-                    value={item.quantity}
-                    onChange={(event) =>
-                      setQuantity(item.productId, Number(event.target.value))
+                <div
+                  role="group"
+                  aria-label={t.cart.quantityFor(item.name)}
+                  className="inline-flex items-center rounded-lg border border-border bg-card"
+                >
+                  <button
+                    type="button"
+                    aria-label={t.cart.decreaseQty(item.name)}
+                    disabled={item.quantity <= 1}
+                    onClick={() =>
+                      setQuantity(item.productId, item.quantity - 1)
                     }
-                    className="field w-16 py-1.5"
-                  />
-                </>
+                    className="grid size-9 place-items-center rounded-l-lg text-lg leading-none text-foreground transition hover:bg-muted disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    −
+                  </button>
+                  <span
+                    aria-live="polite"
+                    className="w-9 text-center text-sm font-medium tabular-nums"
+                  >
+                    {item.quantity}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label={t.cart.increaseQty(item.name)}
+                    onClick={() =>
+                      setQuantity(item.productId, item.quantity + 1)
+                    }
+                    className="grid size-9 place-items-center rounded-r-lg text-lg leading-none text-foreground transition hover:bg-muted"
+                  >
+                    +
+                  </button>
+                </div>
               )}
               <button
                 type="button"

@@ -132,6 +132,8 @@ export const en = {
     removeOne: (flavor: string) => `Remove one ${flavor}`,
     addOne: (flavor: string) => `Add one ${flavor}`,
     quantityFor: (name: string) => `Quantity for ${name}`,
+    decreaseQty: (name: string) => `Decrease quantity of ${name}`,
+    increaseQty: (name: string) => `Increase quantity of ${name}`,
     deliveryAddMore: (amount: string) => ` · add ${amount} more for free delivery`,
     open: "Open cart",
   },
@@ -404,6 +406,7 @@ export const en = {
       uploading: "Uploading…",
       uploadFailed: "Upload failed.",
       photoRemoveError: "Could not remove the photo.",
+      viewPhoto: "View photo",
       avatarHint: "JPG, PNG, or WEBP up to 5 MB. Helps the shop recognise you.",
     },
 
