@@ -167,10 +167,23 @@ model ProductImage {
 }
 
 enum OrderStatus {
+  // A MoMo order sits here until payment clears; the shop never sees it.
+  AWAITING_PAYMENT
   PENDING
   CONFIRMED
   RECEIVED
   CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  MOMO
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
 }
 
 enum FulfillmentMethod {
@@ -202,9 +215,35 @@ model Order {
   items          OrderItem[]
   reviews        Review[]
   testimonial    Testimonial?
+  payment        Payment?
 
   @@index([userId])
   @@index([createdAt])
+}
+
+// One payment attempt per order. Cash payments are just a record; MoMo payments
+// carry the MTN request-to-pay reference and are settled by polling MoMo.
+model Payment {
+  id                     String        @id @default(cuid())
+  orderId                String        @unique
+  order                  Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  method                 PaymentMethod
+  status                 PaymentStatus @default(PENDING)
+  amountCents            Int
+  currency               String        @default("XAF")
+  // Payer MSISDN for MoMo (digits, international format).
+  phone                  String?
+  // Our X-Reference-Id sent to MoMo — also the id we poll status with.
+  momoReferenceId        String?       @unique
+  // MoMo's own transaction id, returned once the payment succeeds.
+  momoFinancialId        String?
+  failureReason          String?
+  attempts               Int           @default(1)
+  paidAt                 DateTime?
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  @@index([status])
 }
 
 model OrderItem {

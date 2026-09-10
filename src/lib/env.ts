@@ -39,6 +39,20 @@ export const env = {
     "VAPID_SUBJECT",
     "mailto:kaphandavid99@gmail.com",
   ),
+
+  // MTN MoMo Collections API. Sandbox and production share the same shape;
+  // only the base URL, target environment and currency differ.
+  momoEnv: readClean("MOMO_ENV", "sandbox"),
+  momoBaseUrl: readClean(
+    "MOMO_BASE_URL",
+    "https://sandbox.momodeveloper.mtn.com",
+  ),
+  momoTargetEnvironment: readClean("MOMO_TARGET_ENVIRONMENT", "sandbox"),
+  momoCollectionSubscriptionKey: readClean("MOMO_COLLECTION_SUBSCRIPTION_KEY"),
+  momoCollectionApiUser: readClean("MOMO_COLLECTION_API_USER"),
+  momoCollectionApiKey: readClean("MOMO_COLLECTION_API_KEY"),
+  momoCurrency: readClean("MOMO_CURRENCY", "EUR"),
+  momoCallbackUrl: readClean("MOMO_CALLBACK_URL"),
 };
 
 export function isCloudinaryConfigured() {
@@ -57,6 +71,14 @@ export function isAssistantConfigured() {
 
 export function isPushConfigured() {
   return Boolean(env.vapidPublicKey && env.vapidPrivateKey);
+}
+
+export function isMomoConfigured() {
+  return Boolean(
+    env.momoCollectionSubscriptionKey &&
+      env.momoCollectionApiUser &&
+      env.momoCollectionApiKey,
+  );
 }
 
 export const isProduction = env.nodeEnv === "production";

@@ -21,6 +21,8 @@ export const checkoutSchema = z
     address: z.string().trim().max(200).optional().or(z.literal("")),
     notes: z.string().trim().max(300).optional().or(z.literal("")),
     redeemPoints: z.boolean().optional(),
+    paymentMethod: z.enum(["CASH", "MOMO"]).default("CASH"),
+    momoPhone: z.string().trim().max(20).optional().or(z.literal("")),
     items: z.array(cartLineSchema).min(1, "Your cart is empty."),
   })
   .superRefine((value, ctx) => {
@@ -30,6 +32,16 @@ export const checkoutSchema = z
         path: ["address"],
         message: "Enter a delivery address.",
       });
+    }
+    if (value.paymentMethod === "MOMO") {
+      const digits = (value.momoPhone ?? "").replace(/\D/g, "");
+      if (digits.length < 9) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["momoPhone"],
+          message: "Enter the MTN MoMo number to charge.",
+        });
+      }
     }
   });
 
