@@ -1,25 +1,18 @@
 import "server-only";
 
-import {
-  GoogleGenAI,
-  type Content,
-  type GenerateContentResponse,
-  type Part,
-} from "@google/genai";
 import { env, isAssistantConfigured } from "@/lib/env";
 import { SYSTEM_PROMPT } from "@/server/assistant/prompt";
 import { assistantTools, runTool, type ToolContext } from "@/server/assistant/tools";
 import { answerWithRules, genericFallback } from "@/server/assistant/rules";
+import {
+  streamChatCompletion,
+  type GroqMessage,
+  type GroqToolCall,
+} from "@/server/assistant/groq";
 import { saveTurn, type ChatTurn, type ThreadOwner } from "@/server/assistant/threads";
 
 const MAX_ROUNDS = 6;
 const MAX_OUTPUT_TOKENS = 1024;
-
-let ai: GoogleGenAI | null = null;
-function client() {
-  if (!ai) ai = new GoogleGenAI({ apiKey: env.geminiApiKey });
-  return ai;
-}
 
 type StreamInput = {
   userMessage: string;
@@ -71,7 +64,7 @@ export function streamAssistantReply(input: StreamInput): ReadableStream<Uint8Ar
       };
 
       /**
-       * Backup path — used when Gemini is not configured, errors before it has
+       * Backup path — used when the model is not configured, errors before it has
        * streamed any text, or returns nothing usable. The deterministic rules
        * engine handles the common asks for free; `genericFallback` covers the rest.
        */
@@ -102,12 +95,15 @@ export function streamAssistantReply(input: StreamInput): ReadableStream<Uint8Ar
         return;
       }
 
-      const contents: Content[] = [
-        ...input.history.map((turn) => ({
-          role: turn.role,
-          parts: [{ text: turn.text }],
-        })),
-        { role: "user", parts: [{ text: input.userMessage }] },
+      const messages: GroqMessage[] = [
+        { role: "system", content: SYSTEM_PROMPT },
+        ...input.history.map(
+          (turn): GroqMessage =>
+            turn.role === "model"
+              ? { role: "assistant", content: turn.text }
+              : { role: "user", content: turn.text },
+        ),
+        { role: "user", content: input.userMessage },
       ];
 
       const answerParts: string[] = [];
@@ -116,63 +112,75 @@ export function streamAssistantReply(input: StreamInput): ReadableStream<Uint8Ar
 
       try {
         for (let round = 0; round < MAX_ROUNDS; round += 1) {
-          const stream = await client().models.generateContentStream({
+          const stream = streamChatCompletion({
             model: env.assistantModel,
-            contents,
-            config: {
-              systemInstruction: SYSTEM_PROMPT,
-              tools: [{ functionDeclarations: assistantTools }],
-              temperature: 0.4,
-              maxOutputTokens: MAX_OUTPUT_TOKENS,
-              thinkingConfig: { thinkingBudget: 0 },
-            },
+            messages,
+            tools: assistantTools,
+            temperature: 0.4,
+            max_tokens: MAX_OUTPUT_TOKENS,
           });
 
           let roundText = "";
-          const calls: { name: string; args: Record<string, unknown> }[] = [];
+          // Tool-call fragments arrive spread across chunks, keyed by index.
+          const partial: { id: string; name: string; args: string }[] = [];
 
-          for await (const chunk of stream as AsyncGenerator<GenerateContentResponse>) {
-            const delta = chunk.text;
-            if (delta) {
-              roundText += delta;
+          for await (const chunk of stream) {
+            const delta = chunk.choices?.[0]?.delta;
+            if (!delta) continue;
+
+            if (delta.content) {
+              roundText += delta.content;
               sentText = true;
-              send({ type: "text", delta });
+              send({ type: "text", delta: delta.content });
             }
-            for (const call of chunk.functionCalls ?? []) {
-              if (call.name) calls.push({ name: call.name, args: call.args ?? {} });
+
+            for (const call of delta.tool_calls ?? []) {
+              const slot = (partial[call.index] ??= { id: "", name: "", args: "" });
+              if (call.id) slot.id = call.id;
+              if (call.function?.name) slot.name += call.function.name;
+              if (call.function?.arguments) slot.args += call.function.arguments;
             }
           }
 
           if (roundText.trim()) answerParts.push(roundText.trim());
 
-          const modelParts: Part[] = [];
-          if (roundText) modelParts.push({ text: roundText });
-          for (const call of calls) {
-            modelParts.push({ functionCall: { name: call.name, args: call.args } });
-          }
-          contents.push({ role: "model", parts: modelParts });
+          const calls = partial.filter((c) => c && c.name);
+          const toolCalls: GroqToolCall[] = calls.map((c) => ({
+            id: c.id,
+            type: "function",
+            function: { name: c.name, arguments: c.args || "{}" },
+          }));
 
-          if (!calls.length) break;
+          messages.push({
+            role: "assistant",
+            content: roundText || null,
+            ...(toolCalls.length ? { tool_calls: toolCalls } : {}),
+          });
 
-          const responseParts: Part[] = [];
+          if (!toolCalls.length) break;
+
           for (const call of calls) {
             send({ type: "tool", name: call.name });
-            const output = await runTool(call.name, call.args, input.ctx);
-            toolTrace.push({ name: call.name, input: call.args });
-            responseParts.push({
-              functionResponse: {
-                name: call.name,
-                response: { result: output },
-              },
+            let args: Record<string, unknown> = {};
+            try {
+              args = call.args ? (JSON.parse(call.args) as Record<string, unknown>) : {};
+            } catch {
+              // Model emitted invalid JSON args — run the tool with none.
+            }
+            const output = await runTool(call.name, args, input.ctx);
+            toolTrace.push({ name: call.name, input: args });
+            messages.push({
+              role: "tool",
+              tool_call_id: call.id,
+              content: JSON.stringify(output),
             });
           }
-          contents.push({ role: "user", parts: responseParts });
         }
 
         const assistantText = answerParts.join("\n\n");
 
         if (!assistantText) {
-          // Gemini produced no usable text. If nothing has reached the client
+          // The model produced no usable text. If nothing has reached the client
           // yet, hand off to the backup engine; otherwise close politely.
           if (!sentText) {
             await runBackup();
@@ -187,7 +195,7 @@ export function streamAssistantReply(input: StreamInput): ReadableStream<Uint8Ar
 
         await finish(assistantText, toolTrace);
       } catch (error) {
-        console.error("[assistant] gemini error", error);
+        console.error("[assistant] groq error", error);
 
         // Clean failure before any text was streamed — fall back silently.
         if (!sentText) {

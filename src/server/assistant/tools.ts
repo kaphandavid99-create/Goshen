@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { FunctionDeclaration } from "@google/genai";
+import type { GroqTool } from "@/server/assistant/groq";
 import {
   DELIVERY_FEE,
   FREE_DELIVERY_FROM,
@@ -54,12 +54,20 @@ const HELP_TOPICS = {
 
 type HelpTopic = keyof typeof HELP_TOPICS;
 
-export const assistantTools: FunctionDeclaration[] = [
-  {
-    name: "search_products",
-    description:
-      "Search the Goshen catalogue. Use for questions like 'do you have rice', 'show me cooking oil under 2000', 'what's on offer'. Returns up to 8 products with links.",
-    parametersJsonSchema: {
+/** Wrap a bare JSON Schema in the OpenAI/Groq function-tool envelope. */
+function tool(
+  name: string,
+  description: string,
+  parameters: Record<string, unknown> = { type: "object", properties: {} },
+): GroqTool {
+  return { type: "function", function: { name, description, parameters } };
+}
+
+export const assistantTools: GroqTool[] = [
+  tool(
+    "search_products",
+    "Search the Goshen catalogue. Use for questions like 'do you have rice', 'show me cooking oil under 2000', 'what's on offer'. Returns up to 8 products with links.",
+    {
       type: "object",
       properties: {
         query: { type: "string", description: "Free-text search, e.g. a product name or keyword." },
@@ -69,51 +77,35 @@ export const assistantTools: FunctionDeclaration[] = [
         dealsOnly: { type: "boolean", description: "Only products that are on offer (featured deals)." },
       },
     },
-  },
-  {
-    name: "get_product_details",
-    description: "Get the full details for one product by its slug (the last part of its /shop/<slug> URL).",
-    parametersJsonSchema: {
+  ),
+  tool(
+    "get_product_details",
+    "Get the full details for one product by its slug (the last part of its /shop/<slug> URL).",
+    { type: "object", properties: { slug: { type: "string" } }, required: ["slug"] },
+  ),
+  tool("list_categories", "List the product categories in the shop, with links."),
+  tool(
+    "get_my_orders",
+    "List the signed-in customer's recent orders with status and totals. Requires the customer to be signed in.",
+  ),
+  tool(
+    "get_order_details",
+    "Get one of the signed-in customer's orders by its order number (e.g. GOS-20260101-1234), including items and status. Requires sign in.",
+    { type: "object", properties: { orderNumber: { type: "string" } }, required: ["orderNumber"] },
+  ),
+  tool(
+    "get_loyalty_status",
+    "Get the signed-in customer's loyalty points balance, what it is worth right now, how to earn more, and their referral link. Requires sign in.",
+  ),
+  tool(
+    "get_help_topic",
+    "Get the shop's standard explanation and page link for a common topic (delivery, payment, wholesale, cakes, rewards, returns, hours_location, account, contact).",
+    {
       type: "object",
-      properties: { slug: { type: "string" } },
-      required: ["slug"],
-    },
-  },
-  {
-    name: "list_categories",
-    description: "List the product categories in the shop, with links.",
-    parametersJsonSchema: { type: "object", properties: {} },
-  },
-  {
-    name: "get_my_orders",
-    description: "List the signed-in customer's recent orders with status and totals. Requires the customer to be signed in.",
-    parametersJsonSchema: { type: "object", properties: {} },
-  },
-  {
-    name: "get_order_details",
-    description: "Get one of the signed-in customer's orders by its order number (e.g. GOS-20260101-1234), including items and status. Requires sign in.",
-    parametersJsonSchema: {
-      type: "object",
-      properties: { orderNumber: { type: "string" } },
-      required: ["orderNumber"],
-    },
-  },
-  {
-    name: "get_loyalty_status",
-    description: "Get the signed-in customer's loyalty points balance, what it is worth right now, how to earn more, and their referral link. Requires sign in.",
-    parametersJsonSchema: { type: "object", properties: {} },
-  },
-  {
-    name: "get_help_topic",
-    description: "Get the shop's standard explanation and page link for a common topic (delivery, payment, wholesale, cakes, rewards, returns, hours_location, account, contact).",
-    parametersJsonSchema: {
-      type: "object",
-      properties: {
-        topic: { type: "string", enum: Object.keys(HELP_TOPICS) },
-      },
+      properties: { topic: { type: "string", enum: Object.keys(HELP_TOPICS) } },
       required: ["topic"],
     },
-  },
+  ),
 ];
 
 function asString(value: unknown) {

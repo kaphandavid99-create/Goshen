@@ -31,8 +31,8 @@ export const env = {
   cloudinaryApiSecret: process.env.CLOUDINARY_API_SECRET ?? "",
   googleClientId: (process.env.GOOGLE_CLIENT_ID ?? "").trim(),
   googleClientSecret: (process.env.GOOGLE_CLIENT_SECRET ?? "").trim(),
-  geminiApiKey: (process.env.GEMINI_API_KEY ?? "").trim(),
-  assistantModel: (process.env.ASSISTANT_MODEL ?? "gemini-2.5-flash").trim(),
+  groqApiKey: readClean("GROQ_API_KEY"),
+  assistantModel: readClean("ASSISTANT_MODEL", "openai/gpt-oss-120b"),
   vapidPublicKey: readClean("NEXT_PUBLIC_VAPID_PUBLIC_KEY"),
   vapidPrivateKey: readClean("VAPID_PRIVATE_KEY"),
   vapidSubject: readClean(
@@ -66,7 +66,7 @@ export function isGoogleAuthConfigured() {
 }
 
 export function isAssistantConfigured() {
-  return Boolean(env.geminiApiKey);
+  return Boolean(env.groqApiKey);
 }
 
 export function isPushConfigured() {
