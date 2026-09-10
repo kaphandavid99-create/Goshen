@@ -55,6 +55,7 @@ export const en = {
   nav: {
     home: "Home",
     shop: "Shop",
+    bundles: "Bundles",
     deals: "Deals",
     wholesale: "Wholesale",
     rewards: "Rewards",
@@ -171,6 +172,10 @@ export const en = {
     todaysDeals: "Today's deals",
     limitedTime: "Limited time",
     viewAllDeals: "View all deals",
+    bundles: {
+      title: "Value bundles",
+      seeAll: "See all bundles",
+    },
     promoStayHome: "Stay home. We will bring the shop to you.",
     promoStayHomeBody:
       "Order groceries and household staples for delivery across Bamenda.",
@@ -195,6 +200,17 @@ export const en = {
       starsOutOf5: (n: number) => `${n} out of 5 stars`,
       verifiedOn: (date: string) => `Verified customer · ${date}`,
     },
+  },
+
+  bundles: {
+    kicker: "Save time",
+    title: "Bundles",
+    intro:
+      "Ready-made sets at one price — add a whole shop in a single tap.",
+    empty: "No bundles right now.",
+    whatsInside: "What's inside",
+    someOut: "One of the products in this bundle is out of stock right now.",
+    contains: "Contains:",
   },
 
   shop: {

@@ -97,6 +97,11 @@ export default async function AdminProductsPage() {
                           <span>
                             <span className="block font-semibold text-primary">
                               {product.name}
+                              {product.kind === "BUNDLE" ? (
+                                <span className="ml-2 rounded-full border border-border px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">
+                                  Bundle · {product._count.bundleItems}
+                                </span>
+                              ) : null}
                             </span>
                             <span className="text-xs text-muted-foreground">
                               {product.unit}

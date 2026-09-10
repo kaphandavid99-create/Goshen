@@ -59,6 +59,12 @@
       "name": "Other Groceries",
       "slug": "other-groceries",
       "description": "Everything else for the pantry and the shopping list."
+    },
+    {
+      "id": "bundles-category",
+      "name": "Bundles",
+      "slug": "bundles",
+      "description": "Ready-made sets of products at one price."
     }
   ],
   "products": []

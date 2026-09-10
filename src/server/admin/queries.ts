@@ -123,6 +123,11 @@ export async function getAdminOrder(orderId: string) {
           product: {
             select: {
               inStock: true,
+              kind: true,
+              bundleItems: {
+                orderBy: { sortOrder: "asc" },
+                include: { product: { select: { name: true, unit: true } } },
+              },
               images: {
                 orderBy: { sortOrder: "asc" },
                 select: {
@@ -151,6 +156,10 @@ export async function getAdminProduct(productId: string) {
     include: {
       category: { select: { name: true, slug: true } },
       images: { orderBy: { sortOrder: "asc" } },
+      bundleItems: {
+        orderBy: { sortOrder: "asc" },
+        include: { product: { select: { name: true, unit: true } } },
+      },
     },
   });
 }
@@ -161,7 +170,17 @@ export async function listAdminProducts() {
     include: {
       category: { select: { name: true, slug: true } },
       images: { orderBy: { sortOrder: "asc" }, take: 1 },
+      _count: { select: { bundleItems: true } },
     },
+  });
+}
+
+/** Simple products only — the pool an admin can drop into a bundle. */
+export async function listAdminSimpleProducts() {
+  return prisma.product.findMany({
+    where: { kind: "SIMPLE" },
+    orderBy: { name: "asc" },
+    select: { id: true, name: true, unit: true },
   });
 }
 

@@ -53,6 +53,7 @@ export const fr: Dictionary = {
   nav: {
     home: "Accueil",
     shop: "Boutique",
+    bundles: "Lots",
     deals: "Promos",
     wholesale: "Gros",
     rewards: "Fidélité",
@@ -170,6 +171,10 @@ export const fr: Dictionary = {
     todaysDeals: "Promos du jour",
     limitedTime: "Durée limitée",
     viewAllDeals: "Voir toutes les promos",
+    bundles: {
+      title: "Lots avantageux",
+      seeAll: "Voir tous les lots",
+    },
     promoStayHome: "Restez chez vous. Nous vous apportons la boutique.",
     promoStayHomeBody:
       "Commandez alimentation et produits ménagers en livraison partout à Bamenda.",
@@ -194,6 +199,17 @@ export const fr: Dictionary = {
       starsOutOf5: (n: number) => `${n} étoiles sur 5`,
       verifiedOn: (date: string) => `Client vérifié · ${date}`,
     },
+  },
+
+  bundles: {
+    kicker: "Gagnez du temps",
+    title: "Lots",
+    intro:
+      "Des ensembles prêts à l'emploi à un seul prix — toute une course en un clic.",
+    empty: "Aucun lot pour le moment.",
+    whatsInside: "Ce que contient le lot",
+    someOut: "Un des produits de ce lot est en rupture de stock pour l'instant.",
+    contains: "Contient :",
   },
 
   shop: {

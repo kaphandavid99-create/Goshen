@@ -84,6 +84,18 @@ export default async function OrderDetailPage({
                       {flavors}
                     </span>
                   ) : null}
+                  {item.product?.kind === "BUNDLE" &&
+                  item.product.bundleItems.length > 0 ? (
+                    <span className="mt-1 block text-xs text-muted-foreground">
+                      {t.bundles.contains}{" "}
+                      {item.product.bundleItems
+                        .map(
+                          (part) =>
+                            `${part.quantity}× ${part.product.name}`,
+                        )
+                        .join(", ")}
+                    </span>
+                  ) : null}
                 </span>
                 <span>{formatPrice(item.priceCents * item.quantity, locale)}</span>
               </li>

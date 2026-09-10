@@ -122,6 +122,46 @@ export function TodaysDeals({
   );
 }
 
+export function Bundles({
+  bundles,
+  savedIds = [],
+}: {
+  bundles: CatalogProduct[];
+  savedIds?: string[];
+}) {
+  const t = useT();
+  const saved = new Set(savedIds);
+  const shown = bundles.slice(0, 3);
+
+  if (shown.length === 0) {
+    return null;
+  }
+
+  return (
+    <Reveal>
+      <section id="bundles" className="page-wrap scroll-mt-28 py-6 sm:py-10">
+        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
+          <h2 className="section-title">{t.home.bundles.title}</h2>
+        </div>
+        <div className="deals-grid">
+          {shown.map((bundle) => (
+            <ProductCard
+              key={bundle.id}
+              product={bundle}
+              saved={saved.has(bundle.id)}
+            />
+          ))}
+        </div>
+        <div className="mt-5 flex justify-center sm:mt-6">
+          <Link href="/bundles" className="btn btn-outline">
+            {t.home.bundles.seeAll}
+          </Link>
+        </div>
+      </section>
+    </Reveal>
+  );
+}
+
 export function PromoSidebar() {
   const reduce = useReducedMotion();
   const t = useT();

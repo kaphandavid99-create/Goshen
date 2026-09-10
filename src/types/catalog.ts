@@ -13,6 +13,16 @@ export type CatalogProductImage = {
   sortOrder: number;
 };
 
+export type BundleComponent = {
+  productId: string;
+  name: string;
+  slug: string;
+  unit: string;
+  quantity: number;
+  imageUrl: string | null;
+  inStock: boolean;
+};
+
 export type CatalogProduct = {
   id: string;
   name: string;
@@ -22,6 +32,10 @@ export type CatalogProduct = {
   /** Optional flat wholesale unit price; null when not sold wholesale. */
   wholesalePriceCents: number | null;
   unit: string;
+  /**
+   * For bundles this is the *effective* stock: false when the bundle itself is
+   * off, or when any product inside it is out of stock.
+   */
   inStock: boolean;
   featured: boolean;
   categoryId: string;
@@ -29,6 +43,10 @@ export type CatalogProduct = {
   images: CatalogProductImage[];
   /** Drink flavours a shopper can pick from; empty for everything else. */
   flavors: string[];
+  /** "SIMPLE" for normal products, "BUNDLE" for admin-assembled sets. */
+  kind: "SIMPLE" | "BUNDLE";
+  /** Present only on bundles: the products it contains, in display order. */
+  bundleItems?: BundleComponent[];
   rating?: number | null;
   reviewCount?: number;
 };

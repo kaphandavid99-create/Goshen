@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/motion/reveal";
@@ -45,8 +46,12 @@ export default async function ProductPage({
 
   const image = primaryMedia(product.images);
   const compareAt = dealCompareAt(product.priceCents, product.featured);
+  const isBundle = product.kind === "BUNDLE";
+  const bundleItems = product.bundleItems ?? [];
   const drinkFlavors =
-    product.category.slug === DRINKS_CATEGORY_SLUG ? product.flavors : [];
+    !isBundle && product.category.slug === DRINKS_CATEGORY_SLUG
+      ? product.flavors
+      : [];
   const user = await getCurrentUser();
   const saved = user
     ? await isInWishlist(user.id, product.id).catch(() => false)
@@ -76,7 +81,10 @@ export default async function ProductPage({
       </div>
       <Reveal className="flex flex-col justify-center" delay={0.08}>
         <p className="kicker">
-          <Link href={`/shop?category=${product.category.slug}`} className="hover:underline">
+          <Link
+            href={isBundle ? "/bundles" : `/shop?category=${product.category.slug}`}
+            className="hover:underline"
+          >
             {product.category.name}
           </Link>
         </p>
@@ -107,6 +115,48 @@ export default async function ProductPage({
         <p className="mt-6 max-w-xl leading-7 text-muted-foreground">
           {product.description}
         </p>
+
+        {isBundle && bundleItems.length > 0 ? (
+          <div className="mt-7 max-w-md">
+            <h2 className="section-title">{t.bundles.whatsInside}</h2>
+            <ul className="mt-3 divide-y divide-border rounded-xl border border-border">
+              {bundleItems.map((item) => (
+                <li
+                  key={item.productId}
+                  className="flex items-center gap-3 p-3"
+                >
+                  <span className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-muted">
+                    {item.imageUrl ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.name}
+                        fill
+                        sizes="44px"
+                        className="object-contain p-1"
+                        unoptimized
+                      />
+                    ) : null}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium text-primary">
+                      {item.name}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {item.unit}
+                    </span>
+                  </span>
+                  <span className="shrink-0 text-sm font-semibold text-primary tabular-nums">
+                    × {item.quantity}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            {!product.inStock ? (
+              <p className="mt-2 text-sm text-accent">{t.bundles.someOut}</p>
+            ) : null}
+          </div>
+        ) : null}
+
         <div className="mt-8 max-w-xs space-y-3">
           {drinkFlavors.length > 0 ? (
             <FlavorPicker product={product} flavors={drinkFlavors} />

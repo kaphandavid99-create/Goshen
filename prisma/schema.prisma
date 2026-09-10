@@ -83,6 +83,11 @@ model Category {
   products    Product[]
 }
 
+enum ProductKind {
+  SIMPLE
+  BUNDLE
+}
+
 model Product {
   id                  String         @id @default(cuid())
   name                String
@@ -96,6 +101,9 @@ model Product {
   stockCount          Int            @default(0)
   lowStockAt          Int            @default(5)
   featured            Boolean        @default(false)
+  // SIMPLE: a normal product. BUNDLE: a fixed set of other products sold at one
+  // admin-set price (`bundleItems`).
+  kind                ProductKind    @default(SIMPLE)
   // For drinks: the flavour names a shopper can pick from (JSON array of strings).
   flavors             Json?
   categoryId          String
@@ -104,11 +112,29 @@ model Product {
   orderItems          OrderItem[]
   reviews             Review[]
   wishlistItems       WishlistItem[]
+  // When kind = BUNDLE: what's in it. When SIMPLE: the bundles that contain it.
+  bundleItems         BundleItem[]   @relation("BundleParent")
+  inBundles           BundleItem[]   @relation("BundleChild")
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
 
   @@index([categoryId])
   @@index([featured])
+  @@index([kind])
+}
+
+model BundleItem {
+  id        String  @id @default(cuid())
+  bundleId  String
+  bundle    Product @relation("BundleParent", fields: [bundleId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation("BundleChild", fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int     @default(1)
+  sortOrder Int     @default(0)
+
+  @@unique([bundleId, productId])
+  @@index([bundleId])
+  @@index([productId])
 }
 
 model ProductImage {

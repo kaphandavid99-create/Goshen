@@ -168,6 +168,18 @@ export default async function AdminOrderPage({
                         </p>
                       ) : null;
                     })()}
+                    {item.product?.kind === "BUNDLE" &&
+                    item.product.bundleItems.length > 0 ? (
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        Bundle:{" "}
+                        {item.product.bundleItems
+                          .map(
+                            (part) =>
+                              `${part.quantity}× ${part.product.name} (${part.product.unit})`,
+                          )
+                          .join(", ")}
+                      </p>
+                    ) : null}
                     {removed ? (
                       <p className="mt-1 text-xs text-accent">
                         Product deleted from the catalogue — photos below are from

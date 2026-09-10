@@ -6,11 +6,15 @@ import { deliveryFeeFor } from "@/lib/constants";
 import { prisma } from "@/lib/db/prisma";
 import {
   flavorQuantityTotal,
-  normalizeFlavorList,
   normalizeFlavorQuantities,
 } from "@/lib/flavors";
 import { redeemableDiscount, spendPointsFor } from "@/lib/points";
-import { getProductById, getProductBySlug } from "@/server/catalog/queries";
+import {
+  bundleItemsInclude,
+  getProductById,
+  getProductBySlug,
+  hydrateProduct,
+} from "@/server/catalog/queries";
 import { awardReferralOnPurchase } from "@/server/account/referrals";
 import { createNotification } from "@/server/account/notifications";
 import type { CheckoutInput } from "@/validators/order";
@@ -29,12 +33,15 @@ async function resolveProduct(productId: string, slug: string) {
   try {
     const product = await prisma.product.findUnique({
       where: { slug },
-      include: { images: { orderBy: { sortOrder: "asc" } } },
+      include: {
+        images: { orderBy: { sortOrder: "asc" } },
+        bundleItems: bundleItemsInclude,
+      },
     });
 
     if (product) {
       return {
-        product: { ...product, flavors: normalizeFlavorList(product.flavors) },
+        product: hydrateProduct(product),
         fromDatabase: true as const,
       };
     }

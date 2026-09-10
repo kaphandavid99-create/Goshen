@@ -10,11 +10,12 @@ type SeedImage = Pick<CatalogProductImage, "url" | "alt" | "sortOrder">;
 
 type SeedProduct = Omit<
   CatalogProduct,
-  "category" | "images" | "flavors" | "wholesalePriceCents"
+  "category" | "images" | "flavors" | "wholesalePriceCents" | "kind" | "bundleItems"
 > & {
   images: SeedImage[];
   flavors?: unknown;
   wholesalePriceCents?: number | null;
+  kind?: "SIMPLE" | "BUNDLE";
 };
 
 const categories: CatalogCategory[] = seedData.categories.map((category) => ({
@@ -38,6 +39,7 @@ export const fallbackProducts: CatalogProduct[] = (
   return {
     ...product,
     category,
+    kind: product.kind ?? "SIMPLE",
     wholesalePriceCents: product.wholesalePriceCents ?? null,
     flavors: normalizeFlavorList(product.flavors),
     images: product.images.map((image) => ({

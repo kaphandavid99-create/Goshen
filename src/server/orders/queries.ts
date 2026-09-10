@@ -14,12 +14,24 @@ export async function listOrdersForUser(userId: string) {
   }
 }
 
+export const orderItemBundleInclude = {
+  product: {
+    select: {
+      kind: true,
+      bundleItems: {
+        orderBy: { sortOrder: "asc" as const },
+        include: { product: { select: { name: true, unit: true } } },
+      },
+    },
+  },
+};
+
 export async function getOrderForUser(userId: string, orderId: string) {
   try {
     return await prisma.order.findFirst({
       where: { id: orderId, userId },
       include: {
-        items: true,
+        items: { include: orderItemBundleInclude },
         reviews: true,
         testimonial: true,
       },

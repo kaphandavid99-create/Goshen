@@ -29,9 +29,29 @@ const productDetailShape = {
   inStock: z.boolean(),
   featured: z.boolean(),
   flavors: z.array(z.enum(DRINK_FLAVORS)).max(DRINK_FLAVORS.length).optional(),
+  kind: z.enum(["SIMPLE", "BUNDLE"]).default("SIMPLE"),
+  bundleItems: z
+    .array(
+      z.object({
+        productId: z.string().trim().min(1),
+        quantity: z.number().int().min(1).max(50),
+      }),
+    )
+    .max(30)
+    .optional(),
 };
 
-export const adminProductCreateSchema = z.object(productDetailShape);
+export const adminProductCreateSchema = z
+  .object(productDetailShape)
+  .superRefine((value, ctx) => {
+    if (value.kind === "BUNDLE" && (value.bundleItems?.length ?? 0) < 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["bundleItems"],
+        message: "A bundle needs at least two products.",
+      });
+    }
+  });
 
 export const adminProductPatchSchema = z
   .object({
@@ -44,6 +64,8 @@ export const adminProductPatchSchema = z
     inStock: z.boolean().optional(),
     featured: z.boolean().optional(),
     flavors: productDetailShape.flavors,
+    kind: z.enum(["SIMPLE", "BUNDLE"]).optional(),
+    bundleItems: productDetailShape.bundleItems,
   })
   .refine((value) => Object.values(value).some((entry) => entry !== undefined), {
     message: "Nothing to update.",

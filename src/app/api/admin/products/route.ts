@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { slugify } from "@/lib/utils";
+import { BUNDLES_CATEGORY_SLUG } from "@/lib/constants";
 import { prisma } from "@/lib/db/prisma";
 import { getCurrentUser, isStaffRole } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
@@ -43,19 +44,69 @@ export async function POST(request: Request) {
     );
   }
 
+  const { bundleItems, kind, ...fields } = parsed.data;
+  const isBundle = kind === "BUNDLE";
+
+  // Bundles are always filed under the Bundles category.
+  let categoryId = fields.categoryId;
+  if (isBundle) {
+    const bundlesCategory = await prisma.category.findUnique({
+      where: { slug: BUNDLES_CATEGORY_SLUG },
+      select: { id: true },
+    });
+    if (!bundlesCategory) {
+      return jsonError(
+        "The Bundles category is missing. Run the database migration.",
+        500,
+      );
+    }
+    categoryId = bundlesCategory.id;
+  }
+
   const category = await prisma.category.findUnique({
-    where: { id: parsed.data.categoryId },
+    where: { id: categoryId },
     select: { id: true },
   });
   if (!category) {
     return jsonError("That category no longer exists.", 400);
   }
 
+  let components: { productId: string; quantity: number }[] = [];
+  if (isBundle) {
+    components = bundleItems ?? [];
+    const uniqueIds = [...new Set(components.map((item) => item.productId))];
+    if (uniqueIds.length !== components.length) {
+      return jsonError("A product is listed twice in the bundle.", 400);
+    }
+    const found = await prisma.product.findMany({
+      where: { id: { in: uniqueIds }, kind: "SIMPLE" },
+      select: { id: true },
+    });
+    if (found.length !== uniqueIds.length) {
+      return jsonError("One of the bundle products no longer exists.", 400);
+    }
+  }
+
   try {
     const product = await prisma.product.create({
       data: {
-        ...parsed.data,
-        slug: await uniqueSlug(parsed.data.name),
+        ...fields,
+        categoryId,
+        kind,
+        slug: await uniqueSlug(fields.name),
+        ...(isBundle
+          ? {
+              wholesalePriceCents: null,
+              flavors: [],
+              bundleItems: {
+                create: components.map((item, index) => ({
+                  productId: item.productId,
+                  quantity: item.quantity,
+                  sortOrder: index,
+                })),
+              },
+            }
+          : {}),
       },
       select: { id: true, slug: true },
     });

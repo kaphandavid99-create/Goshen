@@ -48,6 +48,9 @@ export const DELIVERY_FEE = 1_000;
 /** Category whose products can carry drink flavours. */
 export const DRINKS_CATEGORY_SLUG = "drinks-and-beverages";
 
+/** Category that holds bundle products (kind = BUNDLE). */
+export const BUNDLES_CATEGORY_SLUG = "bundles";
+
 /** The flavours a drink can be offered in. Admin picks which apply per product. */
 export const DRINK_FLAVORS = [
   "Ananas",
@@ -95,6 +98,7 @@ export function deliveryFeeFor(subtotal: number) {
 export const NAV_LINKS = [
   { href: "/", key: "home", label: "Home" },
   { href: "/shop", key: "shop", label: "Shop" },
+  { href: "/bundles", key: "bundles", label: "Bundles" },
   { href: "/shop?deals=1", key: "deals", label: "Deals" },
   { href: "/wholesale", key: "wholesale", label: "Wholesale" },
   { href: "/rewards", key: "rewards", label: "Rewards" },

@@ -31,9 +31,20 @@ export async function PATCH(
     );
   }
 
-  if (parsed.data.categoryId) {
+  const { bundleItems, ...fields } = parsed.data;
+
+  const existing = await prisma.product.findUnique({
+    where: { id },
+    select: { kind: true },
+  });
+  if (!existing) {
+    return jsonError("Product not found.", 404);
+  }
+  const isBundle = (fields.kind ?? existing.kind) === "BUNDLE";
+
+  if (fields.categoryId) {
     const category = await prisma.category.findUnique({
-      where: { id: parsed.data.categoryId },
+      where: { id: fields.categoryId },
       select: { id: true },
     });
     if (!category) {
@@ -41,20 +52,60 @@ export async function PATCH(
     }
   }
 
-  try {
-    const product = await prisma.product.update({
-      where: { id },
-      data: parsed.data,
-      select: {
-        id: true,
-        name: true,
-        priceCents: true,
-        unit: true,
-        inStock: true,
-        featured: true,
-        categoryId: true,
-      },
+  let components: { productId: string; quantity: number }[] | null = null;
+  if (bundleItems !== undefined) {
+    if (!isBundle) {
+      return jsonError("Only bundles can have products inside them.", 400);
+    }
+    if (bundleItems.length < 2) {
+      return jsonError("A bundle needs at least two products.", 400);
+    }
+    const uniqueIds = [...new Set(bundleItems.map((item) => item.productId))];
+    if (uniqueIds.length !== bundleItems.length) {
+      return jsonError("A product is listed twice in the bundle.", 400);
+    }
+    const found = await prisma.product.findMany({
+      where: { id: { in: uniqueIds }, kind: "SIMPLE" },
+      select: { id: true },
     });
+    if (found.length !== uniqueIds.length) {
+      return jsonError("One of the bundle products no longer exists.", 400);
+    }
+    components = bundleItems;
+  }
+
+  try {
+    const product = await prisma.$transaction(async (tx) => {
+      const updated = await tx.product.update({
+        where: { id },
+        data: fields,
+        select: {
+          id: true,
+          name: true,
+          priceCents: true,
+          unit: true,
+          inStock: true,
+          featured: true,
+          categoryId: true,
+          kind: true,
+        },
+      });
+
+      if (components) {
+        await tx.bundleItem.deleteMany({ where: { bundleId: id } });
+        await tx.bundleItem.createMany({
+          data: components.map((item, index) => ({
+            bundleId: id,
+            productId: item.productId,
+            quantity: item.quantity,
+            sortOrder: index,
+          })),
+        });
+      }
+
+      return updated;
+    });
+
     return Response.json({ product });
   } catch (error) {
     if (

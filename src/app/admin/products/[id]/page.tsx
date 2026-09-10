@@ -4,10 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeleteMediaButton, MediaUploader } from "@/components/admin/media-uploader";
 import { DeleteProductButton, ProductForm } from "@/components/admin/product-form";
+import { BUNDLES_CATEGORY_SLUG } from "@/lib/constants";
 import { isCloudinaryConfigured } from "@/lib/env";
 import { normalizeFlavorList } from "@/lib/flavors";
 import { formatPrice } from "@/lib/money";
-import { getAdminProduct } from "@/server/admin/queries";
+import { getAdminProduct, listAdminSimpleProducts } from "@/server/admin/queries";
 import { listCategories } from "@/server/catalog/queries";
 
 export const metadata: Metadata = {
@@ -20,9 +21,10 @@ export default async function AdminProductMediaPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [product, categories] = await Promise.all([
+  const [product, categories, allProducts] = await Promise.all([
     getAdminProduct(id),
     listCategories(),
+    listAdminSimpleProducts(),
   ]);
 
   if (!product) {
@@ -30,6 +32,9 @@ export default async function AdminProductMediaPage({
   }
 
   const configured = isCloudinaryConfigured();
+  const bundlesCategoryId = categories.find(
+    (category) => category.slug === BUNDLES_CATEGORY_SLUG,
+  )?.id;
 
   return (
     <main>
@@ -41,32 +46,6 @@ export default async function AdminProductMediaPage({
       <p className="mt-2 text-sm text-muted-foreground">
         {product.category.name} · {formatPrice(product.priceCents)} / {product.unit}
       </p>
-
-      <section className="card mt-8 p-5 sm:p-6">
-        <h2 className="section-title">Details</h2>
-        <p className="mt-2 mb-5 text-sm text-muted-foreground">
-          Update the name, price, unit, description, or category.
-        </p>
-        <ProductForm
-          productId={product.id}
-          categories={categories.map((category) => ({
-            id: category.id,
-            name: category.name,
-            slug: category.slug,
-          }))}
-          initial={{
-            name: product.name,
-            description: product.description,
-            priceCents: product.priceCents,
-            unit: product.unit,
-            categoryId: product.categoryId,
-            inStock: product.inStock,
-            featured: product.featured,
-            wholesalePriceCents: product.wholesalePriceCents,
-            flavors: normalizeFlavorList(product.flavors),
-          }}
-        />
-      </section>
 
       <section className="card mt-8 p-5 sm:p-6">
         <h2 className="section-title">Upload</h2>
@@ -123,6 +102,39 @@ export default async function AdminProductMediaPage({
             ))}
           </ul>
         )}
+      </section>
+
+      <section className="card mt-8 p-5 sm:p-6">
+        <h2 className="section-title">Details</h2>
+        <p className="mt-2 mb-5 text-sm text-muted-foreground">
+          Update the name, price, unit, description, or category.
+        </p>
+        <ProductForm
+          productId={product.id}
+          categories={categories.map((category) => ({
+            id: category.id,
+            name: category.name,
+            slug: category.slug,
+          }))}
+          allProducts={allProducts}
+          bundlesCategoryId={bundlesCategoryId}
+          initial={{
+            name: product.name,
+            description: product.description,
+            priceCents: product.priceCents,
+            unit: product.unit,
+            categoryId: product.categoryId,
+            inStock: product.inStock,
+            featured: product.featured,
+            wholesalePriceCents: product.wholesalePriceCents,
+            flavors: normalizeFlavorList(product.flavors),
+            kind: product.kind,
+            bundleItems: product.bundleItems.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+            })),
+          }}
+        />
       </section>
 
       <section className="card mt-8 border-accent/30 p-5 sm:p-6">
