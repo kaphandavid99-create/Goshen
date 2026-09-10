@@ -4,6 +4,37 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db/prisma";
 import { POINT_VALUE_FCFA } from "@/lib/constants";
 
+/**
+ * The dashboard fans out a lot of queries at once. On a remote pooled database
+ * (Supabase transaction pooler) a slow link or a momentarily saturated pool
+ * shows up as a transient "can't reach database server" (P1001) / timeout
+ * (P1002) / closed-connection (P1017). Those clear on a quick retry, so wrap
+ * each read batch rather than 500-ing the whole page.
+ */
+async function withRetry<T>(run: () => Promise<T>, attempts = 3): Promise<T> {
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      return await run();
+    } catch (error) {
+      const code =
+        error instanceof Prisma.PrismaClientKnownRequestError
+          ? error.code
+          : error instanceof Prisma.PrismaClientInitializationError
+            ? error.errorCode
+            : undefined;
+      const retryable =
+        code === "P1001" ||
+        code === "P1002" ||
+        code === "P1008" ||
+        code === "P1017";
+      if (!retryable || attempt >= attempts) {
+        throw error;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
+    }
+  }
+}
+
 /* ------------------------------------------------------------------ */
 /*  Date range                                                          */
 /* ------------------------------------------------------------------ */
@@ -175,7 +206,7 @@ export async function getKpis(range: ResolvedRange) {
     lowStockRows,
     activePoints,
     redeemedPoints,
-  ] = await prisma.$transaction([
+  ] = await withRetry(() => Promise.all([
     prisma.order.aggregate({
       _sum: { totalCents: true },
       where: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
@@ -206,7 +237,7 @@ export async function getKpis(range: ResolvedRange) {
       _sum: { pointsRedeemed: true },
       where: { pointsRedeemed: { gt: 0 } },
     }),
-  ]);
+  ]));
 
   const revenue = revNow._sum.totalCents ?? 0;
   const revenuePrev = revPrev._sum.totalCents ?? 0;
@@ -242,10 +273,12 @@ export async function getKpis(range: ResolvedRange) {
 /* ------------------------------------------------------------------ */
 
 export async function getSalesSeries(range: ResolvedRange) {
-  const orders = await prisma.order.findMany({
-    where: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
-    select: { createdAt: true, totalCents: true },
-  });
+  const orders = await withRetry(() =>
+    prisma.order.findMany({
+      where: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
+      select: { createdAt: true, totalCents: true },
+    }),
+  );
 
   const buckets = buildBuckets(range);
   const map = new Map(buckets.map((b) => [b.key, { revenueCents: 0, orders: 0 }]));
@@ -276,11 +309,13 @@ export async function getSalesSeries(range: ResolvedRange) {
 /* ------------------------------------------------------------------ */
 
 export async function getOrderStatusBreakdown() {
-  const rows = await prisma.order.groupBy({
-    by: ["status"],
-    _count: { status: true },
-    orderBy: { status: "asc" },
-  });
+  const rows = await withRetry(() =>
+    prisma.order.groupBy({
+      by: ["status"],
+      _count: { status: true },
+      orderBy: { status: "asc" },
+    }),
+  );
   const order = ["PENDING", "CONFIRMED", "RECEIVED", "CANCELLED"] as const;
   const labels: Record<string, string> = {
     PENDING: "Pending",
@@ -305,16 +340,18 @@ export async function getOrderStatusBreakdown() {
 /* ------------------------------------------------------------------ */
 
 export async function getCategorySales(range: ResolvedRange) {
-  const items = await prisma.orderItem.findMany({
-    where: {
-      order: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
-    },
-    select: {
-      quantity: true,
-      priceCents: true,
-      product: { select: { category: { select: { name: true } } } },
-    },
-  });
+  const items = await withRetry(() =>
+    prisma.orderItem.findMany({
+      where: {
+        order: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
+      },
+      select: {
+        quantity: true,
+        priceCents: true,
+        product: { select: { category: { select: { name: true } } } },
+      },
+    }),
+  );
 
   const map = new Map<string, { units: number; revenueCents: number }>();
   for (const it of items) {
@@ -341,21 +378,23 @@ export async function getCategorySales(range: ResolvedRange) {
 /* ------------------------------------------------------------------ */
 
 export async function getTopProducts(range: ResolvedRange, take = 5) {
-  const grouped = await prisma.orderItem.groupBy({
-    by: ["productId"],
-    where: {
-      productId: { not: null },
-      order: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
-    },
-    _sum: { quantity: true },
-    orderBy: { _sum: { quantity: "desc" } },
-    take,
-  });
+  const grouped = await withRetry(() =>
+    prisma.orderItem.groupBy({
+      by: ["productId"],
+      where: {
+        productId: { not: null },
+        order: { ...NOT_CANCELLED, createdAt: { gte: range.start, lt: range.end } },
+      },
+      _sum: { quantity: true },
+      orderBy: { _sum: { quantity: "desc" } },
+      take,
+    }),
+  );
 
   const ids = grouped.map((g) => g.productId!).filter(Boolean);
   if (ids.length === 0) return [];
 
-  const [products, revenueRows] = await Promise.all([
+  const [products, revenueRows] = await withRetry(() => Promise.all([
     prisma.product.findMany({
       where: { id: { in: ids } },
       select: {
@@ -376,7 +415,7 @@ export async function getTopProducts(range: ResolvedRange, take = 5) {
         AND o.status::text <> 'CANCELLED'
         AND o."createdAt" >= ${range.start} AND o."createdAt" < ${range.end}
       GROUP BY oi."productId"`,
-  ]);
+  ]));
 
   const byId = new Map(products.map((p) => [p.id, p]));
   const revById = new Map(revenueRows.map((r) => [r.productId, Number(r.revenue)]));
@@ -405,22 +444,28 @@ export async function getTopProducts(range: ResolvedRange, take = 5) {
 /* ------------------------------------------------------------------ */
 
 export async function getRecentOrders(take = 8) {
-  return prisma.order.findMany({
-    take,
-    orderBy: { createdAt: "desc" },
-    include: {
-      user: { select: { name: true, email: true, avatarUrl: true } },
-      items: {
-        include: {
-          product: {
-            select: {
-              images: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
+  return withRetry(() =>
+    prisma.order.findMany({
+      take,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true, email: true, avatarUrl: true } },
+        items: {
+          include: {
+            product: {
+              select: {
+                images: {
+                  take: 1,
+                  orderBy: { sortOrder: "asc" },
+                  select: { url: true },
+                },
+              },
             },
           },
         },
       },
-    },
-  });
+    }),
+  );
 }
 
 /* ------------------------------------------------------------------ */
@@ -428,25 +473,36 @@ export async function getRecentOrders(take = 8) {
 /* ------------------------------------------------------------------ */
 
 export async function getStockAlerts(take = 8) {
-  const rows = await prisma.$queryRaw<
-    { id: string; name: string; slug: string; stockCount: number; lowStockAt: number }[]
-  >`
+  const rows = await withRetry(
+    () =>
+      prisma.$queryRaw<
+        {
+          id: string;
+          name: string;
+          slug: string;
+          stockCount: number;
+          lowStockAt: number;
+        }[]
+      >`
     SELECT id, name, slug, "stockCount", "lowStockAt"
     FROM "Product"
     WHERE "stockCount" <= "lowStockAt"
     ORDER BY "stockCount" ASC, name ASC
-    LIMIT ${take}`;
+    LIMIT ${take}`,
+  );
 
   if (rows.length === 0) return [];
 
-  const meta = await prisma.product.findMany({
-    where: { id: { in: rows.map((r) => r.id) } },
-    select: {
-      id: true,
-      category: { select: { name: true } },
-      images: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
-    },
-  });
+  const meta = await withRetry(() =>
+    prisma.product.findMany({
+      where: { id: { in: rows.map((r) => r.id) } },
+      select: {
+        id: true,
+        category: { select: { name: true } },
+        images: { take: 1, orderBy: { sortOrder: "asc" }, select: { url: true } },
+      },
+    }),
+  );
   const byId = new Map(meta.map((m) => [m.id, m]));
 
   return rows.map((r) => ({
@@ -467,7 +523,7 @@ export async function getFulfilmentSummary(range: ResolvedRange) {
   const where = { createdAt: { gte: range.start, lt: range.end } };
 
   const [collected, outstanding, delivery, pickup, deliveryFees] =
-    await prisma.$transaction([
+    await withRetry(() => Promise.all([
       prisma.order.aggregate({
         _sum: { totalCents: true },
         _count: { _all: true },
@@ -484,7 +540,7 @@ export async function getFulfilmentSummary(range: ResolvedRange) {
         _sum: { deliveryCents: true },
         where: { ...where, ...NOT_CANCELLED },
       }),
-    ]);
+    ]));
 
   return {
     collectedCents: collected._sum.totalCents ?? 0,
@@ -503,7 +559,7 @@ export async function getFulfilmentSummary(range: ResolvedRange) {
 
 export async function getCustomerOverview(range: ResolvedRange) {
   const [total, newInRange, purchaserRows, returningRows, revenueAgg, growthUsers] =
-    await prisma.$transaction([
+    await withRetry(() => Promise.all([
       prisma.user.count({ where: { role: "CUSTOMER" } }),
       prisma.user.count({
         where: { role: "CUSTOMER", createdAt: { gte: range.start, lt: range.end } },
@@ -521,7 +577,7 @@ export async function getCustomerOverview(range: ResolvedRange) {
         select: { createdAt: true },
         orderBy: { createdAt: "asc" },
       }),
-    ]);
+    ]));
 
   const purchasers = Number(purchaserRows[0]?.n ?? 0);
   const returning = Number(returningRows[0]?.n ?? 0);
@@ -561,7 +617,7 @@ export async function getCustomerOverview(range: ResolvedRange) {
 
 export async function getLoyaltyOverview() {
   const [activeAgg, redeemedAgg, redemptionCount, topCustomers] =
-    await prisma.$transaction([
+    await withRetry(() => Promise.all([
       prisma.user.aggregate({ _sum: { points: true }, where: { role: "CUSTOMER" } }),
       prisma.order.aggregate({
         _sum: { pointsRedeemed: true },
@@ -574,7 +630,7 @@ export async function getLoyaltyOverview() {
         take: 5,
         select: { id: true, name: true, email: true, avatarUrl: true, points: true },
       }),
-    ]);
+    ]));
 
   const active = activeAgg._sum.points ?? 0;
   const redeemed = redeemedAgg._sum.pointsRedeemed ?? 0;
@@ -602,7 +658,7 @@ export async function getAdminAlerts() {
   const todayStart = startOfDay(new Date());
 
   const [pendingOrders, outOfStock, lowStockRows, newCustomers, wholesaleApps, cakeBookings] =
-    await prisma.$transaction([
+    await withRetry(() => Promise.all([
       prisma.order.count({ where: { status: "PENDING" } }),
       prisma.product.count({ where: { stockCount: { lte: 0 } } }),
       prisma.$queryRaw<{ n: bigint }[]>`
@@ -610,7 +666,7 @@ export async function getAdminAlerts() {
       prisma.user.count({ where: { role: "CUSTOMER", createdAt: { gte: todayStart } } }),
       prisma.wholesaleApplication.count({ where: { status: "PENDING" } }),
       prisma.cakeBooking.count({ where: { status: "NEW" } }),
-    ]);
+    ]));
 
   const lowStock = Number(lowStockRows[0]?.n ?? 0);
 
@@ -667,9 +723,11 @@ export async function getAdminAlerts() {
 /* ------------------------------------------------------------------ */
 
 export async function getRecentActivity(take = 8) {
-  return prisma.adminActivity.findMany({
-    take,
-    orderBy: { createdAt: "desc" },
-    include: { actor: { select: { name: true, avatarUrl: true } } },
-  });
+  return withRetry(() =>
+    prisma.adminActivity.findMany({
+      take,
+      orderBy: { createdAt: "desc" },
+      include: { actor: { select: { name: true, avatarUrl: true } } },
+    }),
+  );
 }
