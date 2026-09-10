@@ -9,6 +9,7 @@ import { getDict } from "@/lib/i18n/server";
 import { listWishlistProductIds } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { listCategories, listProducts } from "@/server/catalog/queries";
+import { getNipzContent } from "@/server/site/nipz";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getDict();
@@ -23,10 +24,11 @@ export default async function ShopPage({
   const { category, q, deals } = await searchParams;
   const showDeals = deals === "1";
   const [user, t] = await Promise.all([getCurrentUser(), getDict()]);
-  const [categories, products, savedIds] = await Promise.all([
+  const [categories, products, savedIds, nipz] = await Promise.all([
     listCategories(),
     listProducts(category, q),
     user ? listWishlistProductIds(user.id).catch(() => [] as string[]) : Promise.resolve([] as string[]),
+    getNipzContent(),
   ]);
   const saved = new Set(savedIds);
   const visible = showDeals
@@ -60,7 +62,7 @@ export default async function ShopPage({
             </span>
             <span>
               <span className="block text-sm font-bold text-primary">
-                {NIPZ.name}
+                {nipz.businessName}
               </span>
               <span className="block text-xs text-muted-foreground">
                 {t.shop.nipzBannerDesc}

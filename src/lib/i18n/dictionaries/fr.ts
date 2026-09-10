@@ -675,7 +675,7 @@ export const fr: Dictionary = {
 
   nipz: {
     metaDescription:
-      "Gâteaux, cupcakes, pâtisseries et tables de desserts sur commande chez Goshen à New Bell, Bamenda. Parcourez la galerie et réservez en ligne.",
+      "Gâteaux, cupcakes, pâtisseries et tables de desserts sur commande chez Goshen à New Bell, Bamenda. Réservez en ligne.",
     backToShop: "← Retour à la boutique",
     eyebrow: "Chez Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
@@ -692,16 +692,19 @@ export const fr: Dictionary = {
       pickupOrDelivery: "Retrait ou livraison",
       pickupOrDeliveryLabel: "Partout à Bamenda",
     },
-    galleryKicker: "La galerie",
-    galleryTitle: "Réalisations récentes",
+    galleryKicker: "Le menu",
+    galleryTitle: "Gâteaux & pâtisseries",
     galleryIntro:
-      "Un aperçu de ce qui sort de la cuisine Goshen. Les prix sont un point de départ et varient selon la taille, les étages et les détails.",
+      "Ce qui sort de la cuisine Goshen. Les prix sont un point de départ et varient selon la taille, les étages et les détails — appuyez sur Commander sur WhatsApp pour confirmer.",
     galleryEmpty:
       "De nouvelles photos arrivent bientôt. Contactez la pâtisserie pour le menu actuel.",
     all: "Tous",
     signature: "Signature",
     priceOnRequest: "Prix sur demande",
     bookThis: "Réserver",
+    orderOnWhatsapp: "Commander sur WhatsApp",
+    orderMessage: (business: string, item: string) =>
+      `Bonjour ${business}, je souhaite commander : ${item}. Merci de m'indiquer la disponibilité et le prix final.`,
     stepsKicker: "Comment réserver",
     stepsTitle: "Quatre étapes simples",
     steps: [

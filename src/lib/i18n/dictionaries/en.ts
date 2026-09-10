@@ -674,7 +674,7 @@ export const en = {
 
   nipz: {
     metaDescription:
-      "Custom cakes, cupcakes, pastries and dessert tables made to order at Goshen in New Bell, Bamenda. Browse the gallery and book online.",
+      "Custom cakes, cupcakes, pastries and dessert tables made to order at Goshen in New Bell, Bamenda. Book online.",
     backToShop: "← Back to Shop",
     eyebrow: "Inside Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
@@ -691,16 +691,19 @@ export const en = {
       pickupOrDelivery: "Pickup or delivery",
       pickupOrDeliveryLabel: "Across Bamenda",
     },
-    galleryKicker: "The gallery",
-    galleryTitle: "Recent bakes",
+    galleryKicker: "The menu",
+    galleryTitle: "Cakes & pastries",
     galleryIntro:
-      "A sample of what comes out of the Goshen kitchen. Prices are a starting point and change with size, tiers and detail.",
+      "What comes out of the Goshen kitchen. Prices are a starting point and change with size, tiers and detail — tap Order on WhatsApp to confirm.",
     galleryEmpty:
       "Fresh photos are on the way. Message the bakery for the current menu.",
     all: "All",
     signature: "Signature",
     priceOnRequest: "Price on request",
     bookThis: "Book this",
+    orderOnWhatsapp: "Order on WhatsApp",
+    orderMessage: (business: string, item: string) =>
+      `Hello ${business}, I'd like to order: ${item}. Please share availability and the final price.`,
     stepsKicker: "How booking works",
     stepsTitle: "Four simple steps",
     steps: [

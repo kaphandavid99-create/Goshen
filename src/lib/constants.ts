@@ -20,6 +20,9 @@ export const STORE = {
   directionsHref: `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MAP_QUERY)}`,
 };
 
+/** Number of grid photos shown in the Nipz page hero collage. */
+export const NIPZ_MAX_IMAGES = 3;
+
 export const NIPZ = {
   name: "Nipz Pretty Cakes & Pastries",
   shortName: "Nipz Pretty Cakes",
@@ -29,6 +32,7 @@ export const NIPZ = {
   // The bakery takes all bookings on its own WhatsApp line.
   phoneDisplay: "+237 671 283 634",
   phoneHref: "tel:+237671283634",
+  whatsapp: "237671283634",
   whatsappHref: "https://wa.me/237671283634",
   categories: ["Cakes", "Cupcakes", "Pastries", "Dessert tables"] as const,
   occasions: [

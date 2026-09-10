@@ -7,18 +7,19 @@ import { IconCake, IconCheck, IconClock, IconPhone, IconPin } from "@/components
 import { NIPZ, STORE } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
 import { listCakeItems } from "@/server/cakes/queries";
+import { getNipzContent } from "@/server/site/nipz";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getDict();
-  return { title: NIPZ.name, description: t.nipz.metaDescription };
+  const [nipz, t] = await Promise.all([getNipzContent(), getDict()]);
+  return { title: nipz.businessName, description: t.nipz.metaDescription };
 }
 
 export default async function NipzPage() {
-  const [items, t] = await Promise.all([listCakeItems(), getDict()]);
-  const collage = [
-    ...items.filter((item) => item.featured),
-    ...items.filter((item) => !item.featured),
-  ].slice(0, 3);
+  const [nipz, items, t] = await Promise.all([
+    getNipzContent(),
+    listCakeItems(),
+    getDict(),
+  ]);
 
   return (
     <main className="nipz page-wrap flex-1 py-10 sm:py-12">
@@ -31,21 +32,24 @@ export default async function NipzPage() {
           <div>
             <p className="nipz-eyebrow">
               <IconCake className="size-4" />
-              {t.nipz.eyebrow}
+              {nipz.eyebrow}
             </p>
             <h1 className="nipz-title">
-              {t.nipz.title} <em>{t.nipz.titleEm}</em>
+              {nipz.title}
+              {nipz.titleEm ? <em> {nipz.titleEm}</em> : null}
             </h1>
-            <p className="nipz-lead">{t.nipz.lead}</p>
+            <p className="nipz-lead">{nipz.lead}</p>
             <div className="nipz-hero-actions">
               <a href="#book" className="btn btn-rose">
                 {t.nipz.bookACake}
               </a>
-              <a href="#gallery" className="btn btn-outline">
-                {t.nipz.browseGallery}
-              </a>
+              {items.length > 0 ? (
+                <a href="#gallery" className="btn btn-outline">
+                  {t.nipz.browseGallery}
+                </a>
+              ) : null}
               <a
-                href={NIPZ.whatsappHref}
+                href={`https://wa.me/${nipz.whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
@@ -55,13 +59,13 @@ export default async function NipzPage() {
             </div>
           </div>
 
-          {collage.length > 0 ? (
+          {nipz.images.length > 0 ? (
             <div className="nipz-hero-collage">
-              {collage.map((item, index) => (
-                <figure key={item.id}>
+              {nipz.images.slice(0, 3).map((image, index) => (
+                <figure key={image.id}>
                   <Image
-                    src={item.imageUrl}
-                    alt={item.name}
+                    src={image.url}
+                    alt={image.alt}
                     fill
                     priority={index === 0}
                     sizes="(min-width: 900px) 22vw, 45vw"
@@ -88,18 +92,24 @@ export default async function NipzPage() {
         </div>
       </section>
 
-      <section id="gallery" className="mt-14 scroll-mt-24">
-        <p className="kicker">{t.nipz.galleryKicker}</p>
-        <h2 className="page-title text-[length:clamp(1.5rem,5vw,2.25rem)]">
-          {t.nipz.galleryTitle}
-        </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-          {t.nipz.galleryIntro}
-        </p>
-        <div className="mt-8">
-          <CakeGallery items={items} />
-        </div>
-      </section>
+      {items.length > 0 ? (
+        <section id="gallery" className="mt-14 scroll-mt-24">
+          <p className="kicker">{t.nipz.galleryKicker}</p>
+          <h2 className="page-title text-[length:clamp(1.5rem,5vw,2.25rem)]">
+            {t.nipz.galleryTitle}
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+            {t.nipz.galleryIntro}
+          </p>
+          <div className="mt-8">
+            <CakeGallery
+              items={items}
+              whatsappNumber={nipz.whatsappNumber}
+              businessName={nipz.businessName}
+            />
+          </div>
+        </section>
+      ) : null}
 
       <section className="mt-16">
         <p className="kicker">{t.nipz.stepsKicker}</p>
@@ -147,8 +157,13 @@ export default async function NipzPage() {
                 </p>
                 <p className="flex items-center gap-2 text-muted-foreground">
                   <IconPhone className="size-4 text-primary" />
-                  <a href={NIPZ.whatsappHref} target="_blank" rel="noopener noreferrer" className="btn-ghost">
-                    {NIPZ.phoneDisplay}
+                  <a
+                    href={`https://wa.me/${nipz.whatsappNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-ghost"
+                  >
+                    +{nipz.whatsappNumber}
                   </a>
                 </p>
               </div>

@@ -230,6 +230,28 @@ model HeroImage {
   sortOrder          Int     @default(0)
 }
 
+// Editable content for the Nipz Pretty Cakes page (/shop/nipz).
+model NipzSettings {
+  id             String   @id @default("nipz")
+  businessName   String
+  eyebrow        String
+  title          String
+  titleEm        String
+  lead           String   @db.Text
+  // Digits only, international format — the "Order on WhatsApp" links point here.
+  whatsappNumber String   @default("237671283634")
+  updatedAt      DateTime @updatedAt
+}
+
+// The three grid images in the Nipz page hero collage.
+model NipzImage {
+  id                 String  @id @default(cuid())
+  url                String  @db.Text
+  alt                String
+  cloudinaryPublicId String?
+  sortOrder          Int     @default(0)
+}
+
 model Review {
   id        String   @id @default(cuid())
   userId    String
