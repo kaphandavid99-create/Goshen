@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { MessageSquare, SendHorizonal, Sparkles, X } from "lucide-react";
+import { SendHorizonal, X } from "lucide-react";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useT } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
@@ -205,19 +205,48 @@ export function AssistantWidget() {
 
   return (
     <>
-      <button
+      <motion.button
         type="button"
         aria-label={open ? a.close : a.open}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
+        initial={reduce ? false : { scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={
+          reduce
+            ? { duration: 0 }
+            : { type: "spring", stiffness: 460, damping: 26, delay: 0.35 }
+        }
+        whileTap={reduce ? undefined : { scale: 0.94 }}
         className={cn(
-          "fixed right-4 z-[55] grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg transition hover:opacity-90",
+          "assistant-fab fixed right-4 z-[55] grid size-14 place-items-center rounded-full text-primary-foreground",
           "bottom-[calc(5rem+env(safe-area-inset-bottom))] lg:bottom-4",
           open && "sm:hidden",
         )}
       >
-        {open ? <X className="size-6" /> : <MessageSquare className="size-6" />}
-      </button>
+        {!open ? (
+          <>
+            <span aria-hidden className="assistant-fab-glow" />
+            <span aria-hidden className="assistant-fab-status" />
+          </>
+        ) : null}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={open ? "close" : "mark"}
+            className="grid place-items-center"
+            initial={reduce ? false : { rotate: -60, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={reduce ? { opacity: 0 } : { rotate: 60, opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.16 }}
+          >
+            {open ? (
+              <X className="size-6" />
+            ) : (
+              <AssistantMark className="size-7" />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
 
       <AnimatePresence>
         {open ? (
@@ -228,8 +257,8 @@ export function AssistantWidget() {
           >
             <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
               <div className="flex items-center gap-2">
-                <span className="grid size-8 place-items-center rounded-lg bg-muted text-primary">
-                  <Sparkles className="size-4" />
+                <span className="grid size-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+                  <AssistantMark className="size-4" />
                 </span>
                 <div>
                   <p className="text-sm font-semibold text-primary">{a.title}</p>
@@ -329,6 +358,43 @@ export function AssistantWidget() {
         ) : null}
       </AnimatePresence>
     </>
+  );
+}
+
+function AssistantMark({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className={className}
+    >
+      {/* support agent */}
+      <circle cx="12" cy="8.4" r="3.3" fill="currentColor" />
+      <path
+        d="M5.9 19.4c0-3.3 2.7-5.3 6.1-5.3s6.1 2 6.1 5.3c0 .5-.4.9-.9.9H6.8a.9.9 0 0 1-.9-.9Z"
+        fill="currentColor"
+      />
+      {/* headset */}
+      <path
+        d="M5.4 13.2v-1.6a6.6 6.6 0 0 1 13.2 0v1.6"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M5.4 12.4v2.5M18.6 12.4v2.5"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M18.6 14.9v.5a3.3 3.3 0 0 1-3.3 3.3h-1.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }
 
