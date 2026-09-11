@@ -42,6 +42,100 @@ function stripForSpeech(text: string) {
     .trim();
 }
 
+/**
+ * Best-effort voice selection for the assistant's spoken replies: prefer a
+ * voice for an African region of the current language, then lean toward a
+ * male-sounding one by name. The browser only ever offers voices already
+ * installed on the visitor's device, so there is no guarantee a matching
+ * voice exists — this just picks the closest thing available and nudges the
+ * pitch down a touch so the fallback still reads as a deeper, male-leaning
+ * voice.
+ */
+const AFRICAN_VOICE_LANGS: Record<"en" | "fr", string[]> = {
+  en: ["en-ng", "en-gh", "en-za", "en-ke", "en-tz"],
+  fr: ["fr-cm", "fr-ci", "fr-sn", "fr-cd", "fr-ml", "fr-ne"],
+};
+
+const MALE_NAME_HINTS = [
+  "male",
+  " man",
+  "guy",
+  "daniel",
+  "david",
+  "george",
+  "thomas",
+  "arthur",
+  "fred",
+  "james",
+  "mark",
+  "matthew",
+  "brian",
+  "eric",
+  "kevin",
+  "paul",
+  "luke",
+  "abeo",
+  "chilemba",
+  "obinna",
+  "kwame",
+  "kofi",
+  "sipho",
+  "themba",
+  "musa",
+];
+
+const FEMALE_NAME_HINTS = [
+  "female",
+  " woman",
+  "zira",
+  "hazel",
+  "samantha",
+  "victoria",
+  "susan",
+  "karen",
+  "moira",
+  "tessa",
+  "fiona",
+  "amelie",
+  "audrey",
+  "celine",
+  "julie",
+  "aurelie",
+  "ezinne",
+  "leah",
+  "asilia",
+  "amina",
+  "nneka",
+  "adaeze",
+];
+
+function scoreVoice(voice: SpeechSynthesisVoice, preferredLangs: string[]) {
+  const lang = voice.lang.toLowerCase();
+  const name = voice.name.toLowerCase();
+  let score = 0;
+
+  const langIndex = preferredLangs.indexOf(lang);
+  if (langIndex >= 0) score += 100 - langIndex;
+
+  if (MALE_NAME_HINTS.some((hint) => name.includes(hint))) score += 20;
+  if (FEMALE_NAME_HINTS.some((hint) => name.includes(hint))) score -= 20;
+
+  return score;
+}
+
+function pickVoice(voices: SpeechSynthesisVoice[], locale: "en" | "fr") {
+  if (!voices.length) return undefined;
+
+  const baseMatches = voices.filter((v) => v.lang.toLowerCase().startsWith(locale));
+  const pool = baseMatches.length ? baseMatches : voices;
+  const preferredLangs = AFRICAN_VOICE_LANGS[locale];
+
+  return pool.reduce<SpeechSynthesisVoice | undefined>((best, voice) => {
+    if (!best) return voice;
+    return scoreVoice(voice, preferredLangs) > scoreVoice(best, preferredLangs) ? voice : best;
+  }, undefined);
+}
+
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
@@ -76,6 +170,7 @@ export function AssistantWidget() {
 
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -96,6 +191,7 @@ export function AssistantWidget() {
       setMicSupported(mic);
       setVoiceSupported(voice);
       if (voice) {
+        setVoices(window.speechSynthesis.getVoices());
         try {
           setVoiceEnabled(window.localStorage.getItem(VOICE_KEY) === "1");
         } catch {
@@ -105,12 +201,21 @@ export function AssistantWidget() {
     }
 
     void detectSupport();
+
+    function handleVoicesChanged() {
+      setVoices(window.speechSynthesis.getVoices());
+    }
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.addEventListener("voiceschanged", handleVoicesChanged);
+    }
+
     return () => {
       cancelled = true;
       mediaRecorderRef.current?.stop();
       micStreamRef.current?.getTracks().forEach((track) => track.stop());
       if (typeof window !== "undefined" && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
+        window.speechSynthesis.removeEventListener("voiceschanged", handleVoicesChanged);
       }
     };
   }, []);
@@ -175,9 +280,17 @@ export function AssistantWidget() {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(plain);
       utterance.lang = locale === "fr" ? "fr-FR" : "en-US";
+      // Lean the voice male: pick the closest African-region match by name,
+      // and nudge the pitch down so even a fallback voice reads deeper.
+      const voice = pickVoice(voices, locale);
+      if (voice) {
+        utterance.voice = voice;
+        utterance.lang = voice.lang;
+      }
+      utterance.pitch = 0.82;
       window.speechSynthesis.speak(utterance);
     },
-    [voiceEnabled, locale],
+    [voiceEnabled, locale, voices],
   );
 
   const toggleVoice = useCallback(() => {
