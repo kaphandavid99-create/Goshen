@@ -11,20 +11,21 @@ function sortItems(items: CakeItem[]) {
   );
 }
 
-/** Public gallery — available items only, seed data when the database is down. */
+/**
+ * Public gallery — available items only. Falls back to sample photos only
+ * when the database itself is unreachable; a menu the admin has genuinely
+ * emptied out stays empty (the page shows its own "check back soon" state)
+ * rather than quietly reappearing the same stock photos they just deleted.
+ */
 export async function listCakeItems(): Promise<CakeItem[]> {
   try {
-    const items = await prisma.cakeItem.findMany({
+    return await prisma.cakeItem.findMany({
       where: { available: true },
       orderBy: [{ sortOrder: "asc" }, { name: "asc" }],
     });
-    if (items.length > 0) {
-      return items;
-    }
   } catch {
-    // Fall through to seed data.
+    return sortItems(fallbackCakeItems).filter((item) => item.available);
   }
-  return sortItems(fallbackCakeItems).filter((item) => item.available);
 }
 
 /** Admin view — every item regardless of availability. */
