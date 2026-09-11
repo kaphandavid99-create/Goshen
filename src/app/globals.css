@@ -137,7 +137,7 @@
   --color-brand-cream: #fdf8f1;
   --color-brand-orange: #e67e22;
   --font-sans: var(--font-sans-loaded);
-  --font-display: var(--font-sans-loaded);
+  --font-display: var(--font-brand-loaded);
   --font-mono: var(--font-geist-mono);
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -170,6 +170,29 @@ body {
   max-width: 76rem;
   min-width: 0;
   padding-inline: 1rem;
+}
+
+/* Mobile navbar logo: a quick full spin, once every 7 seconds. */
+@keyframes logo-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  11% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.logo-spin-mobile {
+  animation: logo-spin 7s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-spin-mobile {
+    animation: none;
+  }
 }
 
 @media (min-width: 640px) {

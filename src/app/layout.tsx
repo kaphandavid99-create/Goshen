@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist_Mono, Inter } from "next/font/google";
+import { Fraunces, Geist_Mono, Inter } from "next/font/google";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -22,6 +22,14 @@ const inter = Inter({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Distinctive display serif, used only for the "Goshen Provision" wordmark
+// in the mobile navbar.
+const fraunces = Fraunces({
+  variable: "--font-brand-loaded",
+  subsets: ["latin"],
+  style: ["italic"],
 });
 
 export const viewport: Viewport = {
@@ -61,7 +69,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={LOCALE_BCP47[locale]}
       suppressHydrationWarning
-      className={`${inter.variable} ${geistMono.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${geistMono.variable} ${fraunces.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <LanguageProvider locale={locale}>

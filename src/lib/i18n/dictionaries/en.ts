@@ -882,14 +882,6 @@ export const en = {
     micError: "Couldn't use the microphone. Please try again.",
     voiceEnable: "Read replies aloud",
     voiceDisable: "Stop reading replies aloud",
-    voiceOptionLabel: "Voice",
-    voiceAuto: "Automatic (African male, recommended)",
-    voiceAutoNoMale: "Automatic (no male voice on this device)",
-    voiceNoMaleNotice:
-      "This device doesn't have a male voice installed for this language, so replies will sound female until you install one in your phone or browser's voice settings.",
-    voiceTagMale: "(male)",
-    voiceTagFemale: "(female)",
-    voicePreviewSample: "Hi, this is how I'll sound when I answer you.",
     suggestions: [
       "Do you have rice and cooking oil?",
       "What can I buy with my points?",

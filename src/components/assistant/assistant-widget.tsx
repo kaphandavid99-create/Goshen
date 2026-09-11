@@ -43,141 +43,21 @@ function stripForSpeech(text: string) {
 }
 
 /**
- * Best-effort voice selection for the assistant's spoken replies: prefer a
- * voice for an African region of the current language, then lean toward a
- * male-sounding one by name. The browser only ever offers voices already
- * installed on the visitor's device, so there is no guarantee a matching
- * voice exists — this just picks the closest thing available and nudges the
- * pitch down a touch so the fallback still reads as a deeper, male-leaning
- * voice.
+ * Voice for the assistant's spoken replies: always United Kingdom English for
+ * English, plain French otherwise. No picker — this is just whichever voice
+ * the visitor's browser offers for that language tag.
  */
-const AFRICAN_VOICE_LANGS: Record<"en" | "fr", string[]> = {
-  en: ["en-ng", "en-gh", "en-za", "en-ke", "en-tz"],
-  fr: ["fr-cm", "fr-ci", "fr-sn", "fr-cd", "fr-ml", "fr-ne"],
+const SPEECH_LANG: Record<"en" | "fr", string> = {
+  en: "en-GB",
+  fr: "fr-FR",
 };
 
-// Cross-platform TTS voice names, gathered from Windows/Edge, macOS/iOS and
-// Android/Chrome's built-in voice sets, so the picker can tell male from
-// female voices by name (the Web Speech API exposes no gender field).
-const MALE_NAME_HINTS = [
-  "male",
-  "man",
-  "guy",
-  "daniel",
-  "david",
-  "george",
-  "thomas",
-  "arthur",
-  "fred",
-  "james",
-  "mark",
-  "matthew",
-  "brian",
-  "eric",
-  "kevin",
-  "paul",
-  "luke",
-  "alex",
-  "aaron",
-  "gordon",
-  "oliver",
-  "reed",
-  "rishi",
-  "ryan",
-  "christopher",
-  "roger",
-  "sean",
-  "liam",
-  "ravi",
-  "tom",
-  "bruce",
-  "albert",
-  "nathan",
-  "abeo",
-  "chilemba",
-  "obinna",
-  "kwame",
-  "kofi",
-  "sipho",
-  "themba",
-  "musa",
-];
-
-const FEMALE_NAME_HINTS = [
-  "female",
-  "woman",
-  "zira",
-  "hazel",
-  "samantha",
-  "victoria",
-  "susan",
-  "karen",
-  "moira",
-  "tessa",
-  "fiona",
-  "amelie",
-  "audrey",
-  "celine",
-  "julie",
-  "aurelie",
-  "ezinne",
-  "leah",
-  "asilia",
-  "amina",
-  "nneka",
-  "adaeze",
-  "kate",
-  "allison",
-  "ava",
-  "serena",
-  "nicky",
-  "vicki",
-  "veena",
-  "salli",
-  "joanna",
-];
-
-/** Word-boundary match so "female" never counts as a hit on "male". */
-function hasNameHint(name: string, hints: string[]) {
-  return hints.some((hint) => new RegExp(`\\b${hint}\\b`, "i").test(name));
-}
-
-function isLikelyMale(voice: SpeechSynthesisVoice) {
-  return hasNameHint(voice.name, MALE_NAME_HINTS) && !hasNameHint(voice.name, FEMALE_NAME_HINTS);
-}
-
-function scoreVoice(voice: SpeechSynthesisVoice, preferredLangs: string[]) {
-  const lang = voice.lang.toLowerCase();
-  let score = 0;
-
-  const langIndex = preferredLangs.indexOf(lang);
-  if (langIndex >= 0) score += 100 - langIndex;
-
-  if (isLikelyMale(voice)) score += 20;
-  else if (hasNameHint(voice.name, FEMALE_NAME_HINTS)) score -= 20;
-
-  return score;
-}
-
 function pickVoice(voices: SpeechSynthesisVoice[], locale: "en" | "fr") {
-  if (!voices.length) return undefined;
-
-  const baseMatches = voices.filter((v) => v.lang.toLowerCase().startsWith(locale));
-  const pool = baseMatches.length ? baseMatches : voices;
-  const preferredLangs = AFRICAN_VOICE_LANGS[locale];
-
-  return pool.reduce<SpeechSynthesisVoice | undefined>((best, voice) => {
-    if (!best) return voice;
-    return scoreVoice(voice, preferredLangs) > scoreVoice(best, preferredLangs) ? voice : best;
-  }, undefined);
-}
-
-/** Voices for the current language, best (African/male) match first, for the picker. */
-function voiceOptions(voices: SpeechSynthesisVoice[], locale: "en" | "fr") {
-  const preferredLangs = AFRICAN_VOICE_LANGS[locale];
-  return voices
-    .filter((v) => v.lang.toLowerCase().startsWith(locale))
-    .sort((x, y) => scoreVoice(y, preferredLangs) - scoreVoice(x, preferredLangs));
+  const targetLang = SPEECH_LANG[locale].toLowerCase();
+  return (
+    voices.find((v) => v.lang.toLowerCase() === targetLang) ??
+    voices.find((v) => v.lang.toLowerCase().startsWith(locale))
+  );
 }
 
 type ChatMessage = {
@@ -189,7 +69,6 @@ type ChatMessage = {
 
 const THREAD_KEY = "goshen_chat_thread";
 const VOICE_KEY = "goshen_chat_voice";
-const VOICE_URI_KEY = "goshen_chat_voice_uri";
 
 function uid() {
   return Math.random().toString(36).slice(2);
@@ -216,7 +95,6 @@ export function AssistantWidget() {
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [selectedVoiceURI, setSelectedVoiceURI] = useState("");
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -240,7 +118,6 @@ export function AssistantWidget() {
         setVoices(window.speechSynthesis.getVoices());
         try {
           setVoiceEnabled(window.localStorage.getItem(VOICE_KEY) === "1");
-          setSelectedVoiceURI(window.localStorage.getItem(VOICE_URI_KEY) ?? "");
         } catch {
           /* private mode */
         }
@@ -326,22 +203,15 @@ export function AssistantWidget() {
       if (!plain) return;
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(plain);
-      utterance.lang = locale === "fr" ? "fr-FR" : "en-US";
-      // A voice the customer picked themselves wins; otherwise lean the
-      // automatic pick male by nudging the pitch down so even a fallback
-      // voice reads deeper.
-      const picked = selectedVoiceURI
-        ? voices.find((v) => v.voiceURI === selectedVoiceURI)
-        : undefined;
-      const voice = picked ?? pickVoice(voices, locale);
+      utterance.lang = SPEECH_LANG[locale];
+      const voice = pickVoice(voices, locale);
       if (voice) {
         utterance.voice = voice;
         utterance.lang = voice.lang;
       }
-      utterance.pitch = picked ? 1 : 0.82;
       window.speechSynthesis.speak(utterance);
     },
-    [voiceEnabled, locale, voices, selectedVoiceURI],
+    [voiceEnabled, locale, voices],
   );
 
   const toggleVoice = useCallback(() => {
@@ -356,32 +226,6 @@ export function AssistantWidget() {
       return next;
     });
   }, [stopSpeaking]);
-
-  const voiceChoices = useMemo(() => voiceOptions(voices, locale), [voices, locale]);
-  const hasMaleVoice = useMemo(() => voiceChoices.some(isLikelyMale), [voiceChoices]);
-
-  const selectVoice = useCallback(
-    (uri: string) => {
-      setSelectedVoiceURI(uri);
-      try {
-        window.localStorage.setItem(VOICE_URI_KEY, uri);
-      } catch {
-        /* private mode */
-      }
-
-      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
-      const voice = uri ? voices.find((v) => v.voiceURI === uri) : pickVoice(voices, locale);
-      if (!voice) return;
-
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(a.voicePreviewSample);
-      utterance.voice = voice;
-      utterance.lang = voice.lang;
-      utterance.pitch = uri ? 1 : 0.82;
-      window.speechSynthesis.speak(utterance);
-    },
-    [voices, locale, a],
-  );
 
   const send = useCallback(
     async (raw: string) => {
@@ -739,32 +583,6 @@ export function AssistantWidget() {
                   </span>
                 ) : micError ? (
                   <span className="text-destructive">{micError}</span>
-                ) : null}
-              </div>
-            ) : null}
-
-            {voiceEnabled && voiceChoices.length > 0 ? (
-              <div className="space-y-1 border-t border-border px-4 py-2 text-xs">
-                <div className="flex items-center gap-2">
-                  <label htmlFor="assistant-voice" className="shrink-0 text-muted-foreground">
-                    {a.voiceOptionLabel}
-                  </label>
-                  <select
-                    id="assistant-voice"
-                    value={selectedVoiceURI}
-                    onChange={(e) => selectVoice(e.target.value)}
-                    className="field min-w-0 flex-1 py-1 text-xs"
-                  >
-                    <option value="">{hasMaleVoice ? a.voiceAuto : a.voiceAutoNoMale}</option>
-                    {voiceChoices.map((v) => (
-                      <option key={v.voiceURI} value={v.voiceURI}>
-                        {v.name} {isLikelyMale(v) ? a.voiceTagMale : a.voiceTagFemale}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {!hasMaleVoice ? (
-                  <p className="text-muted-foreground">{a.voiceNoMaleNotice}</p>
                 ) : null}
               </div>
             ) : null}
