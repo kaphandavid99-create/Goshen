@@ -136,6 +136,14 @@ function pickVoice(voices: SpeechSynthesisVoice[], locale: "en" | "fr") {
   }, undefined);
 }
 
+/** Voices for the current language, best (African/male) match first, for the picker. */
+function voiceOptions(voices: SpeechSynthesisVoice[], locale: "en" | "fr") {
+  const preferredLangs = AFRICAN_VOICE_LANGS[locale];
+  return voices
+    .filter((v) => v.lang.toLowerCase().startsWith(locale))
+    .sort((x, y) => scoreVoice(y, preferredLangs) - scoreVoice(x, preferredLangs));
+}
+
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
@@ -145,6 +153,7 @@ type ChatMessage = {
 
 const THREAD_KEY = "goshen_chat_thread";
 const VOICE_KEY = "goshen_chat_voice";
+const VOICE_URI_KEY = "goshen_chat_voice_uri";
 
 function uid() {
   return Math.random().toString(36).slice(2);
@@ -171,6 +180,7 @@ export function AssistantWidget() {
   const [voiceSupported, setVoiceSupported] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoiceURI, setSelectedVoiceURI] = useState("");
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -194,6 +204,7 @@ export function AssistantWidget() {
         setVoices(window.speechSynthesis.getVoices());
         try {
           setVoiceEnabled(window.localStorage.getItem(VOICE_KEY) === "1");
+          setSelectedVoiceURI(window.localStorage.getItem(VOICE_URI_KEY) ?? "");
         } catch {
           /* private mode */
         }
@@ -280,17 +291,21 @@ export function AssistantWidget() {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(plain);
       utterance.lang = locale === "fr" ? "fr-FR" : "en-US";
-      // Lean the voice male: pick the closest African-region match by name,
-      // and nudge the pitch down so even a fallback voice reads deeper.
-      const voice = pickVoice(voices, locale);
+      // A voice the customer picked themselves wins; otherwise lean the
+      // automatic pick male by nudging the pitch down so even a fallback
+      // voice reads deeper.
+      const picked = selectedVoiceURI
+        ? voices.find((v) => v.voiceURI === selectedVoiceURI)
+        : undefined;
+      const voice = picked ?? pickVoice(voices, locale);
       if (voice) {
         utterance.voice = voice;
         utterance.lang = voice.lang;
       }
-      utterance.pitch = 0.82;
+      utterance.pitch = picked ? 1 : 0.82;
       window.speechSynthesis.speak(utterance);
     },
-    [voiceEnabled, locale, voices],
+    [voiceEnabled, locale, voices, selectedVoiceURI],
   );
 
   const toggleVoice = useCallback(() => {
@@ -305,6 +320,31 @@ export function AssistantWidget() {
       return next;
     });
   }, [stopSpeaking]);
+
+  const voiceChoices = useMemo(() => voiceOptions(voices, locale), [voices, locale]);
+
+  const selectVoice = useCallback(
+    (uri: string) => {
+      setSelectedVoiceURI(uri);
+      try {
+        window.localStorage.setItem(VOICE_URI_KEY, uri);
+      } catch {
+        /* private mode */
+      }
+
+      if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+      const voice = uri ? voices.find((v) => v.voiceURI === uri) : pickVoice(voices, locale);
+      if (!voice) return;
+
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(a.voicePreviewSample);
+      utterance.voice = voice;
+      utterance.lang = voice.lang;
+      utterance.pitch = uri ? 1 : 0.82;
+      window.speechSynthesis.speak(utterance);
+    },
+    [voices, locale, a],
+  );
 
   const send = useCallback(
     async (raw: string) => {
@@ -663,6 +703,27 @@ export function AssistantWidget() {
                 ) : micError ? (
                   <span className="text-destructive">{micError}</span>
                 ) : null}
+              </div>
+            ) : null}
+
+            {voiceEnabled && voiceChoices.length > 0 ? (
+              <div className="flex items-center gap-2 border-t border-border px-4 py-2 text-xs">
+                <label htmlFor="assistant-voice" className="shrink-0 text-muted-foreground">
+                  {a.voiceOptionLabel}
+                </label>
+                <select
+                  id="assistant-voice"
+                  value={selectedVoiceURI}
+                  onChange={(e) => selectVoice(e.target.value)}
+                  className="field min-w-0 flex-1 py-1 text-xs"
+                >
+                  <option value="">{a.voiceAuto}</option>
+                  {voiceChoices.map((v) => (
+                    <option key={v.voiceURI} value={v.voiceURI}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             ) : null}
 

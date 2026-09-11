@@ -882,6 +882,9 @@ export const en = {
     micError: "Couldn't use the microphone. Please try again.",
     voiceEnable: "Read replies aloud",
     voiceDisable: "Stop reading replies aloud",
+    voiceOptionLabel: "Voice",
+    voiceAuto: "Automatic (African male, recommended)",
+    voicePreviewSample: "Hi, this is how I'll sound when I answer you.",
     suggestions: [
       "Do you have rice and cooking oil?",
       "What can I buy with my points?",

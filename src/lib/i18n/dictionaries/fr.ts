@@ -885,6 +885,9 @@ export const fr: Dictionary = {
     micError: "Impossible d'utiliser le microphone. Veuillez réessayer.",
     voiceEnable: "Lire les réponses à voix haute",
     voiceDisable: "Arrêter la lecture à voix haute",
+    voiceOptionLabel: "Voix",
+    voiceAuto: "Automatique (homme africain, recommandé)",
+    voicePreviewSample: "Bonjour, voici comment je vais sonner pour vous répondre.",
     suggestions: [
       "Avez-vous du riz et de l'huile de cuisine ?",
       "Que puis-je acheter avec mes points ?",
