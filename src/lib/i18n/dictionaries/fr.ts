@@ -887,6 +887,11 @@ export const fr: Dictionary = {
     voiceDisable: "Arrêter la lecture à voix haute",
     voiceOptionLabel: "Voix",
     voiceAuto: "Automatique (homme africain, recommandé)",
+    voiceAutoNoMale: "Automatique (aucune voix masculine sur cet appareil)",
+    voiceNoMaleNotice:
+      "Cet appareil n'a pas de voix masculine installée pour cette langue : les réponses seront féminines tant que vous n'en installez pas une dans les paramètres vocaux de votre téléphone ou navigateur.",
+    voiceTagMale: "(homme)",
+    voiceTagFemale: "(femme)",
     voicePreviewSample: "Bonjour, voici comment je vais sonner pour vous répondre.",
     suggestions: [
       "Avez-vous du riz et de l'huile de cuisine ?",

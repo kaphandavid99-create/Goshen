@@ -56,9 +56,12 @@ const AFRICAN_VOICE_LANGS: Record<"en" | "fr", string[]> = {
   fr: ["fr-cm", "fr-ci", "fr-sn", "fr-cd", "fr-ml", "fr-ne"],
 };
 
+// Cross-platform TTS voice names, gathered from Windows/Edge, macOS/iOS and
+// Android/Chrome's built-in voice sets, so the picker can tell male from
+// female voices by name (the Web Speech API exposes no gender field).
 const MALE_NAME_HINTS = [
   "male",
-  " man",
+  "man",
   "guy",
   "daniel",
   "david",
@@ -74,6 +77,22 @@ const MALE_NAME_HINTS = [
   "kevin",
   "paul",
   "luke",
+  "alex",
+  "aaron",
+  "gordon",
+  "oliver",
+  "reed",
+  "rishi",
+  "ryan",
+  "christopher",
+  "roger",
+  "sean",
+  "liam",
+  "ravi",
+  "tom",
+  "bruce",
+  "albert",
+  "nathan",
   "abeo",
   "chilemba",
   "obinna",
@@ -86,7 +105,7 @@ const MALE_NAME_HINTS = [
 
 const FEMALE_NAME_HINTS = [
   "female",
-  " woman",
+  "woman",
   "zira",
   "hazel",
   "samantha",
@@ -107,18 +126,35 @@ const FEMALE_NAME_HINTS = [
   "amina",
   "nneka",
   "adaeze",
+  "kate",
+  "allison",
+  "ava",
+  "serena",
+  "nicky",
+  "vicki",
+  "veena",
+  "salli",
+  "joanna",
 ];
+
+/** Word-boundary match so "female" never counts as a hit on "male". */
+function hasNameHint(name: string, hints: string[]) {
+  return hints.some((hint) => new RegExp(`\\b${hint}\\b`, "i").test(name));
+}
+
+function isLikelyMale(voice: SpeechSynthesisVoice) {
+  return hasNameHint(voice.name, MALE_NAME_HINTS) && !hasNameHint(voice.name, FEMALE_NAME_HINTS);
+}
 
 function scoreVoice(voice: SpeechSynthesisVoice, preferredLangs: string[]) {
   const lang = voice.lang.toLowerCase();
-  const name = voice.name.toLowerCase();
   let score = 0;
 
   const langIndex = preferredLangs.indexOf(lang);
   if (langIndex >= 0) score += 100 - langIndex;
 
-  if (MALE_NAME_HINTS.some((hint) => name.includes(hint))) score += 20;
-  if (FEMALE_NAME_HINTS.some((hint) => name.includes(hint))) score -= 20;
+  if (isLikelyMale(voice)) score += 20;
+  else if (hasNameHint(voice.name, FEMALE_NAME_HINTS)) score -= 20;
 
   return score;
 }
@@ -322,6 +358,7 @@ export function AssistantWidget() {
   }, [stopSpeaking]);
 
   const voiceChoices = useMemo(() => voiceOptions(voices, locale), [voices, locale]);
+  const hasMaleVoice = useMemo(() => voiceChoices.some(isLikelyMale), [voiceChoices]);
 
   const selectVoice = useCallback(
     (uri: string) => {
@@ -707,23 +744,28 @@ export function AssistantWidget() {
             ) : null}
 
             {voiceEnabled && voiceChoices.length > 0 ? (
-              <div className="flex items-center gap-2 border-t border-border px-4 py-2 text-xs">
-                <label htmlFor="assistant-voice" className="shrink-0 text-muted-foreground">
-                  {a.voiceOptionLabel}
-                </label>
-                <select
-                  id="assistant-voice"
-                  value={selectedVoiceURI}
-                  onChange={(e) => selectVoice(e.target.value)}
-                  className="field min-w-0 flex-1 py-1 text-xs"
-                >
-                  <option value="">{a.voiceAuto}</option>
-                  {voiceChoices.map((v) => (
-                    <option key={v.voiceURI} value={v.voiceURI}>
-                      {v.name}
-                    </option>
-                  ))}
-                </select>
+              <div className="space-y-1 border-t border-border px-4 py-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <label htmlFor="assistant-voice" className="shrink-0 text-muted-foreground">
+                    {a.voiceOptionLabel}
+                  </label>
+                  <select
+                    id="assistant-voice"
+                    value={selectedVoiceURI}
+                    onChange={(e) => selectVoice(e.target.value)}
+                    className="field min-w-0 flex-1 py-1 text-xs"
+                  >
+                    <option value="">{hasMaleVoice ? a.voiceAuto : a.voiceAutoNoMale}</option>
+                    {voiceChoices.map((v) => (
+                      <option key={v.voiceURI} value={v.voiceURI}>
+                        {v.name} {isLikelyMale(v) ? a.voiceTagMale : a.voiceTagFemale}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {!hasMaleVoice ? (
+                  <p className="text-muted-foreground">{a.voiceNoMaleNotice}</p>
+                ) : null}
               </div>
             ) : null}
 
