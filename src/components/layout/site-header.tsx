@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { Avatar } from "@/components/account/avatar";
+import { NotificationBadge } from "@/components/account/notification-badge";
 import { BrandLogo } from "@/components/brand/logo";
 import { HeaderCart } from "@/components/layout/header-cart";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -12,10 +13,12 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { IconPin, IconTruck, IconUser } from "@/components/icons";
 import { NAV_LINKS, STORE } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
+import { countUnreadNotifications } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
 
 export async function SiteHeader() {
   const [user, t] = await Promise.all([getCurrentUser(), getDict()]);
+  const unread = user ? await countUnreadNotifications(user.id).catch(() => 0) : 0;
 
   return (
     <>
@@ -83,11 +86,14 @@ export async function SiteHeader() {
                 href={user ? "/account" : "/login"}
                 className="hidden items-center gap-2.5 lg:flex"
               >
-                {user ? (
-                  <Avatar name={user.name} url={user.avatarUrl} size={32} />
-                ) : (
-                  <IconUser className="size-5 text-primary" />
-                )}
+                <span className="relative">
+                  {user ? (
+                    <Avatar name={user.name} url={user.avatarUrl} size={32} />
+                  ) : (
+                    <IconUser className="size-5 text-primary" />
+                  )}
+                  {user ? <NotificationBadge initialCount={unread} /> : null}
+                </span>
                 <span className="leading-tight">
                   <span className="block text-[11px] text-muted-foreground">
                     {user ? t.header.signedIn : t.header.account}
@@ -103,7 +109,7 @@ export async function SiteHeader() {
         </div>
       </header>
 
-      <MobileTabBar signedIn={Boolean(user)} />
+      <MobileTabBar signedIn={Boolean(user)} unreadNotifications={unread} />
     </>
   );
 }

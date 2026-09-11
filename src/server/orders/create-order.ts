@@ -18,7 +18,7 @@ import {
   hydrateProduct,
 } from "@/server/catalog/queries";
 import { awardReferralOnPurchase } from "@/server/account/referrals";
-import { createNotification } from "@/server/account/notifications";
+import { createNotification, notifyStaffOfNewOrder } from "@/server/account/notifications";
 import type { CheckoutInput } from "@/validators/order";
 
 function createOrderNumber() {
@@ -200,6 +200,7 @@ export async function createOrder(userId: string, input: CheckoutInput) {
             body: `${created.orderNumber} is waiting for the shop to confirm.`,
             href: `/account/orders/${created.id}`,
           });
+          await notifyStaffOfNewOrder(tx, created);
         }
 
         return created;

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { FC, SVGProps } from "react";
+import { NotificationBadge } from "@/components/account/notification-badge";
 import {
   IconGrid,
   IconHome,
@@ -32,7 +33,13 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function MobileTabBar({ signedIn }: { signedIn: boolean }) {
+export function MobileTabBar({
+  signedIn,
+  unreadNotifications = 0,
+}: {
+  signedIn: boolean;
+  unreadNotifications?: number;
+}) {
   const pathname = usePathname();
   const t = useT();
 
@@ -58,7 +65,7 @@ export function MobileTabBar({ signedIn }: { signedIn: boolean }) {
               >
                 <span
                   className={cn(
-                    "flex size-9 items-center justify-center rounded-full transition-colors",
+                    "relative flex size-9 items-center justify-center rounded-full transition-colors",
                     active
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground group-hover:text-primary",
@@ -68,6 +75,9 @@ export function MobileTabBar({ signedIn }: { signedIn: boolean }) {
                     className="size-[22px]"
                     strokeWidth={active ? 2.4 : 1.8}
                   />
+                  {tab.key === "dashboard" && signedIn ? (
+                    <NotificationBadge initialCount={unreadNotifications} />
+                  ) : null}
                 </span>
                 <span
                   className={cn(

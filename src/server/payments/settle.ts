@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { spendPointsFor } from "@/lib/points";
 import { prisma } from "@/lib/db/prisma";
-import { createNotification } from "@/server/account/notifications";
+import { createNotification, notifyStaffOfNewOrder } from "@/server/account/notifications";
 import { awardReferralOnPurchase } from "@/server/account/referrals";
 import { getRequestToPayStatus, requestToPay } from "@/server/payments/momo";
 
@@ -94,6 +94,7 @@ async function finalizePaidOrder(
       body: `${order.orderNumber} is paid — the shop will confirm it shortly.`,
       href: `/account/orders/${order.id}`,
     });
+    await notifyStaffOfNewOrder(tx, order);
   });
 }
 

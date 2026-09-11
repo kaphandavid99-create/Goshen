@@ -5,7 +5,7 @@ import { randomInt, randomUUID } from "node:crypto";
 import { WHOLESALE_MIN_ORDER_CENTS } from "@/lib/constants";
 import { env } from "@/lib/env";
 import { prisma } from "@/lib/db/prisma";
-import { createNotification } from "@/server/account/notifications";
+import { createNotification, notifyStaffOfNewOrder } from "@/server/account/notifications";
 import { requestToPay } from "@/server/payments/momo";
 import type { WholesaleCheckoutInput } from "@/validators/wholesale";
 
@@ -116,6 +116,7 @@ export async function createWholesaleOrder(
             body: `${created.orderNumber} is with the shop. They'll confirm pricing and arrange delivery.`,
             href: `/account/orders/${created.id}`,
           });
+          await notifyStaffOfNewOrder(tx, created);
         }
 
         return created;
