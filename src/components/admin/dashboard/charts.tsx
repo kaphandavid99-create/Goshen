@@ -145,6 +145,98 @@ export function SalesChart({ points }: { points: SalesPoint[] }) {
   );
 }
 
+/* ---------------- Visitors chart (visitors OR page views) ---------------- */
+
+type VisitorPoint = { label: string; views: number; visitors: number };
+
+export function VisitorsChart({ points }: { points: VisitorPoint[] }) {
+  const [metric, setMetric] = useState<"visitors" | "views">("visitors");
+  const color = "var(--chart-visitors)";
+  const dataKey = metric;
+
+  return (
+    <div>
+      <div className="mb-3 flex justify-end">
+        <div className="inline-flex rounded-lg border border-border p-0.5 text-xs">
+          {(["visitors", "views"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMetric(m)}
+              className={cn(
+                "rounded-md px-3 py-1 font-medium capitalize transition",
+                metric === m
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {m === "visitors" ? "Visitors" : "Page views"}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="h-[220px] w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={points} margin={{ top: 8, right: 8, bottom: 0, left: -12 }}>
+            <defs>
+              <linearGradient id="visitorsFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.28} />
+                <stop offset="100%" stopColor={color} stopOpacity={0.02} />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              vertical={false}
+              stroke="var(--chart-grid)"
+              strokeDasharray="3 3"
+            />
+            <XAxis
+              dataKey="label"
+              tickLine={false}
+              axisLine={false}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+              interval="preserveStartEnd"
+              minTickGap={24}
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              width={40}
+              tick={{ fill: "var(--muted-foreground)", fontSize: 11 }}
+              allowDecimals={false}
+            />
+            <Tooltip
+              cursor={{ stroke: "var(--chart-grid)" }}
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const p = payload[0].payload as VisitorPoint;
+                return (
+                  <TooltipBox
+                    title={String(label)}
+                    rows={[
+                      { label: "Visitors", value: String(p.visitors) },
+                      { label: "Page views", value: String(p.views) },
+                    ]}
+                  />
+                );
+              }}
+            />
+            <Area
+              type="monotone"
+              dataKey={dataKey}
+              stroke={color}
+              strokeWidth={2}
+              fill="url(#visitorsFill)"
+              dot={false}
+              activeDot={{ r: 4, strokeWidth: 0 }}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}
+
 /* ---------------- Order-status donut ---------------- */
 
 type StatusSlice = { status: string; label: string; count: number };

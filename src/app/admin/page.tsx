@@ -4,6 +4,7 @@ import {
   Boxes,
   CheckCircle2,
   Clock,
+  Eye,
   Gift,
   PackageX,
   ShoppingCart,
@@ -32,6 +33,7 @@ import {
   RecentOrdersPanel,
   SalesPanel,
   TopProductsPanel,
+  VisitorsPanel,
 } from "@/components/admin/dashboard/panels";
 import { QuickActions } from "@/components/admin/dashboard/quick-actions";
 import { formatPrice } from "@/lib/money";
@@ -49,6 +51,7 @@ import {
   getSalesSeries,
   getStockAlerts,
   getTopProducts,
+  getVisitorStats,
   resolveRange,
 } from "@/server/admin/overview";
 
@@ -89,10 +92,18 @@ export default async function AdminOverviewPage({
 
 async function StatCards({ rangeParam }: { rangeParam?: string }) {
   const range = resolveRange(rangeParam);
-  const k = await getKpis(range);
+  const [k, visitors] = await Promise.all([getKpis(range), getVisitorStats(range)]);
 
   return (
     <StatGrid>
+      <StatCard
+        label="Visitors"
+        value={visitors.visitors.toLocaleString()}
+        icon={Eye}
+        delta={visitors.visitorsDelta}
+        deltaSuffix="vs previous"
+        sub={`${visitors.views.toLocaleString()} page views`}
+      />
       <StatCard
         label="Total revenue"
         value={formatPrice(k.revenue)}
@@ -177,6 +188,7 @@ async function DashboardBody({ rangeParam }: { rangeParam?: string }) {
 
   const [
     series,
+    visitors,
     status,
     categories,
     recentOrders,
@@ -189,6 +201,7 @@ async function DashboardBody({ rangeParam }: { rangeParam?: string }) {
     activity,
   ] = await Promise.all([
     getSalesSeries(range),
+    getVisitorStats(range),
     getOrderStatusBreakdown(),
     getCategorySales(range),
     getRecentOrders(8),
@@ -204,6 +217,7 @@ async function DashboardBody({ rangeParam }: { rangeParam?: string }) {
   return (
     <div className="space-y-6">
       <SalesPanel series={series} rangeLabel={range.label} />
+      <VisitorsPanel data={visitors} rangeLabel={range.label} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <OrderStatusPanel data={status} />

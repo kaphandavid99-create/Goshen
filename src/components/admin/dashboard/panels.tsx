@@ -25,11 +25,13 @@ import type {
   getStockAlerts,
   getTopProducts,
   getAdminAlerts,
+  getVisitorStats,
 } from "@/server/admin/overview";
 import {
   GrowthSpark,
   OrderStatusChart,
   SalesChart,
+  VisitorsChart,
 } from "@/components/admin/dashboard/charts";
 import type {
   getCategorySales,
@@ -48,6 +50,7 @@ type Alerts = Awaited<ReturnType<typeof getAdminAlerts>>;
 type Series = Awaited<ReturnType<typeof getSalesSeries>>;
 type Status = Awaited<ReturnType<typeof getOrderStatusBreakdown>>;
 type Category = Awaited<ReturnType<typeof getCategorySales>>;
+type Visitors = Awaited<ReturnType<typeof getVisitorStats>>;
 
 function paymentLabel(
   status: string,
@@ -94,6 +97,37 @@ export function SalesPanel({
         </span>
       </div>
       <SalesChart points={series.points} />
+    </DashboardSection>
+  );
+}
+
+/* ---------------- Shop visitors ---------------- */
+
+export function VisitorsPanel({
+  data,
+  rangeLabel,
+}: {
+  data: Visitors;
+  rangeLabel: string;
+}) {
+  return (
+    <DashboardSection
+      title="Shop visitors"
+      description={`People browsing the storefront · ${rangeLabel.toLowerCase()}`}
+      isEmpty={data.views === 0}
+      empty="No visits recorded yet."
+    >
+      <div className="mb-3 flex flex-wrap gap-4 text-sm">
+        <span>
+          <span className="text-muted-foreground">Visitors </span>
+          <span className="font-bold text-primary">{data.visitors.toLocaleString()}</span>
+        </span>
+        <span>
+          <span className="text-muted-foreground">Page views </span>
+          <span className="font-bold text-primary">{data.views.toLocaleString()}</span>
+        </span>
+      </div>
+      <VisitorsChart points={data.points} />
     </DashboardSection>
   );
 }

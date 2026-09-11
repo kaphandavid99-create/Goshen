@@ -319,6 +319,55 @@ export async function getSalesSeries(range: ResolvedRange) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Shop visitors (page views)                                          */
+/* ------------------------------------------------------------------ */
+
+export async function getVisitorStats(range: ResolvedRange) {
+  const [rows, prevRows] = await withRetry(() =>
+    Promise.all([
+      prisma.pageView.findMany({
+        where: { createdAt: { gte: range.start, lt: range.end } },
+        select: { createdAt: true, visitorId: true },
+      }),
+      prisma.pageView.findMany({
+        where: { createdAt: { gte: range.prevStart, lt: range.prevEnd } },
+        select: { visitorId: true },
+      }),
+    ]),
+  );
+
+  const views = rows.length;
+  const visitors = new Set(rows.map((r) => r.visitorId)).size;
+  const viewsPrev = prevRows.length;
+  const visitorsPrev = new Set(prevRows.map((r) => r.visitorId)).size;
+
+  const buckets = buildBuckets(range);
+  const viewCounts = new Map(buckets.map((b) => [b.key, 0]));
+  const visitorSets = new Map(buckets.map((b) => [b.key, new Set<string>()]));
+
+  for (const row of rows) {
+    const key = bucketKey(row.createdAt, range.bucket);
+    if (!viewCounts.has(key)) continue;
+    viewCounts.set(key, (viewCounts.get(key) ?? 0) + 1);
+    visitorSets.get(key)!.add(row.visitorId);
+  }
+
+  const points = buckets.map((b) => ({
+    label: b.label,
+    views: viewCounts.get(b.key) ?? 0,
+    visitors: visitorSets.get(b.key)?.size ?? 0,
+  }));
+
+  return {
+    views,
+    viewsDelta: pctChange(views, viewsPrev),
+    visitors,
+    visitorsDelta: pctChange(visitors, visitorsPrev),
+    points,
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /*  Order-status breakdown                                              */
 /* ------------------------------------------------------------------ */
 

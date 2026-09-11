@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist_Mono, Inter } from "next/font/google";
+import { VisitTracker } from "@/components/analytics/visit-tracker";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -75,6 +76,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <LanguageProvider locale={locale}>
           <ThemeProvider>
             <ScrollToHash />
+            <VisitTracker />
             <StoreChrome header={<SiteHeader />} footer={<SiteFooter />}>
               <PageTransition>{children}</PageTransition>
             </StoreChrome>

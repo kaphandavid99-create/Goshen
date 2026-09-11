@@ -33,6 +33,7 @@
   /* dashboard charts */
   --chart-revenue: #1f9d55;
   --chart-orders: #e67e22;
+  --chart-visitors: #2a78d6;
   --chart-grid: #e6e0d4;
   --status-pending: #d9932b;
   --status-confirmed: #2a78d6;
@@ -84,6 +85,7 @@
 
   --chart-revenue: #46c884;
   --chart-orders: #f0902f;
+  --chart-visitors: #3987e5;
   --chart-grid: #2a352e;
   --status-pending: #e0a94a;
   --status-confirmed: #3987e5;

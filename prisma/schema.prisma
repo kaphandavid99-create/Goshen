@@ -58,6 +58,7 @@ model User {
   adminActivity        AdminActivity[]
   chatThreads          ChatThread[]
   pushSubscriptions    PushSubscription[]
+  pageViews            PageView[]
 
   @@index([referredById])
 }
@@ -483,6 +484,22 @@ model ChatMessage {
   createdAt DateTime   @default(now())
 
   @@index([threadId, createdAt])
+}
+
+/// One recorded page view of the storefront (the admin area is never
+/// tracked). visitorId is a long-lived anonymous cookie set on first visit;
+/// userId is filled in when that visitor happens to be signed in. Powers the
+/// "Visitors" panel on the admin dashboard.
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  visitorId String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([visitorId, createdAt])
 }
 
 /// An audit-log entry for an important action taken by shop staff in the admin.

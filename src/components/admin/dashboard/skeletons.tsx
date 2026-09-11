@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function StatGridSkeleton() {
   return (
     <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-5">
-      {Array.from({ length: 10 }).map((_, i) => (
+      {Array.from({ length: 11 }).map((_, i) => (
         <div key={i} className="card flex flex-col p-4 sm:p-5">
           <div className="flex items-start justify-between gap-2">
             <Skeleton className="h-3 w-20" />
@@ -40,6 +40,12 @@ function PanelSkeleton({ lines = 4 }: { lines?: number }) {
 export function DashboardSkeleton() {
   return (
     <div className="space-y-6">
+      <section className="card flex min-w-0 flex-col p-5 sm:p-6">
+        <Skeleton className="h-4 w-40" />
+        <Skeleton className="mt-2 h-3 w-56" />
+        <Skeleton className="mt-4 h-56 w-full" />
+      </section>
+
       <section className="card flex min-w-0 flex-col p-5 sm:p-6">
         <Skeleton className="h-4 w-40" />
         <Skeleton className="mt-2 h-3 w-56" />
