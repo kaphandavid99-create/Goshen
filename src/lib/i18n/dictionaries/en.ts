@@ -880,6 +880,8 @@ export const en = {
     micPermissionDenied:
       "Microphone access was denied. Allow it in your browser settings to use voice.",
     micError: "Couldn't use the microphone. Please try again.",
+    voiceEnable: "Read replies aloud",
+    voiceDisable: "Stop reading replies aloud",
     suggestions: [
       "Do you have rice and cooking oil?",
       "What can I buy with my points?",

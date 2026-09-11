@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Loader2, Mic, SendHorizonal, Square, X } from "lucide-react";
+import { Loader2, Mic, SendHorizonal, Square, Volume2, VolumeX, X } from "lucide-react";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useI18n } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
@@ -31,6 +31,17 @@ function pickRecorderMimeType() {
   return candidates.find((type) => MediaRecorder.isTypeSupported(type));
 }
 
+/** Plain-text version of a reply for speech — drop markdown syntax and bare links. */
+function stripForSpeech(text: string) {
+  return text
+    .replace(/\[([^\]]+)\]\([^)\s]+\)/g, "$1")
+    .replace(/https?:\/\/\S+/g, "")
+    .replace(/[*_`#>]+/g, "")
+    .replace(/^\s*[-*]\s+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 type ChatMessage = {
   id: string;
   role: "user" | "assistant";
@@ -39,6 +50,7 @@ type ChatMessage = {
 };
 
 const THREAD_KEY = "goshen_chat_thread";
+const VOICE_KEY = "goshen_chat_voice";
 
 function uid() {
   return Math.random().toString(36).slice(2);
@@ -62,6 +74,9 @@ export function AssistantWidget() {
   const [micState, setMicState] = useState<MicState>("idle");
   const [micError, setMicError] = useState<string | null>(null);
 
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -71,19 +86,32 @@ export function AssistantWidget() {
   useEffect(() => {
     let cancelled = false;
 
-    async function detectMicSupport() {
-      const supported =
+    async function detectSupport() {
+      const mic =
         typeof window !== "undefined" &&
         Boolean(navigator.mediaDevices?.getUserMedia) &&
         typeof window.MediaRecorder !== "undefined";
-      if (!cancelled) setMicSupported(supported);
+      const voice = typeof window !== "undefined" && "speechSynthesis" in window;
+      if (cancelled) return;
+      setMicSupported(mic);
+      setVoiceSupported(voice);
+      if (voice) {
+        try {
+          setVoiceEnabled(window.localStorage.getItem(VOICE_KEY) === "1");
+        } catch {
+          /* private mode */
+        }
+      }
     }
 
-    void detectMicSupport();
+    void detectSupport();
     return () => {
       cancelled = true;
       mediaRecorderRef.current?.stop();
       micStreamRef.current?.getTracks().forEach((track) => track.stop());
+      if (typeof window !== "undefined" && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, []);
 
@@ -131,6 +159,40 @@ export function AssistantWidget() {
     }
   }, [open, messages, toolLabel]);
 
+  const stopSpeaking = useCallback(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  const speak = useCallback(
+    (text: string) => {
+      if (!voiceEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) {
+        return;
+      }
+      const plain = stripForSpeech(text);
+      if (!plain) return;
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(plain);
+      utterance.lang = locale === "fr" ? "fr-FR" : "en-US";
+      window.speechSynthesis.speak(utterance);
+    },
+    [voiceEnabled, locale],
+  );
+
+  const toggleVoice = useCallback(() => {
+    setVoiceEnabled((prev) => {
+      const next = !prev;
+      if (!next) stopSpeaking();
+      try {
+        window.localStorage.setItem(VOICE_KEY, next ? "1" : "0");
+      } catch {
+        /* private mode */
+      }
+      return next;
+    });
+  }, [stopSpeaking]);
+
   const send = useCallback(
     async (raw: string) => {
       const text = raw.trim();
@@ -143,12 +205,15 @@ export function AssistantWidget() {
       setBusy(true);
       setToolLabel(null);
 
+      let failed = false;
       const fail = (message: string) => {
+        failed = true;
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMsg.id ? { ...m, content: message, error: true } : m,
           ),
         );
+        speak(message);
       };
 
       try {
@@ -169,6 +234,7 @@ export function AssistantWidget() {
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
         let buffer = "";
+        let finalText = "";
 
         for (;;) {
           const { done, value } = await reader.read();
@@ -189,6 +255,7 @@ export function AssistantWidget() {
 
             if (event.type === "text") {
               const delta = String(event.delta ?? "");
+              finalText += delta;
               setToolLabel(null);
               setMessages((prev) =>
                 prev.map((m) =>
@@ -214,6 +281,12 @@ export function AssistantWidget() {
           }
         }
 
+        if (finalText) {
+          speak(finalText);
+        } else if (!failed) {
+          speak(a.noAnswer);
+        }
+
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMsg.id && !m.content && !m.error
@@ -228,7 +301,7 @@ export function AssistantWidget() {
         setToolLabel(null);
       }
     },
-    [busy, threadId, a],
+    [busy, threadId, a, speak],
   );
 
   const transcribe = useCallback(
@@ -341,7 +414,10 @@ export function AssistantWidget() {
         type="button"
         aria-label={open ? a.close : a.open}
         aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => {
+          if (open) stopSpeaking();
+          setOpen((v) => !v);
+        }}
         initial={reduce ? false : { scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={
@@ -397,14 +473,37 @@ export function AssistantWidget() {
                   <p className="text-xs text-muted-foreground">{a.subtitle}</p>
                 </div>
               </div>
-              <button
-                type="button"
-                aria-label={a.closeShort}
-                onClick={() => setOpen(false)}
-                className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted"
-              >
-                <X className="size-4" />
-              </button>
+              <div className="flex items-center gap-1">
+                {voiceSupported ? (
+                  <button
+                    type="button"
+                    aria-label={voiceEnabled ? a.voiceDisable : a.voiceEnable}
+                    aria-pressed={voiceEnabled}
+                    onClick={toggleVoice}
+                    className={cn(
+                      "grid size-8 place-items-center rounded-lg transition hover:bg-muted",
+                      voiceEnabled ? "text-primary" : "text-muted-foreground",
+                    )}
+                  >
+                    {voiceEnabled ? (
+                      <Volume2 className="size-4" />
+                    ) : (
+                      <VolumeX className="size-4" />
+                    )}
+                  </button>
+                ) : null}
+                <button
+                  type="button"
+                  aria-label={a.closeShort}
+                  onClick={() => {
+                    stopSpeaking();
+                    setOpen(false);
+                  }}
+                  className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted"
+                >
+                  <X className="size-4" />
+                </button>
+              </div>
             </header>
 
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">

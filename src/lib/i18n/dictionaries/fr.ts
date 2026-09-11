@@ -883,6 +883,8 @@ export const fr: Dictionary = {
     micPermissionDenied:
       "Accès au microphone refusé. Autorisez-le dans les paramètres de votre navigateur pour utiliser la voix.",
     micError: "Impossible d'utiliser le microphone. Veuillez réessayer.",
+    voiceEnable: "Lire les réponses à voix haute",
+    voiceDisable: "Arrêter la lecture à voix haute",
     suggestions: [
       "Avez-vous du riz et de l'huile de cuisine ?",
       "Que puis-je acheter avec mes points ?",
