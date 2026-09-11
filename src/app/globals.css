@@ -518,14 +518,8 @@ body {
 .product-card-rating {
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.product-card-rating svg {
-  color: var(--star);
+  gap: 0.1rem;
+  flex-shrink: 0;
 }
 
 .product-card-title {
@@ -655,7 +649,12 @@ body {
 
 .deals-grid .product-card-rating {
   flex-shrink: 0;
-  font-size: 0.68rem;
+  gap: 0.05rem;
+}
+
+.deals-grid .product-card-rating svg {
+  width: 0.65rem;
+  height: 0.65rem;
 }
 
 .deals-grid .product-card-title {

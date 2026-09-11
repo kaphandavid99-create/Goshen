@@ -62,9 +62,20 @@ export function ProductCard({
         <div className="product-card-meta">
           <span className="product-card-category">{product.category.name}</span>
           {rating ? (
-            <span className="product-card-rating">
-              <IconStar className="size-3.5" fill="currentColor" stroke="none" />
-              {rating.toFixed(1)}
+            <span
+              className="product-card-rating"
+              aria-label={t.rating.outOf(Math.round(rating), 5)}
+            >
+              {Array.from({ length: 5 }, (_, index) => (
+                <IconStar
+                  key={index}
+                  className={`size-3.5 ${
+                    index < Math.round(rating) ? "text-star" : "text-muted-foreground/40"
+                  }`}
+                  fill="currentColor"
+                  stroke="none"
+                />
+              ))}
             </span>
           ) : null}
         </div>
