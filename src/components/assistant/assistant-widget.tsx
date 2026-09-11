@@ -473,37 +473,17 @@ export function AssistantWidget() {
                   <p className="text-xs text-muted-foreground">{a.subtitle}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {voiceSupported ? (
-                  <button
-                    type="button"
-                    aria-label={voiceEnabled ? a.voiceDisable : a.voiceEnable}
-                    aria-pressed={voiceEnabled}
-                    onClick={toggleVoice}
-                    className={cn(
-                      "grid size-8 place-items-center rounded-lg transition hover:bg-muted",
-                      voiceEnabled ? "text-primary" : "text-muted-foreground",
-                    )}
-                  >
-                    {voiceEnabled ? (
-                      <Volume2 className="size-4" />
-                    ) : (
-                      <VolumeX className="size-4" />
-                    )}
-                  </button>
-                ) : null}
-                <button
-                  type="button"
-                  aria-label={a.closeShort}
-                  onClick={() => {
-                    stopSpeaking();
-                    setOpen(false);
-                  }}
-                  className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted"
-                >
-                  <X className="size-4" />
-                </button>
-              </div>
+              <button
+                type="button"
+                aria-label={a.closeShort}
+                onClick={() => {
+                  stopSpeaking();
+                  setOpen(false);
+                }}
+                className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted"
+              >
+                <X className="size-4" />
+              </button>
             </header>
 
             <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
@@ -580,26 +560,51 @@ export function AssistantWidget() {
               }}
               className="flex items-end gap-2 border-t border-border px-3 py-3"
             >
-              {micSupported ? (
-                <button
-                  type="button"
-                  aria-label={micState === "recording" ? a.micStop : a.micLabel}
-                  aria-pressed={micState === "recording"}
-                  onClick={toggleMic}
-                  disabled={busy || micState === "transcribing"}
-                  className={cn(
-                    "grid size-9 shrink-0 place-items-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted disabled:opacity-50",
-                    micState === "recording" && "border-destructive bg-destructive/10 text-destructive",
-                  )}
-                >
-                  {micState === "recording" ? (
-                    <Square className="size-4 fill-current" />
-                  ) : micState === "transcribing" ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Mic className="size-4" />
-                  )}
-                </button>
+              {micSupported || voiceSupported ? (
+                <div className="flex shrink-0 items-center gap-1.5">
+                  {micSupported ? (
+                    <button
+                      type="button"
+                      aria-label={micState === "recording" ? a.micStop : a.micLabel}
+                      aria-pressed={micState === "recording"}
+                      onClick={toggleMic}
+                      disabled={busy || micState === "transcribing"}
+                      className={cn(
+                        "grid size-9 shrink-0 place-items-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted disabled:opacity-50",
+                        micState === "recording" &&
+                          "border-destructive bg-destructive/10 text-destructive",
+                      )}
+                    >
+                      {micState === "recording" ? (
+                        <Square className="size-4 fill-current" />
+                      ) : micState === "transcribing" ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <Mic className="size-4" />
+                      )}
+                    </button>
+                  ) : null}
+                  {voiceSupported ? (
+                    <button
+                      type="button"
+                      aria-label={voiceEnabled ? a.voiceDisable : a.voiceEnable}
+                      aria-pressed={voiceEnabled}
+                      onClick={toggleVoice}
+                      className={cn(
+                        "grid size-9 shrink-0 place-items-center rounded-xl border border-border transition hover:bg-muted",
+                        voiceEnabled
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {voiceEnabled ? (
+                        <Volume2 className="size-4" />
+                      ) : (
+                        <VolumeX className="size-4" />
+                      )}
+                    </button>
+                  ) : null}
+                </div>
               ) : null}
               <textarea
                 ref={inputRef}
