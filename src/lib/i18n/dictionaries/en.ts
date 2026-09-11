@@ -873,6 +873,13 @@ export const en = {
       "Hi! I can help you find products, check an order, or use your loyalty points. Ask me anything about Goshen.",
     inputPlaceholder: "Ask about a product, order or points…",
     send: "Send",
+    micLabel: "Record a voice message",
+    micStop: "Stop recording",
+    micRecording: "Listening… tap to stop",
+    micTranscribing: "Transcribing your recording…",
+    micPermissionDenied:
+      "Microphone access was denied. Allow it in your browser settings to use voice.",
+    micError: "Couldn't use the microphone. Please try again.",
     suggestions: [
       "Do you have rice and cooking oil?",
       "What can I buy with my points?",

@@ -9,11 +9,27 @@ import {
   useRef,
   useState,
 } from "react";
-import { SendHorizonal, X } from "lucide-react";
+import { Loader2, Mic, SendHorizonal, Square, X } from "lucide-react";
 import { readCsrf } from "@/lib/auth/csrf-client";
-import { useT } from "@/lib/i18n/context";
+import { useI18n } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
 import { MessageContent } from "@/components/assistant/message-content";
+
+type MicState = "idle" | "recording" | "transcribing";
+
+/** Pick a MIME type the browser's recorder actually supports; undefined lets it choose. */
+function pickRecorderMimeType() {
+  if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported) {
+    return undefined;
+  }
+  const candidates = [
+    "audio/webm;codecs=opus",
+    "audio/webm",
+    "audio/mp4",
+    "audio/ogg;codecs=opus",
+  ];
+  return candidates.find((type) => MediaRecorder.isTypeSupported(type));
+}
 
 type ChatMessage = {
   id: string;
@@ -31,7 +47,7 @@ function uid() {
 export function AssistantWidget() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
-  const t = useT();
+  const { t, locale } = useI18n();
   const a = t.assistant;
 
   const [open, setOpen] = useState(false);
@@ -42,8 +58,34 @@ export function AssistantWidget() {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
+  const [micSupported, setMicSupported] = useState(false);
+  const [micState, setMicState] = useState<MicState>("idle");
+  const [micError, setMicError] = useState<string | null>(null);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const micStreamRef = useRef<MediaStream | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function detectMicSupport() {
+      const supported =
+        typeof window !== "undefined" &&
+        Boolean(navigator.mediaDevices?.getUserMedia) &&
+        typeof window.MediaRecorder !== "undefined";
+      if (!cancelled) setMicSupported(supported);
+    }
+
+    void detectMicSupport();
+    return () => {
+      cancelled = true;
+      mediaRecorderRef.current?.stop();
+      micStreamRef.current?.getTracks().forEach((track) => track.stop());
+    };
+  }, []);
 
   useEffect(() => {
     if (!open || hydrated) return;
@@ -189,6 +231,96 @@ export function AssistantWidget() {
     [busy, threadId, a],
   );
 
+  const transcribe = useCallback(
+    async (blob: Blob) => {
+      if (blob.size === 0) {
+        setMicError(a.micError);
+        setMicState("idle");
+        return;
+      }
+
+      try {
+        const csrf = await readCsrf();
+        const extension = blob.type.includes("mp4")
+          ? "mp4"
+          : blob.type.includes("ogg")
+            ? "ogg"
+            : "webm";
+        const form = new FormData();
+        form.append("audio", blob, `voice-message.${extension}`);
+        form.append("locale", locale);
+
+        const res = await fetch("/api/assistant/transcribe", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "x-csrf-token": csrf },
+          body: form,
+        });
+        const data = (await res.json().catch(() => null)) as
+          | { text?: string; error?: string }
+          | null;
+
+        if (!res.ok || !data?.text) {
+          setMicError(data?.error ?? a.micError);
+          return;
+        }
+
+        setInput((prev) => (prev ? `${prev.trim()} ${data.text}` : (data.text as string)));
+        inputRef.current?.focus();
+      } catch {
+        setMicError(a.micError);
+      } finally {
+        setMicState("idle");
+      }
+    },
+    [a, locale],
+  );
+
+  const startRecording = useCallback(async () => {
+    setMicError(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      micStreamRef.current = stream;
+
+      const mimeType = pickRecorderMimeType();
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      audioChunksRef.current = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) audioChunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        micStreamRef.current?.getTracks().forEach((track) => track.stop());
+        micStreamRef.current = null;
+        const blob = new Blob(audioChunksRef.current, {
+          type: mimeType ?? recorder.mimeType ?? "audio/webm",
+        });
+        void transcribe(blob);
+      };
+
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setMicState("recording");
+    } catch {
+      setMicError(a.micPermissionDenied);
+      setMicState("idle");
+    }
+  }, [a, transcribe]);
+
+  const stopRecording = useCallback(() => {
+    mediaRecorderRef.current?.stop();
+    mediaRecorderRef.current = null;
+    setMicState("transcribing");
+  }, []);
+
+  const toggleMic = useCallback(() => {
+    if (micState === "recording") {
+      stopRecording();
+    } else if (micState === "idle") {
+      void startRecording();
+    }
+  }, [micState, startRecording, stopRecording]);
+
   const panelMotion = useMemo(
     () =>
       reduce
@@ -324,6 +456,24 @@ export function AssistantWidget() {
               ) : null}
             </div>
 
+            {micState !== "idle" || micError ? (
+              <div className="border-t border-border px-4 py-2 text-xs">
+                {micState === "recording" ? (
+                  <span className="flex items-center gap-1.5 text-destructive">
+                    <span className="size-2 animate-pulse rounded-full bg-destructive" />
+                    {a.micRecording}
+                  </span>
+                ) : micState === "transcribing" ? (
+                  <span className="flex items-center gap-1.5 text-muted-foreground">
+                    <Loader2 className="size-3 animate-spin" />
+                    {a.micTranscribing}
+                  </span>
+                ) : micError ? (
+                  <span className="text-destructive">{micError}</span>
+                ) : null}
+              </div>
+            ) : null}
+
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -331,10 +481,34 @@ export function AssistantWidget() {
               }}
               className="flex items-end gap-2 border-t border-border px-3 py-3"
             >
+              {micSupported ? (
+                <button
+                  type="button"
+                  aria-label={micState === "recording" ? a.micStop : a.micLabel}
+                  aria-pressed={micState === "recording"}
+                  onClick={toggleMic}
+                  disabled={busy || micState === "transcribing"}
+                  className={cn(
+                    "grid size-9 shrink-0 place-items-center rounded-xl border border-border text-muted-foreground transition hover:bg-muted disabled:opacity-50",
+                    micState === "recording" && "border-destructive bg-destructive/10 text-destructive",
+                  )}
+                >
+                  {micState === "recording" ? (
+                    <Square className="size-4 fill-current" />
+                  ) : micState === "transcribing" ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <Mic className="size-4" />
+                  )}
+                </button>
+              ) : null}
               <textarea
                 ref={inputRef}
                 value={input}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  if (micError) setMicError(null);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -348,7 +522,7 @@ export function AssistantWidget() {
               <button
                 type="submit"
                 aria-label={a.send}
-                disabled={busy || !input.trim()}
+                disabled={busy || !input.trim() || micState !== "idle"}
                 className="grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground transition hover:opacity-90 disabled:opacity-50"
               >
                 <SendHorizonal className="size-4" />

@@ -876,6 +876,13 @@ export const fr: Dictionary = {
       "Bonjour ! Je peux vous aider à trouver des produits, suivre une commande ou utiliser vos points de fidélité. Posez-moi vos questions sur Goshen.",
     inputPlaceholder: "Posez une question sur un produit, une commande ou vos points…",
     send: "Envoyer",
+    micLabel: "Enregistrer un message vocal",
+    micStop: "Arrêter l'enregistrement",
+    micRecording: "Écoute en cours… touchez pour arrêter",
+    micTranscribing: "Transcription de votre enregistrement…",
+    micPermissionDenied:
+      "Accès au microphone refusé. Autorisez-le dans les paramètres de votre navigateur pour utiliser la voix.",
+    micError: "Impossible d'utiliser le microphone. Veuillez réessayer.",
     suggestions: [
       "Avez-vous du riz et de l'huile de cuisine ?",
       "Que puis-je acheter avec mes points ?",

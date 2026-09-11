@@ -33,6 +33,7 @@ export const env = {
   googleClientSecret: (process.env.GOOGLE_CLIENT_SECRET ?? "").trim(),
   groqApiKey: readClean("GROQ_API_KEY"),
   assistantModel: readClean("ASSISTANT_MODEL", "openai/gpt-oss-120b"),
+  transcribeModel: readClean("ASSISTANT_TRANSCRIBE_MODEL", "whisper-large-v3-turbo"),
   vapidPublicKey: readClean("NEXT_PUBLIC_VAPID_PUBLIC_KEY"),
   vapidPrivateKey: readClean("VAPID_PRIVATE_KEY"),
   vapidSubject: readClean(
