@@ -54,6 +54,14 @@ export const env = {
   momoCollectionApiKey: readClean("MOMO_COLLECTION_API_KEY"),
   momoCurrency: readClean("MOMO_CURRENCY", "EUR"),
   momoCallbackUrl: readClean("MOMO_CALLBACK_URL"),
+
+  // The only accounts allowed admin/staff access to /admin. Comma-separated,
+  // case-insensitive. Anyone else is kept (or reset) to a regular customer —
+  // see reconcileAdminAccess() in server/auth/current-user.ts.
+  adminEmails: readClean(
+    "ADMIN_EMAILS",
+    "lemabrightness26@gmail.com,kaphandavid99@gmail.com",
+  ),
 };
 
 export function isCloudinaryConfigured() {
@@ -72,6 +80,14 @@ export function isAssistantConfigured() {
 
 export function isPushConfigured() {
   return Boolean(env.vapidPublicKey && env.vapidPrivateKey);
+}
+
+export function isAllowedAdminEmail(email: string) {
+  const allowed = env.adminEmails
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return allowed.includes(email.trim().toLowerCase());
 }
 
 export function isMomoConfigured() {
