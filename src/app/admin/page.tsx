@@ -39,7 +39,6 @@ import {
 import { QuickActions } from "@/components/admin/dashboard/quick-actions";
 import { formatPrice } from "@/lib/money";
 import { requireStaff } from "@/server/admin/access";
-import { hasPushSubscription } from "@/server/notifications/push";
 import {
   getAdminAlerts,
   getCategorySales,
@@ -71,16 +70,13 @@ export default async function AdminOverviewPage({
     searchParams,
   ]);
   const range = resolveRange(rangeParam);
-  const [alerts, pushEnabled] = await Promise.all([
-    getAdminAlerts(),
-    hasPushSubscription(user.id),
-  ]);
+  const alerts = await getAdminAlerts();
 
   return (
     <main className="space-y-6">
       <DashboardHeader user={user} alertCount={alerts.total} />
 
-      {!pushEnabled ? <PushManager /> : null}
+      <PushManager />
 
       <Suspense key={`kpi-${range.key}-${rangeParam ?? ""}`} fallback={<StatGridSkeleton />}>
         <StatCards rangeParam={rangeParam} />

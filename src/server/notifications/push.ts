@@ -4,11 +4,6 @@ import type WebPush from "web-push";
 import { prisma } from "@/lib/db/prisma";
 import { env, isPushConfigured } from "@/lib/env";
 
-export async function hasPushSubscription(userId: string) {
-  const count = await prisma.pushSubscription.count({ where: { userId } });
-  return count > 0;
-}
-
 export type PushPayload = {
   title: string;
   body: string;
