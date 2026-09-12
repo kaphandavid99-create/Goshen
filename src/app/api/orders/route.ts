@@ -1,3 +1,5 @@
+import { MIN_REDEEM_POINTS, MIN_REDEEM_SUBTOTAL } from "@/lib/constants";
+import { formatPrice } from "@/lib/money";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
 import { jsonError } from "@/server/auth/request";
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
     }
     if (error instanceof Error && error.message === "REDEEM_NOT_ALLOWED") {
       return jsonError(
-        "Points can be used on orders from 1,000 FCFA when you have at least 100 points.",
+        `Points can be used on orders from ${formatPrice(MIN_REDEEM_SUBTOTAL)} when you have at least ${MIN_REDEEM_POINTS} points.`,
         400,
       );
     }

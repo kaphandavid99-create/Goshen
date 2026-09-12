@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ReferralShare } from "@/components/account/referral-share";
+import { PointsProgress } from "@/components/account/points-progress";
 import {
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
+  POINT_VALUE_FCFA,
   REFERRAL_POINTS,
   REVIEW_POINTS,
   WELCOME_POINTS,
@@ -25,14 +27,40 @@ export default async function AccountRewardsPage() {
     getI18n(),
   ]);
 
+  const points = dashboard.stats.points;
+  const ready = points >= MIN_REDEEM_POINTS;
+  const remainder = points % MIN_REDEEM_POINTS;
+  const progressInBlock = points > 0 && remainder === 0 ? MIN_REDEEM_POINTS : remainder;
+  const remainingToNextMilestone = MIN_REDEEM_POINTS - progressInBlock;
+
   return (
     <div className="space-y-6">
       <section className="card p-5 sm:p-6">
         <h2 className="section-title">{t.account.rewards.title}</h2>
-        <p className="mt-3 text-3xl font-bold text-primary">
-          {t.account.rewards.pointsAmount(dashboard.stats.points)}
-        </p>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <div className="mt-4">
+          <PointsProgress
+            points={points}
+            milestone={MIN_REDEEM_POINTS}
+            pointsLabel={t.account.rewards.pointsAmount(points)}
+            readyLabel={t.account.rewards.progressReady}
+            lockedLabel={t.account.rewards.progressLocked}
+            ready={ready}
+            caption={
+              ready
+                ? t.account.rewards.progressReadyBody(
+                    points,
+                    formatPrice(points * POINT_VALUE_FCFA, locale),
+                  )
+                : t.account.rewards.progressToNext(MIN_REDEEM_POINTS - points)
+            }
+          />
+          {ready && remainingToNextMilestone > 0 ? (
+            <p className="mt-1.5 text-xs text-muted-foreground">
+              {t.account.rewards.progressNextMilestone(remainingToNextMilestone)}
+            </p>
+          ) : null}
+        </div>
+        <p className="mt-4 text-sm text-muted-foreground">
           {t.account.rewards.redeemHint(
             MIN_REDEEM_POINTS,
             formatPrice(MIN_REDEEM_SUBTOTAL, locale),

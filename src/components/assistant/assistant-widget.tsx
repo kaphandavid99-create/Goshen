@@ -10,6 +10,7 @@ import {
   useState,
 } from "react";
 import { Loader2, Mic, SendHorizonal, Square, Volume2, VolumeX, X } from "lucide-react";
+import { useHasMounted } from "@/hooks/use-has-mounted";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useI18n } from "@/lib/i18n/context";
 import { cn } from "@/lib/utils";
@@ -77,6 +78,13 @@ function uid() {
 export function AssistantWidget() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  // The launcher button's mount animation (initial scale/opacity → animate)
+  // is applied by Framer Motion directly to the DOM before React finishes
+  // hydrating, so the server-rendered "initial" style never matches what the
+  // client shows a moment later — React flags that as a hydration mismatch.
+  // Rendering the button only once mounted avoids the SSR/client diff
+  // entirely (same fix as the checkout form's useHasMounted usage).
+  const mounted = useHasMounted();
   const { t, locale } = useI18n();
   const a = t.assistant;
 
@@ -440,7 +448,7 @@ export function AssistantWidget() {
     [reduce],
   );
 
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin") || !mounted) return null;
 
   return (
     <>

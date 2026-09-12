@@ -83,11 +83,14 @@ export const WHOLESALE = {
     "Other",
   ] as const,
 };
-export const POINTS_PER_100_FCFA = 1;
-export const WELCOME_POINTS = 50;
-export const REFERRAL_POINTS = 100;
-export const REVIEW_POINTS = 5;
-export const MIN_REDEEM_POINTS = 100;
+// Typed as `number` (not the `1.5` literal) so call sites can compare it
+// against other point-rate values without a "these literals can never be
+// equal" type error if the rate ever changes.
+export const POINTS_PER_100_FCFA: number = 1.5;
+export const WELCOME_POINTS = 100;
+export const REFERRAL_POINTS = 200;
+export const REVIEW_POINTS = 10;
+export const MIN_REDEEM_POINTS = 200;
 export const MIN_REDEEM_SUBTOTAL = 1_000;
 export const POINT_VALUE_FCFA = 1;
 

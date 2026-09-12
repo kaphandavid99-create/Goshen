@@ -106,7 +106,7 @@ export const en = {
     accountCol: "Account",
     rewardsCol: "Rewards",
     rewardsCopy:
-      "Earn 1 point per 100 FCFA. Get 100 when a friend joins and makes their first purchase. Redeem from 100 points as a shop discount — not cash.",
+      "Earn 1.5 points per 100 FCFA. Get 200 when a friend joins and makes their first purchase. Redeem from 200 points as a shop discount — not cash.",
     howRewardsWork: "How rewards work",
     rightsReserved: (year: number) => `© ${year} Goshen. All rights reserved.`,
     accountLinks: {
@@ -182,14 +182,14 @@ export const en = {
     orderForDelivery: "Order for delivery",
     referFriend: "Refer a friend",
     referFriendBody:
-      "Earn 100 points when a friend signs up and places their first order.",
+      "Earn 200 points when a friend signs up and places their first order.",
     getReferralLink: "Get your referral link",
     perks: {
       earnTitle: "Earn points",
-      earnBody: "1 point per 100 FCFA you pay. Sign up for 50.",
+      earnBody: "1.5 points per 100 FCFA you pay. Sign up for 100.",
       redeemTitle: "Redeem and save",
       redeemBody:
-        "From 100 points, take 1 FCFA off per point on orders from 1,000 FCFA. Not cash.",
+        "From 200 points, take 1 FCFA off per point on orders from 1,000 FCFA. Not cash.",
       extrasTitle: "Member extras",
       extrasBody: "Featured deals and free delivery from 15,000 FCFA.",
     },
@@ -274,11 +274,11 @@ export const en = {
     total: "Total",
     usePoints: (n: number) =>
       `Use ${n} points as a shop discount. Points are not paid out as cash.`,
-    pointsBelowMin: (n: number) =>
-      `You have ${n} points. Redeeming starts at 100 points.`,
+    pointsBelowMin: (n: number, minPoints: number) =>
+      `You have ${n} points. Redeeming starts at ${minPoints} points.`,
     pointsNeedSubtotal: "Add items to reach 1,000 FCFA before you can redeem points.",
     earnsNote: (earned: number, freeFrom: string, fee: string) =>
-      `This order earns ${earned} ${earned === 1 ? "point" : "points"} (1 point per 100 FCFA paid). Pay on delivery or at pickup. Free delivery from ${freeFrom}. Standard delivery is ${fee}.`,
+      `This order earns ${earned} ${earned === 1 ? "point" : "points"} (1.5 points per 100 FCFA paid). Pay on delivery or at pickup. Free delivery from ${freeFrom}. Standard delivery is ${fee}.`,
     unableToPlace: "Unable to place the order.",
     networkError: "Network error. Try again.",
     placingOrder: "Placing order…",
@@ -399,7 +399,7 @@ export const en = {
     perks: {
       earnTitle: "Earn on every shop",
       earnBody:
-        "Collect 1 point for every 100 FCFA you pay. A 1,000 FCFA order earns 10 points.",
+        "Collect 1.5 points for every 100 FCFA you pay. A 1,000 FCFA order earns 15 points.",
       referTitle: "Sign up and refer",
       referBody: (welcome: number, referral: number) =>
         `New accounts get ${welcome} points. You receive ${referral} points when a friend signs up with your link and places their first order. They still get ${welcome} points for joining.`,
@@ -495,6 +495,14 @@ export const en = {
       redeemHint: (minPoints: number, minSubtotal: string) =>
         `Redeem from ${minPoints} points on orders of ${minSubtotal} or more. 1 point = 1 FCFA off. Not cash.`,
       redeemAtCheckout: "Redeem at checkout",
+      progressReady: "Ready to redeem",
+      progressLocked: "Keep earning",
+      progressToNext: (remaining: number) =>
+        `${remaining} ${remaining === 1 ? "point" : "points"} to your next reward`,
+      progressReadyBody: (points: number, value: string) =>
+        `You can redeem ${points} points for ${value} off at checkout.`,
+      progressNextMilestone: (remaining: number) =>
+        `${remaining} more to your next milestone`,
       referTitle: "Refer a friend",
       friendsSignedUp: "Friends signed up",
       firstOrderRewards: "First-order rewards",
@@ -555,7 +563,7 @@ export const en = {
 
   referral: {
     blurb:
-      "Share this link. You get 100 points when your friend creates an account and places their first order. They get 50 points for joining.",
+      "Share this link. You get 200 points when your friend creates an account and places their first order. They get 100 points for joining.",
     yourCode: "Your code:",
     linkLabel: "Referral link",
     copy: "Copy link",
@@ -602,8 +610,8 @@ export const en = {
     },
     feedback: {
       title: "Share your experience",
-      intro:
-        "A short testimonial helps other shoppers, and item reviews tell us what to stock more of. Each product review adds 5 points.",
+      intro: (reviewPoints: number) =>
+        `A short testimonial helps other shoppers, and item reviews tell us what to stock more of. Each product review adds ${reviewPoints} points.`,
       testimonial: "Testimonial",
       howWas: "How was Goshen?",
       testimonialPlaceholder:

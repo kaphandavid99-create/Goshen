@@ -4,7 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useHasMounted } from "@/hooks/use-has-mounted";
-import { DELIVERY_FEE, FREE_DELIVERY_FROM, deliveryFeeFor } from "@/lib/constants";
+import {
+  DELIVERY_FEE,
+  FREE_DELIVERY_FROM,
+  MIN_REDEEM_POINTS,
+  deliveryFeeFor,
+} from "@/lib/constants";
 import { useI18n } from "@/lib/i18n/context";
 import { formatPrice } from "@/lib/money";
 import {
@@ -349,8 +354,8 @@ export function CheckoutForm({
                       ? discount
                       : redeemableDiscount(points, subtotal),
                   )
-                : points < 100
-                  ? t.checkout.pointsBelowMin(points)
+                : points < MIN_REDEEM_POINTS
+                  ? t.checkout.pointsBelowMin(points, MIN_REDEEM_POINTS)
                   : t.checkout.pointsNeedSubtotal}
           </span>
         </label>

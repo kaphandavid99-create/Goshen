@@ -5,6 +5,7 @@ import { useState } from "react";
 import { StarPicker } from "@/components/feedback/star-rating";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useT } from "@/lib/i18n/context";
+import { REVIEW_POINTS } from "@/lib/constants";
 
 type ReviewDraft = {
   productId: string;
@@ -91,7 +92,9 @@ export function OrderFeedbackForm({
     <form onSubmit={submit} className="card mt-6 space-y-6 p-6">
       <div>
         <h2 className="section-title">{f.title}</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">{f.intro}</p>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          {f.intro(REVIEW_POINTS)}
+        </p>
       </div>
 
       <fieldset className="space-y-3">

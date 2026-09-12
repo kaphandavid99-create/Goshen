@@ -343,7 +343,7 @@ function formatLoyalty(result: unknown): string {
     loginUrl?: string;
     points?: number;
     redeem?: { minPoints: number; minOrderFcfa: number; canRedeemNow: boolean };
-    earn?: { perHundredFcfa: number };
+    earn?: { perHundredFcfa: number; referralBonus: number };
     referral?: { code?: string | null; url?: string };
   };
 
@@ -362,9 +362,11 @@ function formatLoyalty(result: unknown): string {
         ? `You can redeem now on orders of ${formatPrice(redeem.minOrderFcfa)} or more.`
         : `You can redeem once you reach ${redeem.minPoints} points, on orders of ${formatPrice(redeem.minOrderFcfa)} or more.`
       : null,
-    d.earn ? `You earn ${d.earn.perHundredFcfa} point per 100 FCFA spent.` : null,
-    d.referral?.code
-      ? `Share your referral link for 100 points per friend: [${d.referral.url}](${d.referral.url})`
+    d.earn
+      ? `You earn ${d.earn.perHundredFcfa} ${d.earn.perHundredFcfa === 1 ? "point" : "points"} per 100 FCFA spent.`
+      : null,
+    d.referral?.code && d.earn
+      ? `Share your referral link for ${d.earn.referralBonus} points per friend: [${d.referral.url}](${d.referral.url})`
       : null,
     `Full details at [rewards](/rewards).`,
   ].filter(Boolean);

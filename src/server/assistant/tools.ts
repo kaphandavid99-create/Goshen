@@ -45,7 +45,7 @@ const HELP_TOPICS = {
   payment: `Payment is arranged with the shop after you place the order (mobile money or cash). Place the order at [checkout](/checkout); the shop then confirms it.`,
   wholesale: `Approved business buyers get wholesale prices. See [/wholesale](/wholesale) and apply at [/wholesale/apply](/wholesale/apply). Minimum wholesale order is ${WHOLESALE_MIN_ORDER_CENTS.toLocaleString("en-US")} FCFA.`,
   cakes: `Custom cakes, cupcakes, pastries and dessert tables are from Nipz Pretty Cakes. Browse and request a booking at [/shop/nipz](/shop/nipz).`,
-  rewards: `You earn ${POINTS_PER_100_FCFA} loyalty point per 100 FCFA spent. Redeem from ${MIN_REDEEM_POINTS} points on orders of ${MIN_REDEEM_SUBTOTAL.toLocaleString("en-US")} FCFA or more, where ${POINT_VALUE_FCFA} point = 1 FCFA off. Full details at [/rewards](/rewards).`,
+  rewards: `You earn ${POINTS_PER_100_FCFA} loyalty ${POINTS_PER_100_FCFA === 1 ? "point" : "points"} per 100 FCFA spent. Redeem from ${MIN_REDEEM_POINTS} points on orders of ${MIN_REDEEM_SUBTOTAL.toLocaleString("en-US")} FCFA or more, where ${POINT_VALUE_FCFA} point = 1 FCFA off. Full details at [/rewards](/rewards).`,
   returns: `For a problem with an order or an item, contact the shop on WhatsApp (${STORE.whatsappHref}) or call ${STORE.phoneDisplay}. Have your order number ready.`,
   hours_location: `Goshen is in ${STORE.location}, open ${STORE.hours} every day. Directions: ${STORE.directionsHref}`,
   account: `Manage your account at [/account](/account): [orders](/account/orders), [addresses](/account/addresses), [rewards](/account/rewards), [wishlist](/account/wishlist) and [notifications](/account/notifications).`,

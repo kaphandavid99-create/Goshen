@@ -16,6 +16,10 @@ import { getDict } from "@/lib/i18n/server";
 import { countUnreadNotifications } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
 
+// Desktop top nav only — Bundles stays reachable from the mobile menu and
+// the footer, it's just dropped from this row to keep it short on desktop.
+const DESKTOP_NAV_LINKS = NAV_LINKS.filter((link) => link.key !== "bundles");
+
 export async function SiteHeader() {
   const [user, t] = await Promise.all([getCurrentUser(), getDict()]);
   const unread = user ? await countUnreadNotifications(user.id).catch(() => 0) : 0;
@@ -60,7 +64,7 @@ export async function SiteHeader() {
             <Suspense
               fallback={
                 <nav aria-label={t.nav.primary} className="hidden items-center gap-4 xl:gap-7 lg:flex">
-                  {NAV_LINKS.map((link) => (
+                  {DESKTOP_NAV_LINKS.map((link) => (
                     <Link key={link.key} href={link.href} className="nav-link">
                       {t.nav[link.key]}
                     </Link>
@@ -69,7 +73,7 @@ export async function SiteHeader() {
               }
             >
               <nav aria-label={t.nav.primary} className="hidden items-center gap-4 xl:gap-7 lg:flex">
-                {NAV_LINKS.map((link) => (
+                {DESKTOP_NAV_LINKS.map((link) => (
                   <NavLink key={link.key} href={link.href} className="nav-link">
                     {t.nav[link.key]}
                   </NavLink>

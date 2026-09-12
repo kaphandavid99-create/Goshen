@@ -10,7 +10,9 @@ export function spendPointsFor(amountFcfa: number) {
     return 0;
   }
 
-  return Math.floor(amountFcfa / 100) * POINTS_PER_100_FCFA;
+  // Points are whole numbers even at a fractional rate (e.g. 1.5 per 100 FCFA):
+  // round to the nearest point rather than always truncating in the shop's favor.
+  return Math.round(Math.floor(amountFcfa / 100) * POINTS_PER_100_FCFA);
 }
 
 export function canRedeemPoints(points: number, subtotalFcfa: number) {

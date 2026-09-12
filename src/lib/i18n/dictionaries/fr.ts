@@ -104,7 +104,7 @@ export const fr: Dictionary = {
     accountCol: "Compte",
     rewardsCol: "Fidélité",
     rewardsCopy:
-      "Gagnez 1 point par tranche de 100 FCFA. Recevez 100 points quand un ami s'inscrit et passe sa première commande. Utilisez vos points dès 100 comme remise en boutique — non convertibles en espèces.",
+      "Gagnez 1,5 point par tranche de 100 FCFA. Recevez 200 points quand un ami s'inscrit et passe sa première commande. Utilisez vos points dès 200 comme remise en boutique — non convertibles en espèces.",
     howRewardsWork: "Comment fonctionne la fidélité",
     rightsReserved: (year: number) => `© ${year} Goshen. Tous droits réservés.`,
     accountLinks: {
@@ -181,14 +181,14 @@ export const fr: Dictionary = {
     orderForDelivery: "Commander en livraison",
     referFriend: "Parrainer un ami",
     referFriendBody:
-      "Gagnez 100 points quand un ami s'inscrit et passe sa première commande.",
+      "Gagnez 200 points quand un ami s'inscrit et passe sa première commande.",
     getReferralLink: "Obtenir votre lien de parrainage",
     perks: {
       earnTitle: "Gagnez des points",
-      earnBody: "1 point par 100 FCFA payés. 50 points à l'inscription.",
+      earnBody: "1,5 point par 100 FCFA payés. 100 points à l'inscription.",
       redeemTitle: "Utilisez et économisez",
       redeemBody:
-        "Dès 100 points, 1 FCFA de remise par point sur les commandes à partir de 1 000 FCFA. Non convertible en espèces.",
+        "Dès 200 points, 1 FCFA de remise par point sur les commandes à partir de 1 000 FCFA. Non convertible en espèces.",
       extrasTitle: "Avantages membres",
       extrasBody: "Promos exclusives et livraison gratuite dès 15 000 FCFA.",
     },
@@ -273,12 +273,12 @@ export const fr: Dictionary = {
     total: "Total",
     usePoints: (n: number) =>
       `Utiliser ${n} points comme remise en boutique. Les points ne sont pas convertis en espèces.`,
-    pointsBelowMin: (n: number) =>
-      `Vous avez ${n} points. L'utilisation commence à 100 points.`,
+    pointsBelowMin: (n: number, minPoints: number) =>
+      `Vous avez ${n} points. L'utilisation commence à ${minPoints} points.`,
     pointsNeedSubtotal:
       "Ajoutez des articles pour atteindre 1 000 FCFA avant d'utiliser vos points.",
     earnsNote: (earned: number, freeFrom: string, fee: string) =>
-      `Cette commande rapporte ${earned} ${earned === 1 ? "point" : "points"} (1 point par 100 FCFA payés). Payez à la livraison ou au retrait. Livraison gratuite dès ${freeFrom}. La livraison standard coûte ${fee}.`,
+      `Cette commande rapporte ${earned} ${earned === 1 ? "point" : "points"} (1,5 point par 100 FCFA payés). Payez à la livraison ou au retrait. Livraison gratuite dès ${freeFrom}. La livraison standard coûte ${fee}.`,
     unableToPlace: "Impossible de passer la commande.",
     networkError: "Erreur réseau. Réessayez.",
     placingOrder: "Envoi de la commande…",
@@ -402,7 +402,7 @@ export const fr: Dictionary = {
     perks: {
       earnTitle: "Gagnez à chaque achat",
       earnBody:
-        "Cumulez 1 point par tranche de 100 FCFA payés. Une commande de 1 000 FCFA rapporte 10 points.",
+        "Cumulez 1,5 point par tranche de 100 FCFA payés. Une commande de 1 000 FCFA rapporte 15 points.",
       referTitle: "Inscrivez-vous et parrainez",
       referBody: (welcome: number, referral: number) =>
         `Les nouveaux comptes reçoivent ${welcome} points. Vous recevez ${referral} points quand un ami s'inscrit avec votre lien et passe sa première commande. Il reçoit tout de même ${welcome} points à l'inscription.`,
@@ -499,6 +499,14 @@ export const fr: Dictionary = {
       redeemHint: (minPoints: number, minSubtotal: string) =>
         `Utilisez dès ${minPoints} points sur les commandes de ${minSubtotal} ou plus. 1 point = 1 FCFA de remise. Non convertible en espèces.`,
       redeemAtCheckout: "Utiliser au paiement",
+      progressReady: "Prêt à échanger",
+      progressLocked: "Continuez à gagner",
+      progressToNext: (remaining: number) =>
+        `${remaining} ${remaining === 1 ? "point" : "points"} avant votre prochaine récompense`,
+      progressReadyBody: (points: number, value: string) =>
+        `Vous pouvez échanger ${points} points contre ${value} de remise au paiement.`,
+      progressNextMilestone: (remaining: number) =>
+        `${remaining} de plus avant votre prochain palier`,
       referTitle: "Parrainer un ami",
       friendsSignedUp: "Amis inscrits",
       firstOrderRewards: "Récompenses de première commande",
@@ -561,7 +569,7 @@ export const fr: Dictionary = {
 
   referral: {
     blurb:
-      "Partagez ce lien. Vous gagnez 100 points quand votre ami crée un compte et passe sa première commande. Il reçoit 50 points à l'inscription.",
+      "Partagez ce lien. Vous gagnez 200 points quand votre ami crée un compte et passe sa première commande. Il reçoit 100 points à l'inscription.",
     yourCode: "Votre code :",
     linkLabel: "Lien de parrainage",
     copy: "Copier le lien",
@@ -608,8 +616,8 @@ export const fr: Dictionary = {
     },
     feedback: {
       title: "Partagez votre expérience",
-      intro:
-        "Un court témoignage aide les autres clients, et les avis produits nous indiquent quoi mettre davantage en stock. Chaque avis produit ajoute 5 points.",
+      intro: (reviewPoints: number) =>
+        `Un court témoignage aide les autres clients, et les avis produits nous indiquent quoi mettre davantage en stock. Chaque avis produit ajoute ${reviewPoints} points.`,
       testimonial: "Témoignage",
       howWas: "Comment était Goshen ?",
       testimonialPlaceholder:
