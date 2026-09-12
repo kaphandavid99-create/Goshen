@@ -59,6 +59,7 @@ export const BUNDLES_CATEGORY_SLUG = "bundles";
 export const DRINK_FLAVORS = [
   "Ananas",
   "Orange",
+  "Apple",
   "Cocktail",
   "Grenadine",
   "Coca-Cola",
