@@ -55,6 +55,12 @@
       "description": "Water, juice, soft drinks, tea, coffee, and cocoa."
     },
     {
+      "id": "cat_biscuits_snacks",
+      "name": "Biscuits & Snacks",
+      "slug": "biscuits-and-snacks",
+      "description": "Biscuits, crackers, chips, and other snack treats."
+    },
+    {
       "id": "cat_other_groceries",
       "name": "Other Groceries",
       "slug": "other-groceries",
