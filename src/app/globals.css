@@ -1855,4 +1855,12 @@ body {
     inset: 0;
     width: 100%;
   }
+
+  /* On-screen-only controls (buttons, nav links) that live inside a printed
+   * area — e.g. the "Print / save as PDF" button itself. !important and kept
+   * outside any @layer so it always wins, regardless of Tailwind's own
+   * cascade-layer ordering for utilities like print:hidden. */
+  .no-print {
+    display: none !important;
+  }
 }

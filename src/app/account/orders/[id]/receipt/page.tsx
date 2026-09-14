@@ -117,7 +117,7 @@ export default async function OrderReceiptPage({
         ) : null}
       </section>
 
-      <p className="mt-8 text-sm print:hidden">
+      <p className="mt-8 text-sm no-print">
         <Link href={`/account/orders/${order.id}`} className="btn-ghost">
           {t.orders.backToOrders}
         </Link>

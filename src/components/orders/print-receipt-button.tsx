@@ -5,7 +5,7 @@ export function PrintReceiptButton({ label }: { label: string }) {
     <button
       type="button"
       onClick={() => window.print()}
-      className="btn btn-outline print:hidden"
+      className="btn btn-outline no-print"
     >
       {label}
     </button>
