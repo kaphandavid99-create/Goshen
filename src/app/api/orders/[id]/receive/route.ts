@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
 import { jsonError } from "@/server/auth/request";
 import { createNotification } from "@/server/account/notifications";
+import { sendOrderReceiptEmail } from "@/server/email/order-receipt";
 
 export async function POST(
   request: Request,
@@ -43,10 +44,17 @@ export async function POST(
     });
     await createNotification(prisma, {
       userId: user.id,
-      title: "Order received",
-      body: `Thanks for confirming ${order.orderNumber}. You can review products on the order.`,
-      href: `/account/orders/${order.id}`,
+      title: "Receipt ready",
+      body: `Thanks for confirming ${order.orderNumber}. Your receipt is ready to view or print for your records.`,
+      href: `/account/orders/${order.id}/receipt`,
     });
+
+    // Email the receipt. Best effort — a failed or unconfigured send must
+    // never undo the receive-confirmation the customer just made.
+    sendOrderReceiptEmail(order.id).catch((error) => {
+      console.error("order receipt email failed", error);
+    });
+
     return Response.json({ order: updated });
   } catch {
     return jsonError("Unable to confirm receipt.", 503);

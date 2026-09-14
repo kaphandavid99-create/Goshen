@@ -593,6 +593,13 @@ export const en = {
     address: "Address:",
     notes: "Notes:",
     backToOrders: "Back to orders",
+    receipt: {
+      link: "View receipt",
+      kicker: "Receipt",
+      receivedOn: (date: string) => `Confirmed received on ${date}.`,
+      keepForRecords: "Keep this for your records.",
+      print: "Print receipt",
+    },
     progress: {
       placed: "Placed",
       accepted: "Accepted",

@@ -62,6 +62,11 @@ export const env = {
     "ADMIN_EMAILS",
     "lemabrightness26@gmail.com,kaphandavid99@gmail.com",
   ),
+
+  // Resend (resend.com) — transactional email, e.g. the order receipt sent
+  // once a customer confirms they received their order.
+  resendApiKey: readClean("RESEND_API_KEY"),
+  receiptFromEmail: readClean("RECEIPT_FROM_EMAIL", "Goshen <receipts@goshen.shop>"),
 };
 
 export function isCloudinaryConfigured() {
@@ -88,6 +93,10 @@ export function isAllowedAdminEmail(email: string) {
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
   return allowed.includes(email.trim().toLowerCase());
+}
+
+export function isEmailConfigured() {
+  return Boolean(env.resendApiKey);
 }
 
 export function isMomoConfigured() {

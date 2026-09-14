@@ -599,6 +599,13 @@ export const fr: Dictionary = {
     address: "Adresse :",
     notes: "Remarques :",
     backToOrders: "Retour aux commandes",
+    receipt: {
+      link: "Voir le reçu",
+      kicker: "Reçu",
+      receivedOn: (date: string) => `Réception confirmée le ${date}.`,
+      keepForRecords: "Conservez ce reçu pour vos dossiers.",
+      print: "Imprimer le reçu",
+    },
     progress: {
       placed: "Passée",
       accepted: "Acceptée",

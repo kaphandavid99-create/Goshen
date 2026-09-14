@@ -1,25 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ConfirmReceived } from "@/components/orders/confirm-received";
-import { OrderFeedbackForm } from "@/components/orders/order-feedback-form";
-import { OrderProgress } from "@/components/orders/order-progress";
+import { PrintReceiptButton } from "@/components/orders/print-receipt-button";
+import { formatDate } from "@/lib/dates";
 import {
   formatFlavorSummary,
   normalizeFlavorQuantities,
 } from "@/lib/flavors";
 import { getDict, getI18n } from "@/lib/i18n/server";
 import { formatPrice } from "@/lib/money";
-import { canCustomerReceive, canLeaveFeedback, orderStatusLabel } from "@/lib/order-status";
 import { requireUser } from "@/server/auth/current-user";
 import { getOrderForUser } from "@/server/orders/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getDict();
-  return { title: t.account.nav.orders };
+  return { title: t.orders.receipt.kicker };
 }
 
-export default async function OrderDetailPage({
+export default async function OrderReceiptPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -31,60 +29,21 @@ export default async function OrderDetailPage({
     getI18n(),
   ]);
 
-  if (!order) {
+  if (!order || !order.receivedAt) {
     notFound();
   }
 
   return (
-    <section className="max-w-3xl">
-      <p className="kicker">{t.orders.kicker}</p>
-      <h1 className="page-title mt-2">
-        {order.orderNumber}
-      </h1>
+    <section className="max-w-2xl">
+      <p className="kicker">{t.orders.receipt.kicker}</p>
+      <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
+        <h1 className="page-title">{order.orderNumber}</h1>
+        <PrintReceiptButton label={t.orders.receipt.print} />
+      </div>
       <p className="mt-2 text-sm text-muted-foreground">
-        {order.channel === "WHOLESALE" ? t.orders.wholesalePrefix : ""}
-        {order.fulfillment === "DELIVERY" ? t.orders.delivery : t.orders.pickup} ·{" "}
-        {orderStatusLabel(order.status, locale)}.{" "}
-        {order.channel === "WHOLESALE" ? t.orders.wholesaleNote : t.orders.payNote}
+        {t.orders.receipt.receivedOn(formatDate(order.receivedAt, locale))}{" "}
+        {t.orders.receipt.keepForRecords}
       </p>
-
-      {order.status === "AWAITING_PAYMENT" && order.payment ? (
-        <Link
-          href={`/pay/${order.payment.id}`}
-          className="btn btn-rose mt-6 inline-flex"
-        >
-          {t.pay.finishPayment}
-        </Link>
-      ) : null}
-
-      <section className="card mt-8 p-6">
-        <OrderProgress status={order.status} />
-      </section>
-
-      {canCustomerReceive(order.status) ? (
-        <ConfirmReceived orderId={order.id} />
-      ) : null}
-
-      {canLeaveFeedback(order.status) ? (
-        <Link
-          href={`/account/orders/${order.id}/receipt`}
-          className="btn btn-outline mt-6 inline-flex"
-        >
-          {t.orders.receipt.link}
-        </Link>
-      ) : null}
-
-      {canLeaveFeedback(order.status) ? (
-        <OrderFeedbackForm
-          orderId={order.id}
-          items={order.items.map((item) => ({
-            productId: item.productId,
-            name: item.name,
-          }))}
-          testimonial={order.testimonial}
-          reviews={order.reviews}
-        />
-      ) : null}
 
       <section className="card mt-8 p-6">
         <h2 className="font-semibold text-primary">{t.orders.items}</h2>
@@ -156,15 +115,10 @@ export default async function OrderDetailPage({
             <span className="text-muted-foreground">{t.orders.address}</span> {order.address}
           </p>
         ) : null}
-        {order.notes ? (
-          <p className="mt-1">
-            <span className="text-muted-foreground">{t.orders.notes}</span> {order.notes}
-          </p>
-        ) : null}
       </section>
 
-      <p className="mt-8 text-sm">
-        <Link href="/account/orders" className="btn-ghost">
+      <p className="mt-8 text-sm print:hidden">
+        <Link href={`/account/orders/${order.id}`} className="btn-ghost">
           {t.orders.backToOrders}
         </Link>
       </p>
