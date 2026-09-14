@@ -99,7 +99,9 @@ export default async function AdminOrdersPage({
                       <p className="text-xs text-muted-foreground">{order.phone}</p>
                     </td>
                     <td>
-                      <OrderThumbs items={order.items} />
+                      <Link href={`/admin/orders/${order.id}`}>
+                        <OrderThumbs items={order.items} />
+                      </Link>
                     </td>
                     <td>{order.fulfillment === "DELIVERY" ? "Delivery" : "Pickup"}</td>
                     <td>

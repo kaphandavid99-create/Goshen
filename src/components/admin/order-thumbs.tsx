@@ -12,21 +12,30 @@ export function orderItemImage(item: ThumbItem) {
   return item.imageUrl ?? item.product?.images[0]?.url ?? null;
 }
 
-/** A small stacked preview of the products in an order, for admin tables. */
+/** Full "2× Cocktail Mix, 1× Garri (5kg), …" listing — for a hover tooltip
+ * so every product in the order is readable, not just the first few thumbs. */
+function fullItemList(items: ThumbItem[]) {
+  return items.map((item) => `${item.quantity}× ${item.name}`).join(", ");
+}
+
+/** A small stacked preview of the products in an order, for admin tables.
+ * Only the first few get a thumbnail (table rows have limited width), but
+ * every product's name is always in the group's tooltip — hover the row to
+ * read the full list without opening the order. */
 export function OrderThumbs({ items }: { items: ThumbItem[] }) {
   const totalUnits = items.reduce((sum, item) => sum + item.quantity, 0);
   const shown = items.slice(0, 4);
   const extra = items.length - shown.length;
+  const fullList = fullItemList(items);
 
   return (
-    <span className="flex items-center gap-2">
+    <span className="flex items-center gap-2" title={fullList}>
       <span className="flex -space-x-2">
         {shown.map((item) => {
           const url = orderItemImage(item);
           return (
             <span
               key={item.id}
-              title={item.name}
               className="relative size-9 shrink-0 overflow-hidden rounded-lg border border-card bg-muted ring-1 ring-border"
             >
               {url ? (

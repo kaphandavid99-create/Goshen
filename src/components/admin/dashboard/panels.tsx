@@ -216,7 +216,6 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
           <tbody>
             {orders.map((o) => {
               const pay = paymentLabel(o.status, o.payment);
-              const count = o.items.reduce((s, i) => s + i.quantity, 0);
               return (
                 <tr key={o.id}>
                   <td>
@@ -233,7 +232,11 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
                       <span className="min-w-0 truncate">{o.user.name}</span>
                     </span>
                   </td>
-                  <td className="text-muted-foreground">{count}</td>
+                  <td>
+                    <Link href={`/admin/orders/${o.id}`}>
+                      <OrderThumbs items={o.items} />
+                    </Link>
+                  </td>
                   <td className="font-medium">{formatPrice(o.totalCents)}</td>
                   <td className={cn("text-xs font-medium", pay.tone)}>{pay.text}</td>
                   <td>
@@ -258,7 +261,6 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
       <ul className="space-y-3 sm:hidden">
         {orders.map((o) => {
           const pay = paymentLabel(o.status, o.payment);
-          const count = o.items.reduce((s, i) => s + i.quantity, 0);
           return (
             <li key={o.id} className="rounded-lg border border-border p-3">
               <div className="flex items-center justify-between gap-2">
@@ -268,12 +270,15 @@ export function RecentOrdersPanel({ orders }: { orders: Recent }) {
               <p className="mt-1 text-xs text-muted-foreground">
                 {o.user.name} · {formatDate(o.createdAt)}
               </p>
-              <div className="mt-2 flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">
-                  {count} item{count === 1 ? "" : "s"} · {pay.text}
+              <div className="mt-2 flex items-center justify-between gap-2">
+                <Link href={`/admin/orders/${o.id}`}>
+                  <OrderThumbs items={o.items} />
+                </Link>
+                <span className="shrink-0 text-sm font-semibold">
+                  {formatPrice(o.totalCents)}
                 </span>
-                <span className="font-semibold">{formatPrice(o.totalCents)}</span>
               </div>
+              <p className="mt-1 text-xs text-muted-foreground">{pay.text}</p>
               <Link
                 href={`/admin/orders/${o.id}`}
                 className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-primary"
