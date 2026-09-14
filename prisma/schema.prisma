@@ -211,6 +211,9 @@ model Order {
   totalCents     Int
   acceptedAt     DateTime?
   receivedAt     DateTime?
+  // Set once the repeat-purchase cron has sent a "more from this category"
+  // nudge for this order, so it's never sent twice for the same order.
+  repeatPurchaseNotifiedAt DateTime?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   items          OrderItem[]
@@ -220,6 +223,7 @@ model Order {
 
   @@index([userId])
   @@index([createdAt])
+  @@index([status, receivedAt, repeatPurchaseNotifiedAt])
 }
 
 // One payment attempt per order. Cash payments are just a record; MoMo payments

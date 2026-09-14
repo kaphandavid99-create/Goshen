@@ -95,6 +95,11 @@ export const MIN_REDEEM_POINTS = 200;
 export const MIN_REDEEM_SUBTOTAL = 1_000;
 export const POINT_VALUE_FCFA = 1;
 
+/** Days after an order is received before the repeat-purchase nudge fires. */
+export const REPEAT_PURCHASE_DELAY_DAYS = 4;
+/** Max products suggested per nudge, so the notification stays short. */
+export const REPEAT_PURCHASE_MAX_SUGGESTIONS = 3;
+
 export function deliveryFeeFor(subtotal: number) {
   return subtotal >= FREE_DELIVERY_FROM ? 0 : DELIVERY_FEE;
 }

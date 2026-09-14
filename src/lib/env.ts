@@ -67,6 +67,10 @@ export const env = {
   // once a customer confirms they received their order.
   resendApiKey: readClean("RESEND_API_KEY"),
   receiptFromEmail: readClean("RECEIPT_FROM_EMAIL", "Goshen <receipts@goshen.shop>"),
+
+  // Shared secret Vercel Cron sends back as a Bearer token so /api/cron/*
+  // routes can tell a real scheduled run from a random request.
+  cronSecret: readClean("CRON_SECRET"),
 };
 
 export function isCloudinaryConfigured() {
@@ -97,6 +101,13 @@ export function isAllowedAdminEmail(email: string) {
 
 export function isEmailConfigured() {
   return Boolean(env.resendApiKey);
+}
+
+export function isCronRequestAuthorized(request: Request) {
+  if (!env.cronSecret) {
+    return false;
+  }
+  return request.headers.get("authorization") === `Bearer ${env.cronSecret}`;
 }
 
 export function isMomoConfigured() {
