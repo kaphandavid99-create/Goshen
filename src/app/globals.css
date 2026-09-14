@@ -1843,6 +1843,10 @@ body {
  * around it. Scoped with :has() so it only kicks in on pages that actually
  * contain the marker; every other page prints normally. */
 @media print {
+  @page {
+    margin: 10mm;
+  }
+
   body:has(.print-only-area) * {
     visibility: hidden;
   }
@@ -1854,6 +1858,18 @@ body {
     position: absolute;
     inset: 0;
     width: 100%;
+    /* Shrink the whole receipt (text, images, spacing all scale together)
+     * so a typical order's worth of line items fits on a single page
+     * instead of spilling a couple of lines onto a second one. */
+    zoom: 0.8;
+  }
+
+  /* Never let an item row or card split across a page break — keeps a
+   * product's name, photo and price together if the page break does land
+   * mid-list on a longer order. */
+  .print-only-area li,
+  .print-only-area .card {
+    break-inside: avoid;
   }
 
   /* On-screen-only controls (buttons, nav links) that live inside a printed
