@@ -34,7 +34,7 @@ export default async function OrderReceiptPage({
   }
 
   return (
-    <section className="max-w-2xl">
+    <section className="print-only-area max-w-2xl">
       <p className="kicker">{t.orders.receipt.kicker}</p>
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <h1 className="page-title">{order.orderNumber}</h1>

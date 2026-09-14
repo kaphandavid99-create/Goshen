@@ -604,7 +604,7 @@ export const fr: Dictionary = {
       kicker: "Reçu",
       receivedOn: (date: string) => `Réception confirmée le ${date}.`,
       keepForRecords: "Conservez ce reçu pour vos dossiers.",
-      print: "Imprimer le reçu",
+      print: "Imprimer / enregistrer en PDF",
     },
     progress: {
       placed: "Passée",

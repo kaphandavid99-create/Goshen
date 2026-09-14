@@ -1837,3 +1837,22 @@ body {
     animation: none;
   }
 }
+
+/* Printing a receipt (or anything else marked .print-only-area) should
+ * produce just that content — not the site header, account nav, or footer
+ * around it. Scoped with :has() so it only kicks in on pages that actually
+ * contain the marker; every other page prints normally. */
+@media print {
+  body:has(.print-only-area) * {
+    visibility: hidden;
+  }
+  body:has(.print-only-area) .print-only-area,
+  body:has(.print-only-area) .print-only-area * {
+    visibility: visible;
+  }
+  body:has(.print-only-area) .print-only-area {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+  }
+}

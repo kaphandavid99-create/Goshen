@@ -598,7 +598,7 @@ export const en = {
       kicker: "Receipt",
       receivedOn: (date: string) => `Confirmed received on ${date}.`,
       keepForRecords: "Keep this for your records.",
-      print: "Print receipt",
+      print: "Print / save as PDF",
     },
     progress: {
       placed: "Placed",
