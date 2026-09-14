@@ -63,3 +63,30 @@ export async function notifyStaffOfNewOrder(
     ),
   );
 }
+
+/**
+ * Tell every customer (in-app + push) about a product that just went live,
+ * so they hear about it even when Goshen isn't open on their device. Callers
+ * should fire this without awaiting it — with many customers this can be a
+ * lot of writes/pushes, and a new product should never wait on that fan-out.
+ */
+export async function notifyCustomersOfNewProduct(
+  db: Db,
+  product: { id: string; name: string; slug: string; priceCents: number },
+) {
+  const customers = await db.user.findMany({
+    where: { role: "CUSTOMER" },
+    select: { id: true },
+  });
+
+  await Promise.all(
+    customers.map((c) =>
+      createNotification(db, {
+        userId: c.id,
+        title: "New in store",
+        body: `${product.name} — ${formatPrice(product.priceCents)} just landed. Take a look.`,
+        href: `/shop/${product.slug}`,
+      }),
+    ),
+  );
+}

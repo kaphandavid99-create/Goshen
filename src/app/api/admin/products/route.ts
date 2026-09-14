@@ -6,6 +6,7 @@ import { getCurrentUser, isStaffRole } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
 import { jsonError } from "@/server/auth/request";
 import { adminProductCreateSchema } from "@/validators/admin";
+import { notifyCustomersOfNewProduct } from "@/server/account/notifications";
 
 async function uniqueSlug(name: string) {
   const base = slugify(name) || "product";
@@ -110,6 +111,21 @@ export async function POST(request: Request) {
       },
       select: { id: true, slug: true },
     });
+
+    // Let customers know a new product just landed. Best effort and never
+    // awaited — with many customers this fan-out can take a while, and it
+    // must never delay the admin's save or fail the request if it errors.
+    if (fields.inStock) {
+      notifyCustomersOfNewProduct(prisma, {
+        id: product.id,
+        name: fields.name,
+        slug: product.slug,
+        priceCents: fields.priceCents,
+      }).catch((error) => {
+        console.error("notify customers of new product failed", error);
+      });
+    }
+
     return Response.json({ product }, { status: 201 });
   } catch (error) {
     if (
