@@ -51,6 +51,7 @@ export async function POST(request: Request) {
       );
     }
 
+    console.error("create order failed", error);
     return jsonError("Unable to place the order. Confirm the database is running.", 503);
   }
 }
