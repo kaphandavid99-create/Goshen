@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { IconGoogle } from "@/components/icons";
 import { isSafeNextPath } from "@/lib/auth/safe-next";
 import { useT } from "@/lib/i18n/context";
 
@@ -134,6 +135,7 @@ export function AuthForm({ mode }: AuthFormProps) {
         href={googleStartHref(mode, safeNext, activeReferral)}
         className="btn btn-outline w-full"
       >
+        <IconGoogle />
         {t.auth.continueWithGoogle}
       </a>
       <p className="text-center text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
