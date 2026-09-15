@@ -109,6 +109,8 @@ export const en = {
       `Earn 1.5 points per 100 FCFA. Get ${signupBonus} when a friend joins and ${referral} more when they make their first purchase. Redeem from ${minPoints} points as a shop discount — not cash.`,
     howRewardsWork: "How rewards work",
     rightsReserved: (year: number) => `© ${year} Goshen. All rights reserved.`,
+    termsLink: "Terms",
+    privacyLink: "Privacy",
     accountLinks: {
       signIn: "Sign in",
       createAccount: "Create account",
@@ -387,6 +389,8 @@ export const en = {
     haveAccount: "Already have an account?",
     newToGoshen: "New to Goshen?",
     createAnAccount: "Create an account",
+    agreeIntro: "By creating an account, you agree to our",
+    agreeAnd: "and",
   },
 
   rewards: {
@@ -935,6 +939,164 @@ export const en = {
     CANCELLED: "Cancelled",
   },
 
+  terms: {
+    kicker: "Legal",
+    title: "Terms of Service",
+    updatedLabel: (date: string) => `Last updated: ${date}`,
+    intro:
+      "These terms cover how you can use the Goshen website and shop with us in New Bell, Bamenda. By creating an account, placing an order, or otherwise using the site, you agree to them.",
+    sections: [
+      {
+        heading: "1. Who we are",
+        body: [
+          "Goshen is a neighborhood grocery and household store based in New Bell, Bamenda, Cameroon, selling directly to individual shoppers and, for approved business buyers, at wholesale prices. Nipz Pretty Cakes & Pastries is operated as part of Goshen and takes bookings on its own WhatsApp line.",
+        ],
+      },
+      {
+        heading: "2. Your account",
+        body: [
+          "You can create an account with an email and password, or by signing in with Google. You are responsible for keeping your login details safe and for all activity on your account.",
+          "Give us accurate information — your name, phone number, and delivery address are used to fulfil orders and contact you about them. One account per person; do not create multiple accounts to claim repeat welcome or referral rewards.",
+        ],
+      },
+      {
+        heading: "3. Orders and payment",
+        body: [
+          "Prices are shown in FCFA. You can pay in cash on delivery or pickup, or by mobile money (MoMo) at checkout. An order is only confirmed once we accept it — we may decline or cancel an order if an item is out of stock, if the delivery address is outside our service area, or if we suspect fraud or abuse.",
+          "Delivery is free on orders of 15,000 FCFA or more; otherwise a delivery fee applies. It is your responsibility to be reachable and to give a correct address and phone number for delivery.",
+        ],
+      },
+      {
+        heading: "4. Loyalty points and referrals",
+        body: [
+          "Signing up, spending, referring friends, and reviewing products earns loyalty points, shown in your account. Points can only be redeemed as a discount at checkout, up to the per-order limit shown on the Rewards page — they are never paid out as cash and cannot be transferred between accounts.",
+          "Referral rewards are meant for genuine new customers. We may withhold or reverse points earned through fake accounts, self-referrals, or other abuse of the program, and may change the points program, point values, or redemption limits at any time.",
+        ],
+      },
+      {
+        heading: "5. Wholesale accounts",
+        body: [
+          "Business buyers can apply for wholesale pricing. We review applications and may approve, reject, or later suspend wholesale status at our discretion. Final pricing, payment terms, and delivery for a wholesale order are confirmed directly with you after you place it; loyalty points do not apply to wholesale orders.",
+        ],
+      },
+      {
+        heading: "6. Reviews and other content",
+        body: [
+          "You can review a product after receiving an order. Reviews must be honest and based on your own experience — no offensive, misleading, or fake content. We may remove a review or restrict an account that violates this.",
+        ],
+      },
+      {
+        heading: "7. The shopping assistant",
+        body: [
+          "The in-site shopping assistant helps you find products, check orders, and understand loyalty points. It cannot place orders or take payment on your behalf, and its answers are provided as a convenience, without guarantee of accuracy beyond your own account and order data.",
+        ],
+      },
+      {
+        heading: "8. Acceptable use",
+        body: [
+          "Do not misuse the site: no scraping, automated account creation, attempts to bypass security or rate limits, or interfering with other customers' use of the shop.",
+        ],
+      },
+      {
+        heading: "9. Liability",
+        body: [
+          "We aim to keep product information, prices, and stock levels accurate, but errors can happen and we may correct them, including after an order is placed. To the extent permitted by law, our liability for any claim relating to an order is limited to the amount you paid for that order.",
+        ],
+      },
+      {
+        heading: "10. Changes and termination",
+        body: [
+          "We may update these terms from time to time; the date at the top shows the latest revision. We may suspend or close an account that violates these terms.",
+        ],
+      },
+      {
+        heading: "11. Contact",
+        body: [
+          "Questions about these terms? Reach us on WhatsApp, by phone, or through the Contact page.",
+        ],
+      },
+    ],
+  },
+
+  privacy: {
+    kicker: "Legal",
+    title: "Privacy Policy",
+    updatedLabel: (date: string) => `Last updated: ${date}`,
+    intro:
+      "This explains what information Goshen collects when you use the website, and how it is used.",
+    sections: [
+      {
+        heading: "1. Information we collect",
+        body: [
+          "Account details: your name, email address, phone number, delivery address, and a securely hashed password — we never store your password in plain text. If you sign in with Google, we receive your name, email, and Google account ID.",
+          "Order details: items purchased, delivery or pickup choice, payment method, and order status.",
+          "Wholesale applications: your business name and details, if you apply for wholesale pricing.",
+          "Content you add: product reviews, notification preferences, and messages you send us.",
+          "Usage information: an anonymous visitor identifier stored in a cookie, together with the pages you visit, so we can see how many people use the shop. We also briefly note IP addresses to keep sign-up and page-view traffic from being abused.",
+        ],
+      },
+      {
+        heading: "2. Cookies",
+        body: [
+          "We use a small number of cookies: one to keep you signed in, one for security (CSRF protection), and one anonymous, long-lived identifier used only to count visits to the shop in aggregate — it is never used to identify you personally.",
+        ],
+      },
+      {
+        heading: "3. How we use your information",
+        body: [
+          "To create and manage your account, take and fulfil orders, and contact you about them.",
+          "To run the loyalty points and referral program, and to send account, order, and reward notifications — including push notifications, only if you turn them on.",
+          "To respond to messages sent through the Contact page or WhatsApp, and to review wholesale applications.",
+          "To understand overall shop traffic and improve the site, using aggregated, anonymised visit data.",
+          "To keep the platform secure and prevent fraud or abuse of accounts, orders, and the referral program.",
+        ],
+      },
+      {
+        heading: "4. How we share information",
+        body: [
+          "We do not sell your personal information. We share it only where needed to run the shop: with our mobile money provider to process a MoMo payment you initiate, with Google if you choose to sign in with Google, with our image-hosting provider for product photos, and with staff who prepare and deliver your order.",
+          "We may disclose information if required to do so by law.",
+        ],
+      },
+      {
+        heading: "5. How long we keep it",
+        body: [
+          "We keep account and order information for as long as your account is active, and afterwards for as long as needed for accounting and legal purposes. You can ask us to delete your account and personal data at any time, subject to records we are required to keep.",
+        ],
+      },
+      {
+        heading: "6. Your choices",
+        body: [
+          "You can update your profile details from your account at any time, turn push notifications off from your device or browser settings, and ask us — via the Contact page or WhatsApp — to see, correct, export, or delete the personal information we hold about you.",
+        ],
+      },
+      {
+        heading: "7. Children",
+        body: [
+          "Goshen's website is not directed at children, and accounts should only be created by adults able to place and pay for orders.",
+        ],
+      },
+      {
+        heading: "8. Security",
+        body: [
+          "Passwords are stored using one-way hashing, not in plain text, and your session is kept in a secure, HTTP-only cookie. No online service can be guaranteed completely secure, but we take reasonable steps to protect your information.",
+        ],
+      },
+      {
+        heading: "9. Changes to this policy",
+        body: [
+          "We may update this policy from time to time; the date at the top shows the latest revision.",
+        ],
+      },
+      {
+        heading: "10. Contact",
+        body: [
+          "For any privacy question or request, reach us on WhatsApp, by phone, or through the Contact page.",
+        ],
+      },
+    ],
+  },
+
   meta: {
     cart: "Cart",
     shop: "Shop",
@@ -946,6 +1108,8 @@ export const en = {
     login: "Sign in",
     register: "Create account",
     account: "Dashboard",
+    terms: "Terms of Service",
+    privacy: "Privacy Policy",
   },
 };
 

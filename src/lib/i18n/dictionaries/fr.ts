@@ -107,6 +107,8 @@ export const fr: Dictionary = {
       `Gagnez 1,5 point par tranche de 100 FCFA. Recevez ${signupBonus} points quand un ami s'inscrit, puis ${referral} points de plus lors de sa première commande. Utilisez vos points dès ${minPoints} comme remise en boutique — non convertibles en espèces.`,
     howRewardsWork: "Comment fonctionne la fidélité",
     rightsReserved: (year: number) => `© ${year} Goshen. Tous droits réservés.`,
+    termsLink: "Conditions",
+    privacyLink: "Confidentialité",
     accountLinks: {
       signIn: "Se connecter",
       createAccount: "Créer un compte",
@@ -390,6 +392,8 @@ export const fr: Dictionary = {
     haveAccount: "Vous avez déjà un compte ?",
     newToGoshen: "Nouveau chez Goshen ?",
     createAnAccount: "Créer un compte",
+    agreeIntro: "En créant un compte, vous acceptez nos",
+    agreeAnd: "et notre",
   },
 
   rewards: {
@@ -938,6 +942,164 @@ export const fr: Dictionary = {
     CANCELLED: "Annulée",
   },
 
+  terms: {
+    kicker: "Mentions légales",
+    title: "Conditions d'utilisation",
+    updatedLabel: (date: string) => `Dernière mise à jour : ${date}`,
+    intro:
+      "Ces conditions régissent l'utilisation du site Goshen et vos achats auprès de nous à New Bell, Bamenda. En créant un compte, en passant une commande ou en utilisant autrement le site, vous les acceptez.",
+    sections: [
+      {
+        heading: "1. Qui nous sommes",
+        body: [
+          "Goshen est une épicerie et magasin de produits ménagers de quartier basé à New Bell, Bamenda, au Cameroun, qui vend directement aux particuliers et, pour les acheteurs professionnels approuvés, à des prix de gros. Nipz Pretty Cakes & Pastries fait partie de Goshen et prend ses réservations sur sa propre ligne WhatsApp.",
+        ],
+      },
+      {
+        heading: "2. Votre compte",
+        body: [
+          "Vous pouvez créer un compte avec un e-mail et un mot de passe, ou en vous connectant avec Google. Vous êtes responsable de la confidentialité de vos identifiants et de toute activité sur votre compte.",
+          "Fournissez des informations exactes — votre nom, votre numéro de téléphone et votre adresse de livraison servent à traiter vos commandes et à vous contacter à leur sujet. Un compte par personne ; ne créez pas plusieurs comptes pour réclamer plusieurs fois les points de bienvenue ou de parrainage.",
+        ],
+      },
+      {
+        heading: "3. Commandes et paiement",
+        body: [
+          "Les prix sont affichés en FCFA. Vous pouvez payer en espèces à la livraison ou au retrait, ou par mobile money (MoMo) au moment du paiement. Une commande n'est confirmée qu'une fois que nous l'acceptons — nous pouvons refuser ou annuler une commande si un article est en rupture de stock, si l'adresse de livraison est en dehors de notre zone de service, ou en cas de suspicion de fraude ou d'abus.",
+          "La livraison est gratuite à partir de 15 000 FCFA d'achat ; des frais de livraison s'appliquent en dessous de ce montant. Il vous appartient d'être joignable et de fournir une adresse et un numéro de téléphone corrects pour la livraison.",
+        ],
+      },
+      {
+        heading: "4. Points de fidélité et parrainage",
+        body: [
+          "Vous inscrire, dépenser, parrainer des amis et évaluer des produits vous fait gagner des points de fidélité, visibles dans votre compte. Les points ne peuvent être utilisés que comme remise au paiement, dans la limite indiquée par commande sur la page Fidélité — ils ne sont jamais versés en espèces et ne peuvent pas être transférés entre comptes.",
+          "Les récompenses de parrainage sont destinées à de véritables nouveaux clients. Nous pouvons refuser ou annuler des points obtenus par de faux comptes, de l'auto-parrainage ou tout autre abus du programme, et pouvons modifier à tout moment le programme de points, la valeur des points ou les limites d'utilisation.",
+        ],
+      },
+      {
+        heading: "5. Comptes grossistes",
+        body: [
+          "Les acheteurs professionnels peuvent demander des prix de gros. Nous examinons les demandes et pouvons les approuver, les refuser, ou suspendre ultérieurement le statut grossiste à notre discrétion. Le prix final, les modalités de paiement et la livraison d'une commande de gros sont confirmés directement avec vous après la commande ; les points de fidélité ne s'appliquent pas aux commandes de gros.",
+        ],
+      },
+      {
+        heading: "6. Avis et autres contenus",
+        body: [
+          "Vous pouvez évaluer un produit après réception d'une commande. Les avis doivent être honnêtes et basés sur votre propre expérience — aucun contenu offensant, trompeur ou faux. Nous pouvons supprimer un avis ou restreindre un compte qui ne respecte pas cette règle.",
+        ],
+      },
+      {
+        heading: "7. L'assistant d'achat",
+        body: [
+          "L'assistant d'achat du site vous aide à trouver des produits, suivre vos commandes et comprendre vos points de fidélité. Il ne peut ni passer de commande ni effectuer de paiement en votre nom, et ses réponses sont fournies à titre indicatif, sans garantie d'exactitude au-delà des données de votre propre compte et de vos commandes.",
+        ],
+      },
+      {
+        heading: "8. Utilisation autorisée",
+        body: [
+          "N'utilisez pas le site de manière abusive : pas d'extraction automatisée de données, de création automatisée de comptes, de tentative de contournement de la sécurité ou des limites de fréquence, ni d'interférence avec l'utilisation du site par d'autres clients.",
+        ],
+      },
+      {
+        heading: "9. Responsabilité",
+        body: [
+          "Nous nous efforçons de tenir à jour les informations produits, les prix et les niveaux de stock, mais des erreurs peuvent survenir et nous pouvons les corriger, y compris après qu'une commande a été passée. Dans la mesure permise par la loi, notre responsabilité pour toute réclamation liée à une commande est limitée au montant payé pour cette commande.",
+        ],
+      },
+      {
+        heading: "10. Modifications et résiliation",
+        body: [
+          "Nous pouvons modifier ces conditions de temps à autre ; la date en haut de page indique la dernière révision. Nous pouvons suspendre ou fermer un compte qui enfreint ces conditions.",
+        ],
+      },
+      {
+        heading: "11. Contact",
+        body: [
+          "Des questions sur ces conditions ? Contactez-nous par WhatsApp, par téléphone, ou via la page Contact.",
+        ],
+      },
+    ],
+  },
+
+  privacy: {
+    kicker: "Mentions légales",
+    title: "Politique de confidentialité",
+    updatedLabel: (date: string) => `Dernière mise à jour : ${date}`,
+    intro:
+      "Ce document explique quelles informations Goshen collecte lorsque vous utilisez le site, et comment elles sont utilisées.",
+    sections: [
+      {
+        heading: "1. Informations que nous collectons",
+        body: [
+          "Détails du compte : votre nom, adresse e-mail, numéro de téléphone, adresse de livraison, et un mot de passe stocké de façon sécurisée — nous ne stockons jamais votre mot de passe en clair. Si vous vous connectez avec Google, nous recevons votre nom, votre e-mail et votre identifiant de compte Google.",
+          "Détails des commandes : articles achetés, choix de livraison ou de retrait, moyen de paiement et statut de la commande.",
+          "Demandes grossiste : le nom et les informations de votre entreprise, si vous demandez des prix de gros.",
+          "Contenu que vous ajoutez : avis produits, préférences de notification, et messages que vous nous envoyez.",
+          "Informations d'utilisation : un identifiant visiteur anonyme stocké dans un cookie, ainsi que les pages que vous consultez, afin que nous puissions estimer la fréquentation du site. Nous notons aussi brièvement les adresses IP pour éviter les abus lors des inscriptions et de la navigation.",
+        ],
+      },
+      {
+        heading: "2. Cookies",
+        body: [
+          "Nous utilisons un petit nombre de cookies : un pour vous garder connecté, un pour la sécurité (protection CSRF), et un identifiant anonyme de longue durée utilisé uniquement pour compter les visites du site de façon globale — il ne sert jamais à vous identifier personnellement.",
+        ],
+      },
+      {
+        heading: "3. Comment nous utilisons vos informations",
+        body: [
+          "Pour créer et gérer votre compte, traiter et livrer vos commandes, et vous contacter à leur sujet.",
+          "Pour gérer le programme de points de fidélité et de parrainage, et pour envoyer des notifications de compte, de commande et de récompense — y compris des notifications push, uniquement si vous les activez.",
+          "Pour répondre aux messages envoyés via la page Contact ou WhatsApp, et pour examiner les demandes grossiste.",
+          "Pour comprendre la fréquentation globale du site et l'améliorer, à partir de données de visite agrégées et anonymisées.",
+          "Pour assurer la sécurité de la plateforme et prévenir la fraude ou les abus des comptes, des commandes et du programme de parrainage.",
+        ],
+      },
+      {
+        heading: "4. Comment nous partageons vos informations",
+        body: [
+          "Nous ne vendons pas vos informations personnelles. Nous ne les partageons que lorsque c'est nécessaire au fonctionnement du site : avec notre prestataire de mobile money pour traiter un paiement MoMo que vous initiez, avec Google si vous choisissez de vous connecter avec Google, avec notre hébergeur d'images pour les photos produits, et avec le personnel qui prépare et livre votre commande.",
+          "Nous pouvons divulguer des informations si la loi nous y oblige.",
+        ],
+      },
+      {
+        heading: "5. Durée de conservation",
+        body: [
+          "Nous conservons les informations de compte et de commande tant que votre compte est actif, puis aussi longtemps que nécessaire à des fins comptables et légales. Vous pouvez nous demander de supprimer votre compte et vos données personnelles à tout moment, sous réserve des registres que nous sommes tenus de conserver.",
+        ],
+      },
+      {
+        heading: "6. Vos choix",
+        body: [
+          "Vous pouvez mettre à jour les informations de votre profil à tout moment depuis votre compte, désactiver les notifications push depuis les réglages de votre appareil ou navigateur, et nous demander — via la page Contact ou WhatsApp — de consulter, corriger, exporter ou supprimer les informations personnelles que nous détenons sur vous.",
+        ],
+      },
+      {
+        heading: "7. Enfants",
+        body: [
+          "Le site de Goshen ne s'adresse pas aux enfants ; les comptes ne doivent être créés que par des adultes capables de passer et de payer des commandes.",
+        ],
+      },
+      {
+        heading: "8. Sécurité",
+        body: [
+          "Les mots de passe sont stockés par hachage à sens unique, jamais en clair, et votre session est conservée dans un cookie sécurisé et protégé (HTTP-only). Aucun service en ligne ne peut être garanti totalement sûr, mais nous prenons des mesures raisonnables pour protéger vos informations.",
+        ],
+      },
+      {
+        heading: "9. Modifications de cette politique",
+        body: [
+          "Nous pouvons mettre à jour cette politique de temps à autre ; la date en haut de page indique la dernière révision.",
+        ],
+      },
+      {
+        heading: "10. Contact",
+        body: [
+          "Pour toute question ou demande relative à la confidentialité, contactez-nous par WhatsApp, par téléphone, ou via la page Contact.",
+        ],
+      },
+    ],
+  },
+
   meta: {
     cart: "Panier",
     shop: "Boutique",
@@ -949,5 +1111,7 @@ export const fr: Dictionary = {
     login: "Se connecter",
     register: "Créer un compte",
     account: "Mon compte",
+    terms: "Conditions d'utilisation",
+    privacy: "Politique de confidentialité",
   },
 };

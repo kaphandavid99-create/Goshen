@@ -193,6 +193,20 @@ export function AuthForm({ mode }: AuthFormProps) {
             : t.auth.signIn}
       </button>
 
+      {mode === "register" ? (
+        <p className="text-center text-xs text-muted-foreground">
+          {t.auth.agreeIntro}{" "}
+          <Link href="/terms" className="underline">
+            {t.terms.title}
+          </Link>{" "}
+          {t.auth.agreeAnd}{" "}
+          <Link href="/privacy" className="underline">
+            {t.privacy.title}
+          </Link>
+          .
+        </p>
+      ) : null}
+
       <p className="text-sm text-muted-foreground">
         {mode === "register" ? (
           <>

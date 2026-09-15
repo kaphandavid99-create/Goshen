@@ -1,5 +1,8 @@
 export const APP_NAME = "Goshen";
 
+/** ISO date the Terms of Service / Privacy Policy text was last revised. */
+export const LEGAL_LAST_UPDATED = "2026-09-15";
+
 export const BRAND_COLORS = {
   green: "#003D29",
   cream: "#FDF8F1",

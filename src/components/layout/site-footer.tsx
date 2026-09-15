@@ -191,7 +191,15 @@ export async function SiteFooter() {
           <p className="footer-legal">
             {t.footer.rightsReserved(new Date().getFullYear())}
           </p>
-          <p className="footer-legal">{STORE.location}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link href="/terms" className="footer-legal footer-legal-link">
+              {t.footer.termsLink}
+            </Link>
+            <Link href="/privacy" className="footer-legal footer-legal-link">
+              {t.footer.privacyLink}
+            </Link>
+            <p className="footer-legal">{STORE.location}</p>
+          </div>
         </div>
         <p className="footer-wordmark" aria-hidden="true">
           {Array.from(APP_NAME.toUpperCase()).map((letter, index) => (
