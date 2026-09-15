@@ -1,36 +1,16 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IconBell, IconCheck } from "@/components/icons";
 import { readCsrf } from "@/lib/auth/csrf-client";
 import { useT } from "@/lib/i18n/context";
-
-const VAPID_PUBLIC_KEY = (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY ?? "")
-  .trim()
-  .replace(/^["']|["']$/g, "");
+import { PushPermissionError, isPushSupported, subscribeToPush, syncPushSubscriptionToServer } from "@/lib/push/subscribe";
 
 function describeError(err: unknown) {
   if (err instanceof Error && err.message) {
     return `${err.name}: ${err.message}`;
   }
   return String(err);
-}
-
-function sameKey(a: ArrayBuffer | null | undefined, b: Uint8Array) {
-  if (!a) return false;
-  const view = new Uint8Array(a);
-  return view.length === b.length && view.every((byte, i) => byte === b[i]);
-}
-
-function urlBase64ToUint8Array(base64String: string) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
-  const raw = window.atob(base64);
-  const output = new Uint8Array(raw.length);
-  for (let i = 0; i < raw.length; i += 1) {
-    output[i] = raw.charCodeAt(i);
-  }
-  return output;
 }
 
 type State = "loading" | "unsupported" | "blocked" | "off" | "on";
@@ -43,42 +23,11 @@ export function PushManager() {
   const [error, setError] = useState<string | null>(null);
   const [tested, setTested] = useState(false);
 
-  const syncToServer = useCallback(async (sub: PushSubscription) => {
-    const json = sub.toJSON();
-    const response = await fetch("/api/account/push", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-        "x-csrf-token": await readCsrf(),
-      },
-      body: JSON.stringify({
-        endpoint: sub.endpoint,
-        keys: {
-          p256dh: json.keys?.p256dh ?? "",
-          auth: json.keys?.auth ?? "",
-        },
-      }),
-    });
-    if (!response.ok) {
-      const data = (await response.json().catch(() => ({}))) as {
-        error?: string;
-      };
-      throw new Error(data.error ?? `Server responded ${response.status}`);
-    }
-  }, []);
-
   useEffect(() => {
     let cancelled = false;
 
     async function init() {
-      if (
-        typeof window === "undefined" ||
-        !("serviceWorker" in navigator) ||
-        !("PushManager" in window) ||
-        !("Notification" in window) ||
-        !VAPID_PUBLIC_KEY
-      ) {
+      if (!isPushSupported()) {
         if (!cancelled) setState("unsupported");
         return;
       }
@@ -97,7 +46,7 @@ export function PushManager() {
         }
         if (existing) {
           // Keep the server row fresh (endpoints rotate).
-          await syncToServer(existing).catch(() => undefined);
+          await syncPushSubscriptionToServer(existing).catch(() => undefined);
           if (!cancelled) setState("on");
           return;
         }
@@ -111,43 +60,19 @@ export function PushManager() {
     return () => {
       cancelled = true;
     };
-  }, [syncToServer]);
+  }, []);
 
   async function enable() {
     setBusy(true);
     setError(null);
     try {
-      if (Notification.permission !== "granted") {
-        const permission = await Notification.requestPermission();
-        if (permission !== "granted") {
-          setState(permission === "denied" ? "blocked" : "off");
-          return;
-        }
-      }
-
-      const registration = await navigator.serviceWorker.ready;
-      const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-
-      // Reuse an existing subscription, but drop it first if it was made with a
-      // different VAPID key (otherwise subscribe() throws InvalidStateError).
-      let sub = await registration.pushManager.getSubscription();
-      if (
-        sub &&
-        !sameKey(sub.options.applicationServerKey, applicationServerKey)
-      ) {
-        await sub.unsubscribe();
-        sub = null;
-      }
-      if (!sub) {
-        sub = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey,
-        });
-      }
-
-      await syncToServer(sub);
+      await subscribeToPush();
       setState("on");
     } catch (err) {
+      if (err instanceof PushPermissionError) {
+        setState(err.permission === "denied" ? "blocked" : "off");
+        return;
+      }
       setError(`${p.error} (${describeError(err)})`);
     } finally {
       setBusy(false);

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { Avatar } from "@/components/account/avatar";
 import { NotificationBadge } from "@/components/account/notification-badge";
+import { PushAutoPrompt } from "@/components/account/push-auto-prompt";
 import { BrandLogo } from "@/components/brand/logo";
 import { HeaderCart } from "@/components/layout/header-cart";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -26,6 +27,7 @@ export async function SiteHeader() {
 
   return (
     <>
+      {user ? <PushAutoPrompt /> : null}
       <header className="sticky top-0 z-50">
         <div className="bg-[var(--footer)] text-[var(--footer-foreground)]">
           <div className="page-wrap flex items-center justify-between gap-3 py-2 text-[11px] tracking-wide sm:text-xs">
