@@ -5,7 +5,7 @@ import { APP_NAME } from "@/lib/constants";
 export function BrandLogo({ compact = false }: { compact?: boolean }) {
   if (compact) {
     // Mobile: logo with the full brand name tucked directly beneath it —
-    // slightly larger mark, a slow full spin every 7s, and a stylish
+    // slightly larger mark, a slow zoom in/out loop, and a stylish
     // display-serif wordmark (mobile only).
     return (
       <Link
@@ -19,7 +19,7 @@ export function BrandLogo({ compact = false }: { compact?: boolean }) {
           width={160}
           height={160}
           priority
-          className="logo-spin-mobile h-11 w-11 object-contain"
+          className="logo-zoom-mobile h-11 w-11 object-contain"
         />
         <span className="whitespace-nowrap font-display text-[13px] italic leading-none tracking-wide text-primary">
           Goshen Provision
