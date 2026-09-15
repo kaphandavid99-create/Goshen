@@ -17,11 +17,13 @@ export function CategoryFilter({
   active,
   q,
   deals,
+  newArrivals,
 }: {
   categories: CatalogCategory[];
   active?: string;
   q?: string;
   deals?: boolean;
+  newArrivals?: boolean;
 }) {
   const t = useT();
   const router = useRouter();
@@ -30,6 +32,7 @@ export function CategoryFilter({
   function go(slug: string) {
     const params = new URLSearchParams();
     if (deals) params.set("deals", "1");
+    if (newArrivals) params.set("new", "1");
     if (slug) params.set("category", slug);
     if (q) params.set("q", q);
     const query = params.toString();

@@ -49,4 +49,6 @@ export type CatalogProduct = {
   bundleItems?: BundleComponent[];
   rating?: number | null;
   reviewCount?: number;
+  /** ISO timestamp of when the product was added — drives "New arrivals". */
+  createdAt: string;
 };

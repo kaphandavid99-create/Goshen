@@ -48,6 +48,7 @@ export default async function AccountWishlistPage() {
                 wholesalePriceCents: item.product.wholesalePriceCents,
                 flavors: normalizeFlavorList(item.product.flavors),
                 kind: item.product.kind,
+                createdAt: item.product.createdAt.toISOString(),
               }}
               saved
             />

@@ -10,7 +10,13 @@ type SeedImage = Pick<CatalogProductImage, "url" | "alt" | "sortOrder">;
 
 type SeedProduct = Omit<
   CatalogProduct,
-  "category" | "images" | "flavors" | "wholesalePriceCents" | "kind" | "bundleItems"
+  | "category"
+  | "images"
+  | "flavors"
+  | "wholesalePriceCents"
+  | "kind"
+  | "bundleItems"
+  | "createdAt"
 > & {
   images: SeedImage[];
   flavors?: unknown;
@@ -46,5 +52,8 @@ export const fallbackProducts: CatalogProduct[] = (
       ...image,
       cloudinaryPublicId: null,
     })),
+    // Seed data has no real arrival date — it's only used when the database
+    // is unreachable, so back-date it well outside the "new arrivals" window.
+    createdAt: "2024-01-01T00:00:00.000Z",
   };
 });

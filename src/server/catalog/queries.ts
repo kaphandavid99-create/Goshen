@@ -112,7 +112,11 @@ export async function listProducts(categorySlug?: string, query?: string) {
     });
 
     return products.map((product) =>
-      withRating({ ...product, flavors: normalizeFlavorList(product.flavors) }),
+      withRating({
+        ...product,
+        flavors: normalizeFlavorList(product.flavors),
+        createdAt: product.createdAt.toISOString(),
+      }),
     );
   } catch {
     // Catalog still renders from seed data when the database is unavailable.
@@ -153,6 +157,7 @@ export async function listBundles(): Promise<CatalogProduct[]> {
         flavors: normalizeFlavorList(bundle.flavors),
         bundleItems,
         inStock: bundleInStock(bundle.inStock, bundleItems),
+        createdAt: bundle.createdAt.toISOString(),
       });
     });
   } catch {
@@ -210,6 +215,7 @@ type PrismaProductWithBundle = {
   kind: "SIMPLE" | "BUNDLE";
   flavors: unknown;
   bundleItems: PrismaBundleItem[];
+  createdAt: Date;
 };
 
 /** Normalise flavours and, for bundles, attach contents + effective stock. */
@@ -221,6 +227,7 @@ export function hydrateProduct<T extends PrismaProductWithBundle>(product: T) {
     ...rest,
     flavors: normalizeFlavorList(rest.flavors),
     bundleItems,
+    createdAt: rest.createdAt.toISOString(),
     inStock:
       isBundle && bundleItems
         ? bundleInStock(rest.inStock, bundleItems)

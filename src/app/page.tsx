@@ -1,6 +1,7 @@
 import { HomeHero } from "@/components/home/home-hero";
 import {
   Bundles,
+  NewArrivals,
   PromoSidebar,
   RewardsBar,
   ShopByCategory,
@@ -42,6 +43,7 @@ export default async function HomePage() {
           <TodaysDeals products={products} savedIds={savedIds} />
         </div>
       </section>
+      <NewArrivals products={products} savedIds={savedIds} />
       <Bundles bundles={bundles} savedIds={savedIds} />
       <HomeTestimonials />
       <RewardsBar />

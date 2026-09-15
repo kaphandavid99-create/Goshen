@@ -171,6 +171,9 @@ export const fr: Dictionary = {
     todaysDeals: "Promos du jour",
     limitedTime: "Durée limitée",
     viewAllDeals: "Voir toutes les promos",
+    newArrivals: "Nouveautés",
+    justLanded: "Vient d'arriver",
+    viewAllNewArrivals: "Voir toutes les nouveautés",
     bundles: {
       title: "Lots avantageux",
       seeAll: "Voir tous les lots",

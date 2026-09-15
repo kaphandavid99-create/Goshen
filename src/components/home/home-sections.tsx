@@ -8,6 +8,7 @@ import { primaryMedia } from "@/components/shop/product-media";
 import { IconGift, IconTag, IconTruck } from "@/components/icons";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import { useT } from "@/lib/i18n/context";
+import { isNewArrival } from "@/lib/new-arrivals";
 import type { CatalogCategory, CatalogProduct } from "@/types/catalog";
 
 export function ShopByCategory({
@@ -115,6 +116,50 @@ export function TodaysDeals({
         <div className="mt-5 flex justify-center sm:mt-6">
           <Link href="/shop?deals=1" className="btn btn-outline">
             {t.home.viewAllDeals}
+          </Link>
+        </div>
+      </section>
+    </Reveal>
+  );
+}
+
+export function NewArrivals({
+  products,
+  savedIds = [],
+}: {
+  products: CatalogProduct[];
+  savedIds?: string[];
+}) {
+  const t = useT();
+  const saved = new Set(savedIds);
+  const arrivals = products
+    .filter((product) => isNewArrival(product.createdAt))
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    .slice(0, 8);
+
+  if (arrivals.length === 0) {
+    return null;
+  }
+
+  return (
+    <Reveal>
+      <section id="new-arrivals" className="page-wrap scroll-mt-28 py-6 sm:py-10">
+        <div className="mb-4 flex flex-wrap items-center gap-2 sm:mb-5 sm:gap-3">
+          <h2 className="section-title">{t.home.newArrivals}</h2>
+          <span className="badge">{t.home.justLanded}</span>
+        </div>
+        <div className="shop-grid grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
+          {arrivals.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              saved={saved.has(product.id)}
+            />
+          ))}
+        </div>
+        <div className="mt-5 flex justify-center sm:mt-6">
+          <Link href="/shop?new=1" className="btn btn-outline">
+            {t.home.viewAllNewArrivals}
           </Link>
         </div>
       </section>

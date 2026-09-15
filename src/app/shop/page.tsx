@@ -6,6 +6,7 @@ import { CategoryFilter } from "@/components/shop/category-filter";
 import { ProductCard } from "@/components/shop/product-card";
 import { NIPZ } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
+import { isNewArrival } from "@/lib/new-arrivals";
 import { listWishlistProductIds } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
 import { listCategories, listProducts } from "@/server/catalog/queries";
@@ -19,10 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string; q?: string; deals?: string }>;
+  searchParams: Promise<{ category?: string; q?: string; deals?: string; new?: string }>;
 }) {
-  const { category, q, deals } = await searchParams;
+  const { category, q, deals, new: newParam } = await searchParams;
   const showDeals = deals === "1";
+  const showNewArrivals = newParam === "1";
   const [user, t] = await Promise.all([getCurrentUser(), getDict()]);
   const [categories, products, savedIds, nipz] = await Promise.all([
     listCategories(),
@@ -33,15 +35,29 @@ export default async function ShopPage({
   const saved = new Set(savedIds);
   const visible = showDeals
     ? products.filter((product) => product.featured)
-    : products;
+    : showNewArrivals
+      ? products.filter((product) => isNewArrival(product.createdAt))
+      : products;
 
   return (
     <main className="page-wrap flex-1 py-12">
       <PageIntro
-        kicker={showDeals ? t.shop.kickerFeatured : t.shop.kickerCatalog}
-        title={showDeals ? t.shop.titleDeals : t.shop.titleShop}
+        kicker={
+          showDeals
+            ? t.shop.kickerFeatured
+            : showNewArrivals
+              ? t.home.newArrivals
+              : t.shop.kickerCatalog
+        }
+        title={
+          showDeals
+            ? t.shop.titleDeals
+            : showNewArrivals
+              ? t.home.newArrivals
+              : t.shop.titleShop
+        }
       >
-        {showDeals ? t.shop.introDeals : t.shop.introShop}
+        {showDeals ? t.shop.introDeals : showNewArrivals ? t.home.justLanded : t.shop.introShop}
       </PageIntro>
 
       <CategoryFilter
@@ -49,9 +65,10 @@ export default async function ShopPage({
         active={category}
         q={q}
         deals={showDeals}
+        newArrivals={showNewArrivals}
       />
 
-      {!showDeals && !q ? (
+      {!showDeals && !showNewArrivals && !q ? (
         <Link
           href={NIPZ.href}
           className="mt-6 flex items-center justify-between gap-4 rounded-2xl border border-border bg-gradient-to-r from-[var(--nipz-rose-soft)] to-card px-5 py-4 transition hover:border-[var(--nipz-rose)]"

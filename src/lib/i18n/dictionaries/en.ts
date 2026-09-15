@@ -172,6 +172,9 @@ export const en = {
     todaysDeals: "Today's deals",
     limitedTime: "Limited time",
     viewAllDeals: "View all deals",
+    newArrivals: "New arrivals",
+    justLanded: "Just landed",
+    viewAllNewArrivals: "View all new arrivals",
     bundles: {
       title: "Value bundles",
       seeAll: "See all bundles",
