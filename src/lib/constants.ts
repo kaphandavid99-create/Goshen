@@ -94,7 +94,7 @@ export const REFERRAL_SIGNUP_POINTS = 100;
 /** Points the referrer earns when the person they referred places their first order. */
 export const REFERRAL_POINTS = 100;
 export const REVIEW_POINTS = 10;
-export const MIN_REDEEM_POINTS = 200;
+export const MIN_REDEEM_POINTS = 500;
 export const MIN_REDEEM_SUBTOTAL = 1_000;
 export const POINT_VALUE_FCFA = 1;
 
