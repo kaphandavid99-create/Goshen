@@ -404,8 +404,8 @@ export const en = {
       earnBody:
         "Collect 1.5 points for every 100 FCFA you pay. A 1,000 FCFA order earns 15 points.",
       referTitle: "Sign up and refer",
-      referBody: (welcome: number, referral: number) =>
-        `New accounts get ${welcome} points. You receive ${referral} points when a friend signs up with your link and places their first order. They still get ${welcome} points for joining.`,
+      referBody: (welcome: number, signupBonus: number, referral: number) =>
+        `New accounts get ${welcome} points. You earn ${signupBonus} points as soon as a friend joins with your link, plus another ${referral} points when they place their first order. They still get ${welcome} points for joining.`,
       reviewTitle: "Review products",
       reviewBody: (review: number) =>
         `After you receive an order, each product review adds ${review} points.`,
@@ -513,8 +513,13 @@ export const en = {
       friendWaiting: "Signed up · waiting for first order",
       noReferralYet:
         "Your referral link will appear once the database is connected.",
-      summary: (welcome: number, referral: number, review: number) =>
-        `Sign up: ${welcome} points. Referrer: ${referral} points after a friend's first order. Reviews: ${review} points. More on`,
+      summary: (
+        welcome: number,
+        signupBonus: number,
+        referral: number,
+        review: number,
+      ) =>
+        `Sign up: ${welcome} points. Referrer: ${signupBonus} points when a friend joins, plus ${referral} points after their first order. Reviews: ${review} points. More on`,
       rewardsLink: "Rewards",
     },
 

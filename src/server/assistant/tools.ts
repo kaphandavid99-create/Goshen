@@ -9,6 +9,7 @@ import {
   POINTS_PER_100_FCFA,
   POINT_VALUE_FCFA,
   REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
   REVIEW_POINTS,
   STORE,
   WELCOME_POINTS,
@@ -295,6 +296,7 @@ export async function runTool(
           earn: {
             perHundredFcfa: POINTS_PER_100_FCFA,
             signupBonus: WELCOME_POINTS,
+            referralSignupBonus: REFERRAL_SIGNUP_POINTS,
             referralBonus: REFERRAL_POINTS,
             reviewBonus: REVIEW_POINTS,
           },

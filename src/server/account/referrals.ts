@@ -2,7 +2,7 @@ import "server-only";
 
 import { randomInt } from "node:crypto";
 import type { Prisma } from "@prisma/client";
-import { REFERRAL_POINTS } from "@/lib/constants";
+import { REFERRAL_POINTS, REFERRAL_SIGNUP_POINTS } from "@/lib/constants";
 import { prisma } from "@/lib/db/prisma";
 import { createNotification } from "@/server/account/notifications";
 
@@ -66,6 +66,22 @@ export async function getUserPoints(userId: string) {
     select: { points: true },
   });
   return user?.points ?? 0;
+}
+
+export async function awardReferralSignupBonus(
+  tx: Prisma.TransactionClient,
+  referrerId: string,
+) {
+  await tx.user.update({
+    where: { id: referrerId },
+    data: { points: { increment: REFERRAL_SIGNUP_POINTS } },
+  });
+  await createNotification(tx, {
+    userId: referrerId,
+    title: "Referral reward",
+    body: `A friend joined using your referral link. You earned ${REFERRAL_SIGNUP_POINTS} points.`,
+    href: "/account/rewards",
+  });
 }
 
 export async function awardReferralOnPurchase(

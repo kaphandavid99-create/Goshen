@@ -407,8 +407,8 @@ export const fr: Dictionary = {
       earnBody:
         "Cumulez 1,5 point par tranche de 100 FCFA payés. Une commande de 1 000 FCFA rapporte 15 points.",
       referTitle: "Inscrivez-vous et parrainez",
-      referBody: (welcome: number, referral: number) =>
-        `Les nouveaux comptes reçoivent ${welcome} points. Vous recevez ${referral} points quand un ami s'inscrit avec votre lien et passe sa première commande. Il reçoit tout de même ${welcome} points à l'inscription.`,
+      referBody: (welcome: number, signupBonus: number, referral: number) =>
+        `Les nouveaux comptes reçoivent ${welcome} points. Vous gagnez ${signupBonus} points dès qu'un ami s'inscrit avec votre lien, puis ${referral} points de plus quand il passe sa première commande. Il reçoit tout de même ${welcome} points à l'inscription.`,
       reviewTitle: "Évaluez les produits",
       reviewBody: (review: number) =>
         `Après réception d'une commande, chaque avis produit ajoute ${review} points.`,
@@ -517,8 +517,13 @@ export const fr: Dictionary = {
       friendWaiting: "Inscrit · en attente de la première commande",
       noReferralYet:
         "Votre lien de parrainage apparaîtra une fois la base de données connectée.",
-      summary: (welcome: number, referral: number, review: number) =>
-        `Inscription : ${welcome} points. Parrain : ${referral} points après la première commande d'un ami. Avis : ${review} points. Plus d'infos sur`,
+      summary: (
+        welcome: number,
+        signupBonus: number,
+        referral: number,
+        review: number,
+      ) =>
+        `Inscription : ${welcome} points. Parrain : ${signupBonus} points dès qu'un ami s'inscrit, puis ${referral} points après sa première commande. Avis : ${review} points. Plus d'infos sur`,
       rewardsLink: "Fidélité",
     },
 

@@ -8,6 +8,7 @@ import {
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
   REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
   REVIEW_POINTS,
   WELCOME_POINTS,
 } from "@/lib/constants";
@@ -31,7 +32,11 @@ export default async function RewardsPage() {
     {
       icon: IconTag,
       title: t.rewards.perks.referTitle,
-      body: t.rewards.perks.referBody(WELCOME_POINTS, REFERRAL_POINTS),
+      body: t.rewards.perks.referBody(
+        WELCOME_POINTS,
+        REFERRAL_SIGNUP_POINTS,
+        REFERRAL_POINTS,
+      ),
     },
     {
       icon: IconStar,

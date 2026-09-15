@@ -15,6 +15,7 @@ import { createOpaqueToken } from "@/lib/auth/tokens";
 import { env, isGoogleAuthConfigured, isProduction } from "@/lib/env";
 import { prisma } from "@/lib/db/prisma";
 import {
+  awardReferralSignupBonus,
   createUniqueReferralCode,
   findReferrerByCode,
 } from "@/server/account/referrals";
@@ -227,6 +228,11 @@ export async function googleCallback(request: Request) {
       body: `Your account is ready. You have ${WELCOME_POINTS} welcome points.`,
       href: "/account/rewards",
     });
+
+    if (referrer && referrer.id) {
+      await awardReferralSignupBonus(tx, referrer.id);
+    }
+
     return created;
   });
 

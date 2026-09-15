@@ -7,6 +7,7 @@ import {
   MIN_REDEEM_SUBTOTAL,
   POINT_VALUE_FCFA,
   REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
   REVIEW_POINTS,
   WELCOME_POINTS,
 } from "@/lib/constants";
@@ -119,7 +120,12 @@ export default async function AccountRewardsPage() {
       </section>
 
       <section className="card p-5 text-sm text-muted-foreground">
-        {t.account.rewards.summary(WELCOME_POINTS, REFERRAL_POINTS, REVIEW_POINTS)}{" "}
+        {t.account.rewards.summary(
+          WELCOME_POINTS,
+          REFERRAL_SIGNUP_POINTS,
+          REFERRAL_POINTS,
+          REVIEW_POINTS,
+        )}{" "}
         <Link href="/rewards" className="underline">
           {t.account.rewards.rewardsLink}
         </Link>

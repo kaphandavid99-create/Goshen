@@ -3,6 +3,7 @@ import { hashPassword } from "@/lib/auth/password";
 import { WELCOME_POINTS } from "@/lib/constants";
 import { prisma } from "@/lib/db/prisma";
 import {
+  awardReferralSignupBonus,
   createUniqueReferralCode,
   findReferrerByCode,
 } from "@/server/account/referrals";
@@ -56,6 +57,10 @@ export async function POST(request: Request) {
         body: `Your account is ready. You have ${WELCOME_POINTS} welcome points.`,
         href: "/account/rewards",
       });
+
+      if (referrer) {
+        await awardReferralSignupBonus(tx, referrer.id);
+      }
 
       return created;
     });
