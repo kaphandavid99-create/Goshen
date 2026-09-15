@@ -95,6 +95,8 @@ export const REFERRAL_SIGNUP_POINTS = 100;
 export const REFERRAL_POINTS = 100;
 export const REVIEW_POINTS = 10;
 export const MIN_REDEEM_POINTS = 500;
+/** A single order can redeem at most this many points; any balance beyond it carries over. */
+export const MAX_REDEEM_POINTS_PER_ORDER = 500;
 export const MIN_REDEEM_SUBTOTAL = 1_000;
 export const POINT_VALUE_FCFA = 1;
 

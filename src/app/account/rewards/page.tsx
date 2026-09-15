@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ReferralShare } from "@/components/account/referral-share";
 import { PointsProgress } from "@/components/account/points-progress";
 import {
+  MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
   POINT_VALUE_FCFA,
@@ -33,6 +34,7 @@ export default async function AccountRewardsPage() {
   const remainder = points % MIN_REDEEM_POINTS;
   const progressInBlock = points > 0 && remainder === 0 ? MIN_REDEEM_POINTS : remainder;
   const remainingToNextMilestone = MIN_REDEEM_POINTS - progressInBlock;
+  const redeemableNow = Math.min(points, MAX_REDEEM_POINTS_PER_ORDER);
 
   return (
     <div className="space-y-6">
@@ -49,8 +51,8 @@ export default async function AccountRewardsPage() {
             caption={
               ready
                 ? t.account.rewards.progressReadyBody(
-                    points,
-                    formatPrice(points * POINT_VALUE_FCFA, locale),
+                    redeemableNow,
+                    formatPrice(redeemableNow * POINT_VALUE_FCFA, locale),
                   )
                 : t.account.rewards.progressToNext(MIN_REDEEM_POINTS - points)
             }
@@ -64,6 +66,7 @@ export default async function AccountRewardsPage() {
         <p className="mt-4 text-sm text-muted-foreground">
           {t.account.rewards.redeemHint(
             MIN_REDEEM_POINTS,
+            MAX_REDEEM_POINTS_PER_ORDER,
             formatPrice(MIN_REDEEM_SUBTOTAL, locale),
           )}
         </p>

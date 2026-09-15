@@ -342,7 +342,12 @@ function formatLoyalty(result: unknown): string {
     needsAuth?: boolean;
     loginUrl?: string;
     points?: number;
-    redeem?: { minPoints: number; minOrderFcfa: number; canRedeemNow: boolean };
+    redeem?: {
+      minPoints: number;
+      maxPointsPerOrder: number;
+      minOrderFcfa: number;
+      canRedeemNow: boolean;
+    };
     earn?: {
       perHundredFcfa: number;
       referralSignupBonus: number;
@@ -363,7 +368,7 @@ function formatLoyalty(result: unknown): string {
     `You have **${points.toLocaleString("en-US")} points** (1 point = 1 FCFA off).`,
     redeem
       ? canNow
-        ? `You can redeem now on orders of ${formatPrice(redeem.minOrderFcfa)} or more.`
+        ? `You can redeem now on orders of ${formatPrice(redeem.minOrderFcfa)} or more — up to ${redeem.maxPointsPerOrder} points per order, the rest carries over.`
         : `You can redeem once you reach ${redeem.minPoints} points, on orders of ${formatPrice(redeem.minOrderFcfa)} or more.`
       : null,
     d.earn

@@ -1,4 +1,5 @@
 import {
+  MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
   POINT_VALUE_FCFA,
@@ -24,5 +25,6 @@ export function redeemableDiscount(points: number, subtotalFcfa: number) {
     return 0;
   }
 
-  return Math.min(points * POINT_VALUE_FCFA, subtotalFcfa);
+  const redeemablePoints = Math.min(points, MAX_REDEEM_POINTS_PER_ORDER);
+  return Math.min(redeemablePoints * POINT_VALUE_FCFA, subtotalFcfa);
 }

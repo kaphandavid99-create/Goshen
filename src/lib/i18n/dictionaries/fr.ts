@@ -103,8 +103,8 @@ export const fr: Dictionary = {
     explore: "Explorer",
     accountCol: "Compte",
     rewardsCol: "Fidélité",
-    rewardsCopy:
-      "Gagnez 1,5 point par tranche de 100 FCFA. Recevez 200 points quand un ami s'inscrit et passe sa première commande. Utilisez vos points dès 200 comme remise en boutique — non convertibles en espèces.",
+    rewardsCopy: (signupBonus: number, referral: number, minPoints: number) =>
+      `Gagnez 1,5 point par tranche de 100 FCFA. Recevez ${signupBonus} points quand un ami s'inscrit, puis ${referral} points de plus lors de sa première commande. Utilisez vos points dès ${minPoints} comme remise en boutique — non convertibles en espèces.`,
     howRewardsWork: "Comment fonctionne la fidélité",
     rightsReserved: (year: number) => `© ${year} Goshen. Tous droits réservés.`,
     accountLinks: {
@@ -183,15 +183,15 @@ export const fr: Dictionary = {
       "Commandez alimentation et produits ménagers en livraison partout à Bamenda.",
     orderForDelivery: "Commander en livraison",
     referFriend: "Parrainer un ami",
-    referFriendBody:
-      "Gagnez 200 points quand un ami s'inscrit et passe sa première commande.",
+    referFriendBody: (signupBonus: number, referral: number) =>
+      `Gagnez ${signupBonus} points dès qu'un ami s'inscrit avec votre lien, puis ${referral} points de plus lors de sa première commande.`,
     getReferralLink: "Obtenir votre lien de parrainage",
     perks: {
       earnTitle: "Gagnez des points",
       earnBody: "1,5 point par 100 FCFA payés. 100 points à l'inscription.",
       redeemTitle: "Utilisez et économisez",
-      redeemBody:
-        "Dès 200 points, 1 FCFA de remise par point sur les commandes à partir de 1 000 FCFA. Non convertible en espèces.",
+      redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `Dès ${minPoints} points, 1 FCFA de remise par point sur les commandes à partir de ${minSubtotal}. Jusqu'à ${maxPoints} points par commande — le reste est conservé. Non convertible en espèces.`,
       extrasTitle: "Avantages membres",
       extrasBody: "Promos exclusives et livraison gratuite dès 15 000 FCFA.",
     },
@@ -413,8 +413,8 @@ export const fr: Dictionary = {
       reviewBody: (review: number) =>
         `Après réception d'une commande, chaque avis produit ajoute ${review} points.`,
       redeemTitle: "Utilisez en boutique",
-      redeemBody: (minPoints: number, minSubtotal: string) =>
-        `Dès ${minPoints} points, utilisez-les comme remise sur votre prochaine commande de ${minSubtotal} ou plus. 1 point = 1 FCFA de remise. Les points ne sont pas versés en espèces.`,
+      redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `Dès ${minPoints} points, utilisez-les comme remise sur votre prochaine commande de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande — le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Les points ne sont pas versés en espèces.`,
     },
   },
 
@@ -499,8 +499,8 @@ export const fr: Dictionary = {
     rewards: {
       title: "Fidélité",
       pointsAmount: (n: number) => `${n} points`,
-      redeemHint: (minPoints: number, minSubtotal: string) =>
-        `Utilisez dès ${minPoints} points sur les commandes de ${minSubtotal} ou plus. 1 point = 1 FCFA de remise. Non convertible en espèces.`,
+      redeemHint: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `Utilisez dès ${minPoints} points sur les commandes de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande — le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Non convertible en espèces.`,
       redeemAtCheckout: "Utiliser au paiement",
       progressReady: "Prêt à échanger",
       progressLocked: "Continuez à gagner",
@@ -576,8 +576,8 @@ export const fr: Dictionary = {
   },
 
   referral: {
-    blurb:
-      "Partagez ce lien. Vous gagnez 200 points quand votre ami crée un compte et passe sa première commande. Il reçoit 100 points à l'inscription.",
+    blurb: (signupBonus: number, referral: number, welcome: number) =>
+      `Partagez ce lien. Vous gagnez ${signupBonus} points dès que votre ami crée un compte, puis ${referral} points de plus lors de sa première commande. Il reçoit ${welcome} points à l'inscription.`,
     yourCode: "Votre code :",
     linkLabel: "Lien de parrainage",
     copy: "Copier le lien",

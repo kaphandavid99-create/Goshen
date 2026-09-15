@@ -105,8 +105,8 @@ export const en = {
     explore: "Explore",
     accountCol: "Account",
     rewardsCol: "Rewards",
-    rewardsCopy:
-      "Earn 1.5 points per 100 FCFA. Get 200 when a friend joins and makes their first purchase. Redeem from 200 points as a shop discount — not cash.",
+    rewardsCopy: (signupBonus: number, referral: number, minPoints: number) =>
+      `Earn 1.5 points per 100 FCFA. Get ${signupBonus} when a friend joins and ${referral} more when they make their first purchase. Redeem from ${minPoints} points as a shop discount — not cash.`,
     howRewardsWork: "How rewards work",
     rightsReserved: (year: number) => `© ${year} Goshen. All rights reserved.`,
     accountLinks: {
@@ -184,15 +184,15 @@ export const en = {
       "Order groceries and household staples for delivery across Bamenda.",
     orderForDelivery: "Order for delivery",
     referFriend: "Refer a friend",
-    referFriendBody:
-      "Earn 200 points when a friend signs up and places their first order.",
+    referFriendBody: (signupBonus: number, referral: number) =>
+      `Earn ${signupBonus} points as soon as a friend joins with your link, plus ${referral} more when they place their first order.`,
     getReferralLink: "Get your referral link",
     perks: {
       earnTitle: "Earn points",
       earnBody: "1.5 points per 100 FCFA you pay. Sign up for 100.",
       redeemTitle: "Redeem and save",
-      redeemBody:
-        "From 200 points, take 1 FCFA off per point on orders from 1,000 FCFA. Not cash.",
+      redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `From ${minPoints} points, take 1 FCFA off per point on orders from ${minSubtotal}. Up to ${maxPoints} points per order — the rest carries over. Not cash.`,
       extrasTitle: "Member extras",
       extrasBody: "Featured deals and free delivery from 15,000 FCFA.",
     },
@@ -410,8 +410,8 @@ export const en = {
       reviewBody: (review: number) =>
         `After you receive an order, each product review adds ${review} points.`,
       redeemTitle: "Redeem in the shop",
-      redeemBody: (minPoints: number, minSubtotal: string) =>
-        `From ${minPoints} points, use them as a discount on your next order of ${minSubtotal} or more. 1 point = 1 FCFA off. Points are not paid as cash.`,
+      redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `From ${minPoints} points, use them as a discount on your next order of ${minSubtotal} or more. Up to ${maxPoints} points per order — any extra carries over to your next purchase. 1 point = 1 FCFA off. Points are not paid as cash.`,
     },
   },
 
@@ -495,8 +495,8 @@ export const en = {
     rewards: {
       title: "Rewards",
       pointsAmount: (n: number) => `${n} points`,
-      redeemHint: (minPoints: number, minSubtotal: string) =>
-        `Redeem from ${minPoints} points on orders of ${minSubtotal} or more. 1 point = 1 FCFA off. Not cash.`,
+      redeemHint: (minPoints: number, maxPoints: number, minSubtotal: string) =>
+        `Redeem from ${minPoints} points on orders of ${minSubtotal} or more. Up to ${maxPoints} points per order — any extra carries over to your next purchase. 1 point = 1 FCFA off. Not cash.`,
       redeemAtCheckout: "Redeem at checkout",
       progressReady: "Ready to redeem",
       progressLocked: "Keep earning",
@@ -570,8 +570,8 @@ export const en = {
   },
 
   referral: {
-    blurb:
-      "Share this link. You get 200 points when your friend creates an account and places their first order. They get 100 points for joining.",
+    blurb: (signupBonus: number, referral: number, welcome: number) =>
+      `Share this link. You get ${signupBonus} points as soon as your friend creates an account, plus ${referral} more when they place their first order. They get ${welcome} points for joining.`,
     yourCode: "Your code:",
     linkLabel: "Referral link",
     copy: "Copy link",

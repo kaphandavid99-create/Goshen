@@ -7,7 +7,15 @@ import { ProductCard } from "@/components/shop/product-card";
 import { primaryMedia } from "@/components/shop/product-media";
 import { IconGift, IconTag, IconTruck } from "@/components/icons";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
-import { useT } from "@/lib/i18n/context";
+import {
+  MAX_REDEEM_POINTS_PER_ORDER,
+  MIN_REDEEM_POINTS,
+  MIN_REDEEM_SUBTOTAL,
+  REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
+} from "@/lib/constants";
+import { useLocale, useT } from "@/lib/i18n/context";
+import { formatPrice } from "@/lib/money";
 import { isNewArrival } from "@/lib/new-arrivals";
 import type { CatalogCategory, CatalogProduct } from "@/types/catalog";
 
@@ -247,7 +255,7 @@ export function PromoSidebar() {
         </span>
         <p className="mt-4 text-lg font-bold text-primary">{t.home.referFriend}</p>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          {t.home.referFriendBody}
+          {t.home.referFriendBody(REFERRAL_SIGNUP_POINTS, REFERRAL_POINTS)}
         </p>
         <Link href="/rewards" className="btn-ghost mt-4 inline-block text-sm">
           {t.home.getReferralLink}
@@ -259,6 +267,7 @@ export function PromoSidebar() {
 
 export function RewardsBar() {
   const t = useT();
+  const locale = useLocale();
   return (
     <Reveal>
       <section id="rewards" className="page-wrap scroll-mt-28 py-6 sm:py-10">
@@ -271,7 +280,11 @@ export function RewardsBar() {
           <Perk
             icon={IconTag}
             title={t.home.perks.redeemTitle}
-            body={t.home.perks.redeemBody}
+            body={t.home.perks.redeemBody(
+              MIN_REDEEM_POINTS,
+              MAX_REDEEM_POINTS_PER_ORDER,
+              formatPrice(MIN_REDEEM_SUBTOTAL, locale),
+            )}
             divided
           />
           <Perk

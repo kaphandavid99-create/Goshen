@@ -4,6 +4,7 @@ import type { GroqTool } from "@/server/assistant/groq";
 import {
   DELIVERY_FEE,
   FREE_DELIVERY_FROM,
+  MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
   POINTS_PER_100_FCFA,
@@ -286,6 +287,7 @@ export async function runTool(
           pointValueFcfa: POINT_VALUE_FCFA,
           redeem: {
             minPoints: MIN_REDEEM_POINTS,
+            maxPointsPerOrder: MAX_REDEEM_POINTS_PER_ORDER,
             minOrderFcfa: MIN_REDEEM_SUBTOTAL,
             canRedeemNow: points >= MIN_REDEEM_POINTS,
             exampleDiscountOnMinOrderFcfa: redeemableDiscount(

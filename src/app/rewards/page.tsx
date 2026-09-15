@@ -5,6 +5,7 @@ import { IconGift, IconStar, IconTag, IconTruck } from "@/components/icons";
 import { PageIntro } from "@/components/layout/page-intro";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import {
+  MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
   REFERRAL_POINTS,
@@ -48,6 +49,7 @@ export default async function RewardsPage() {
       title: t.rewards.perks.redeemTitle,
       body: t.rewards.perks.redeemBody(
         MIN_REDEEM_POINTS,
+        MAX_REDEEM_POINTS_PER_ORDER,
         formatPrice(MIN_REDEEM_SUBTOTAL, locale),
       ),
     },

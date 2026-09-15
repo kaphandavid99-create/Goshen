@@ -6,7 +6,14 @@ import {
   IconPhone,
   IconPin,
 } from "@/components/icons";
-import { APP_NAME, NAV_LINKS, STORE } from "@/lib/constants";
+import {
+  APP_NAME,
+  MIN_REDEEM_POINTS,
+  NAV_LINKS,
+  REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
+  STORE,
+} from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
 
 const ACCOUNT_LINKS = [
@@ -165,7 +172,13 @@ export async function SiteFooter() {
           </div>
           <div>
             <p className="footer-col-title">{t.footer.rewardsCol}</p>
-            <p className="footer-col-copy">{t.footer.rewardsCopy}</p>
+            <p className="footer-col-copy">
+              {t.footer.rewardsCopy(
+                REFERRAL_SIGNUP_POINTS,
+                REFERRAL_POINTS,
+                MIN_REDEEM_POINTS,
+              )}
+            </p>
             <Link href="/rewards" className="footer-link is-accent">
               {t.footer.howRewardsWork}
             </Link>

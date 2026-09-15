@@ -1,6 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import {
+  REFERRAL_POINTS,
+  REFERRAL_SIGNUP_POINTS,
+  WELCOME_POINTS,
+} from "@/lib/constants";
 import { useT } from "@/lib/i18n/context";
 
 export function ReferralShare({
@@ -26,7 +31,9 @@ export function ReferralShare({
 
   return (
     <div className="space-y-3">
-      <p className="text-sm text-muted-foreground">{t.referral.blurb}</p>
+      <p className="text-sm text-muted-foreground">
+        {t.referral.blurb(REFERRAL_SIGNUP_POINTS, REFERRAL_POINTS, WELCOME_POINTS)}
+      </p>
       <p className="text-sm">
         <span className="text-muted-foreground">{t.referral.yourCode}</span>{" "}
         <span className="font-semibold text-primary">{code}</span>
