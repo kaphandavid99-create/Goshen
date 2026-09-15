@@ -1,6 +1,6 @@
 // How recently a product must have been added to still count as "new" on
 // the homepage and in the /shop?new=1 filter.
-export const NEW_ARRIVAL_WINDOW_DAYS = 21;
+export const NEW_ARRIVAL_WINDOW_DAYS = 10;
 
 export function isNewArrival(createdAt: string, now: Date = new Date()) {
   const ageMs = now.getTime() - new Date(createdAt).getTime();

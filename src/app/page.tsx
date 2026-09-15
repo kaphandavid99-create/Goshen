@@ -32,6 +32,7 @@ export default async function HomePage() {
     <main className="min-w-0 flex-1 pb-12 sm:pb-16">
       <HomeHero content={hero} />
       <InfoRibbon />
+      <NewArrivals products={products} savedIds={savedIds} />
       <section className="page-wrap grid grid-cols-1 gap-8 py-4 sm:py-6 lg:grid-cols-12 lg:gap-8 lg:py-8">
         <div className="min-w-0 lg:col-span-8">
           <ShopByCategory categories={categories} products={products} />
@@ -43,7 +44,6 @@ export default async function HomePage() {
           <TodaysDeals products={products} savedIds={savedIds} />
         </div>
       </section>
-      <NewArrivals products={products} savedIds={savedIds} />
       <Bundles bundles={bundles} savedIds={savedIds} />
       <HomeTestimonials />
       <RewardsBar />
