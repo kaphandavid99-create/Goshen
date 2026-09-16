@@ -62,12 +62,9 @@ export const fr: Dictionary = {
     dashboard: "Mon compte",
     primary: "Principal",
     appearance: "Apparence",
-    support: "Assistance",
   },
 
   header: {
-    deliveryShort: "Livraison : 1 000 FCFA",
-    deliveryLong: "Livraison à Bamenda pour 1 000 FCFA",
     account: "Compte",
     signIn: "Se connecter",
     signedIn: "Connecté",

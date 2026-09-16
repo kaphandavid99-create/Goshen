@@ -12,8 +12,8 @@ import { LanguageToggle } from "@/components/layout/language-toggle";
 import { NavLink } from "@/components/layout/nav-link";
 import { SearchBar } from "@/components/layout/search-bar";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { IconPin, IconTruck, IconUser } from "@/components/icons";
-import { NAV_LINKS, STORE } from "@/lib/constants";
+import { IconUser } from "@/components/icons";
+import { NAV_LINKS } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
 import { countUnreadNotifications } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
@@ -35,25 +35,6 @@ export async function SiteHeader() {
         </>
       ) : null}
       <header className="sticky top-0 z-50">
-        <div className="bg-[var(--footer)] text-[var(--footer-foreground)]">
-          <div className="page-wrap flex items-center justify-between gap-3 py-2 text-[11px] tracking-wide sm:text-xs">
-            <p className="flex min-w-0 items-center gap-2">
-              <IconTruck className="size-3.5 shrink-0 text-accent" />
-              <span className="truncate sm:hidden">{t.header.deliveryShort}</span>
-              <span className="hidden sm:inline">{t.header.deliveryLong}</span>
-            </p>
-            <div className="installed-desktop-hide hidden items-center gap-5 sm:flex">
-              <span className="flex items-center gap-1.5">
-                <IconPin className="size-3.5" />
-                {STORE.location}
-              </span>
-              <Link href="/contact" className="hover:underline">
-                {t.nav.support}
-              </Link>
-            </div>
-          </div>
-        </div>
-
         <div className="relative border-b border-border bg-card">
           <div className="page-wrap flex items-center gap-4 py-3.5 lg:gap-8">
             {/* Left: hamburger on mobile, full logo on desktop */}

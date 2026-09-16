@@ -64,12 +64,9 @@ export const en = {
     dashboard: "Dashboard",
     primary: "Primary",
     appearance: "Appearance",
-    support: "Support",
   },
 
   header: {
-    deliveryShort: "Delivery: 1,000 FCFA",
-    deliveryLong: "Delivery across Bamenda for 1,000 FCFA",
     account: "Account",
     signIn: "Sign in",
     signedIn: "Signed in",
