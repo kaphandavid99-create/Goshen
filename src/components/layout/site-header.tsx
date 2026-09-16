@@ -64,8 +64,10 @@ export async function SiteHeader() {
               </span>
             </div>
 
-            {/* Center: compact logo, mobile only */}
-            <div className="installed-desktop-hide lg:hidden">
+            {/* Center: compact logo, mobile only — always shown, even in an
+                installed desktop app narrowed to mobile width, since it's
+                the only brand mark left once the desktop logo is hidden. */}
+            <div className="lg:hidden">
               <BrandLogo compact />
             </div>
 
