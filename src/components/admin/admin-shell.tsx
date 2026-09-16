@@ -7,6 +7,7 @@ import { useState, type ReactNode } from "react";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
+  IconBell,
   IconBox,
   IconCake,
   IconClipboard,
@@ -21,14 +22,16 @@ import {
 import type { PublicUser } from "@/types";
 
 const LINKS = [
-  { href: "/admin", label: "Overview", icon: IconGrid },
-  { href: "/admin/orders", label: "Orders", icon: IconClipboard },
-  { href: "/admin/products", label: "Products", icon: IconBox },
-  { href: "/admin/wholesale", label: "Wholesale", icon: IconTag },
-  { href: "/admin/cakes", label: "Cakes & bookings", icon: IconCake },
-  { href: "/admin/hero", label: "Homepage", icon: IconHome },
-  { href: "/admin/customers", label: "Customers", icon: IconUsers },
-  { href: "/admin/feedback", label: "Feedback", icon: IconStar },
+  { href: "/admin", label: "Overview", icon: IconGrid, adminOnly: false },
+  { href: "/admin/orders", label: "Orders", icon: IconClipboard, adminOnly: false },
+  { href: "/admin/products", label: "Products", icon: IconBox, adminOnly: false },
+  { href: "/admin/wholesale", label: "Wholesale", icon: IconTag, adminOnly: false },
+  { href: "/admin/cakes", label: "Cakes & bookings", icon: IconCake, adminOnly: false },
+  { href: "/admin/hero", label: "Homepage", icon: IconHome, adminOnly: false },
+  { href: "/admin/customers", label: "Customers", icon: IconUsers, adminOnly: false },
+  { href: "/admin/feedback", label: "Feedback", icon: IconStar, adminOnly: false },
+  // Sending a push to every customer is an ADMIN-only action (see requireAdmin).
+  { href: "/admin/broadcast", label: "Broadcast", icon: IconBell, adminOnly: true },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -92,7 +95,7 @@ export function AdminShell({
           </button>
         </div>
         <nav aria-label="Admin" className="flex flex-1 flex-col gap-1 px-3">
-          {LINKS.map((link) => {
+          {LINKS.filter((link) => !link.adminOnly || user.role === "ADMIN").map((link) => {
             const active = isActive(pathname, link.href);
             return (
               <Link

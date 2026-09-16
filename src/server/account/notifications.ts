@@ -64,6 +64,46 @@ export async function notifyStaffOfNewOrder(
   );
 }
 
+export type BroadcastAudience = "ALL_CUSTOMERS" | "WHOLESALE_CUSTOMERS";
+
+/**
+ * Send a staff-composed announcement (in-app + push) to every customer in the
+ * chosen audience — the mechanism behind admin-triggered promo/deal/special-
+ * offer pushes, since there is no automatic "this product is on sale" signal
+ * to hang a notification off. Callers should fire this without awaiting it —
+ * see `notifyCustomersOfNewProduct` below for why.
+ */
+export async function broadcastNotification(
+  db: Db,
+  input: {
+    title: string;
+    body: string;
+    href?: string | null;
+    audience: BroadcastAudience;
+  },
+) {
+  const recipients = await db.user.findMany({
+    where:
+      input.audience === "WHOLESALE_CUSTOMERS"
+        ? { role: "CUSTOMER", wholesaleStatus: "APPROVED" }
+        : { role: "CUSTOMER" },
+    select: { id: true },
+  });
+
+  await Promise.all(
+    recipients.map((customer) =>
+      createNotification(db, {
+        userId: customer.id,
+        title: input.title,
+        body: input.body,
+        href: input.href ?? null,
+      }),
+    ),
+  );
+
+  return { recipientCount: recipients.length };
+}
+
 /**
  * Tell every customer (in-app + push) about a product that just went live,
  * so they hear about it even when Goshen isn't open on their device. Callers

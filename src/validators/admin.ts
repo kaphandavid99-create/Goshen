@@ -9,6 +9,20 @@ export const adminTestimonialPatchSchema = z.object({
   published: z.boolean(),
 });
 
+export const adminBroadcastSchema = z.object({
+  title: z.string().trim().min(2, "Add a short title.").max(80),
+  body: z.string().trim().min(2, "Add a message.").max(300),
+  href: z
+    .string()
+    .trim()
+    .max(200)
+    .refine((value) => value === "" || value.startsWith("/"), {
+      message: "Use a relative path starting with /, e.g. /shop?deals=1.",
+    })
+    .optional(),
+  audience: z.enum(["ALL_CUSTOMERS", "WHOLESALE_CUSTOMERS"]),
+});
+
 const productDetailShape = {
   name: z.string().trim().min(2, "Name is too short.").max(120),
   description: z.string().trim().min(1, "Add a short description.").max(2000),

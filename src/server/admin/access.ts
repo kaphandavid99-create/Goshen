@@ -15,3 +15,15 @@ export async function requireStaff() {
 
   return user;
 }
+
+// A few actions (e.g. broadcasting a push to every customer) are reserved for
+// ADMIN even though STAFF can otherwise use the admin area.
+export async function requireAdmin() {
+  const user = await requireUser("/admin");
+
+  if (user.role !== "ADMIN") {
+    redirect("/admin");
+  }
+
+  return user;
+}

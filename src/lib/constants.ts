@@ -108,6 +108,11 @@ export const REPEAT_PURCHASE_DELAY_DAYS = 4;
 /** Max products suggested per nudge, so the notification stays short. */
 export const REPEAT_PURCHASE_MAX_SUGGESTIONS = 3;
 
+/** Hours a cart can sit untouched before the cart-reminder cron nudges about it. */
+export const CART_REMINDER_DELAY_HOURS = 1;
+/** Days between "you have points to redeem" reminders for the same customer. */
+export const POINTS_REMINDER_INTERVAL_DAYS = 7;
+
 export function deliveryFeeFor(subtotal: number) {
   return subtotal >= FREE_DELIVERY_FROM ? 0 : DELIVERY_FEE;
 }

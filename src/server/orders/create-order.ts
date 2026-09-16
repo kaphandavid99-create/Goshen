@@ -232,6 +232,10 @@ export async function createOrder(userId: string, input: CheckoutInput) {
         }
       }
 
+      // The items just became an order rather than a sitting cart — clear the
+      // synced snapshot so the reminder cron has nothing left to nudge about.
+      prisma.cartSnapshot.deleteMany({ where: { userId } }).catch(() => undefined);
+
       return order;
     } catch (error) {
       if (error instanceof Error && error.message === "REDEEM_NOT_ALLOWED") {
