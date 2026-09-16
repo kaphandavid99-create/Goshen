@@ -36,7 +36,7 @@ export async function SiteHeader() {
               <span className="truncate sm:hidden">{t.header.freeDeliveryShort}</span>
               <span className="hidden sm:inline">{t.header.freeDeliveryLong}</span>
             </p>
-            <div className="hidden items-center gap-5 sm:flex">
+            <div className="installed-desktop-hide hidden items-center gap-5 sm:flex">
               <span className="flex items-center gap-1.5">
                 <IconPin className="size-3.5" />
                 {STORE.location}
@@ -53,7 +53,7 @@ export async function SiteHeader() {
             {/* Left: hamburger on mobile, full logo on desktop */}
             <div className="flex flex-1 items-center justify-start lg:flex-none">
               <MobileNav />
-              <span className="hidden lg:block">
+              <span className="installed-desktop-hide hidden lg:block">
                 <BrandLogo />
               </span>
             </div>
