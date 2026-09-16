@@ -40,7 +40,7 @@ export async function SiteHeader() {
             {/* Left: hamburger on mobile, full logo on desktop */}
             <div className="flex flex-1 items-center justify-start lg:flex-none">
               <MobileNav />
-              <span className="installed-desktop-hide hidden lg:block">
+              <span className="hidden lg:block">
                 <BrandLogo />
               </span>
             </div>
