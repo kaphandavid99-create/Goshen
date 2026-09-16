@@ -49,7 +49,6 @@ export const NIPZ = {
   ] as const,
 };
 
-export const FREE_DELIVERY_FROM = 15_000;
 export const DELIVERY_FEE = 1_000;
 
 /** Category whose products can carry drink flavours. */
@@ -113,8 +112,8 @@ export const CART_REMINDER_DELAY_HOURS = 1;
 /** Days between "you have points to redeem" reminders for the same customer. */
 export const POINTS_REMINDER_INTERVAL_DAYS = 7;
 
-export function deliveryFeeFor(subtotal: number) {
-  return subtotal >= FREE_DELIVERY_FROM ? 0 : DELIVERY_FEE;
+export function deliveryFeeFor() {
+  return DELIVERY_FEE;
 }
 
 /**

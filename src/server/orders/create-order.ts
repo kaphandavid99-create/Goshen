@@ -111,8 +111,7 @@ export async function createOrder(userId: string, input: CheckoutInput) {
     (total, line) => total + line.priceCents * line.quantity,
     0,
   );
-  const deliveryCents =
-    input.fulfillment === "DELIVERY" ? deliveryFeeFor(subtotalCents) : 0;
+  const deliveryCents = input.fulfillment === "DELIVERY" ? deliveryFeeFor() : 0;
 
   // MoMo orders are held as AWAITING_PAYMENT and only earn points / notify /
   // reach the shop once the payment clears (see settlePayment). Point

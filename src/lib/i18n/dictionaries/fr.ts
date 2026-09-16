@@ -66,8 +66,8 @@ export const fr: Dictionary = {
   },
 
   header: {
-    freeDeliveryShort: "Livraison gratuite dès 15 000 FCFA",
-    freeDeliveryLong: "Livraison gratuite à Bamenda dès 15 000 FCFA",
+    deliveryShort: "Livraison : 1 000 FCFA",
+    deliveryLong: "Livraison à Bamenda pour 1 000 FCFA",
     account: "Compte",
     signIn: "Se connecter",
     signedIn: "Connecté",
@@ -135,8 +135,6 @@ export const fr: Dictionary = {
     quantityFor: (name: string) => `Quantité pour ${name}`,
     decreaseQty: (name: string) => `Réduire la quantité de ${name}`,
     increaseQty: (name: string) => `Augmenter la quantité de ${name}`,
-    deliveryAddMore: (amount: string) =>
-      ` · ajoutez ${amount} pour la livraison gratuite`,
     open: "Ouvrir le panier",
   },
 
@@ -195,7 +193,7 @@ export const fr: Dictionary = {
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
         `Dès ${minPoints} points, 1 FCFA de remise par point sur les commandes à partir de ${minSubtotal}. Jusqu'à ${maxPoints} points par commande — le reste est conservé. Non convertible en espèces.`,
       extrasTitle: "Avantages membres",
-      extrasBody: "Promos exclusives et livraison gratuite dès 15 000 FCFA.",
+      extrasBody: "Promos exclusives et livraison fiable partout à Bamenda.",
     },
     testimonials: {
       kicker: "Nos clients",
@@ -282,8 +280,8 @@ export const fr: Dictionary = {
       `Vous avez ${n} points. L'utilisation commence à ${minPoints} points.`,
     pointsNeedSubtotal:
       "Ajoutez des articles pour atteindre 1 000 FCFA avant d'utiliser vos points.",
-    earnsNote: (earned: number, freeFrom: string, fee: string) =>
-      `Cette commande rapporte ${earned} ${earned === 1 ? "point" : "points"} (1,5 point par 100 FCFA payés). Payez à la livraison ou au retrait. Livraison gratuite dès ${freeFrom}. La livraison standard coûte ${fee}.`,
+    earnsNote: (earned: number, fee: string) =>
+      `Cette commande rapporte ${earned} ${earned === 1 ? "point" : "points"} (1,5 point par 100 FCFA payés). Payez à la livraison ou au retrait. La livraison coûte ${fee} ; le retrait est gratuit.`,
     unableToPlace: "Impossible de passer la commande.",
     networkError: "Erreur réseau. Réessayez.",
     placingOrder: "Envoi de la commande…",
@@ -326,7 +324,7 @@ export const fr: Dictionary = {
     whereTitle: "Où nous trouver",
     howTitle: "Comment nous vendons",
     howBody:
-      "Les prix sont en FCFA. Payez à la livraison ou au retrait en boutique. Livraison gratuite dès 15 000 FCFA.",
+      "Les prix sont en FCFA. Payez à la livraison ou au retrait en boutique. La livraison coûte 1 000 FCFA ; le retrait en boutique est gratuit.",
     browseShop: "Parcourir la boutique",
     contactUs: "Nous contacter",
   },
@@ -966,7 +964,7 @@ export const fr: Dictionary = {
         heading: "3. Commandes et paiement",
         body: [
           "Les prix sont affichés en FCFA. Vous pouvez payer en espèces à la livraison ou au retrait, ou par mobile money (MoMo) au moment du paiement. Une commande n'est confirmée qu'une fois que nous l'acceptons — nous pouvons refuser ou annuler une commande si un article est en rupture de stock, si l'adresse de livraison est en dehors de notre zone de service, ou en cas de suspicion de fraude ou d'abus.",
-          "La livraison est gratuite à partir de 15 000 FCFA d'achat ; des frais de livraison s'appliquent en dessous de ce montant. Il vous appartient d'être joignable et de fournir une adresse et un numéro de téléphone corrects pour la livraison.",
+          "Des frais de livraison fixes s'appliquent aux commandes livrées ; le retrait en boutique est toujours gratuit. Il vous appartient d'être joignable et de fournir une adresse et un numéro de téléphone corrects pour la livraison.",
         ],
       },
       {

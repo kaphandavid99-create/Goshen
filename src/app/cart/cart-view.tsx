@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useHasMounted } from "@/hooks/use-has-mounted";
-import { FREE_DELIVERY_FROM, deliveryFeeFor } from "@/lib/constants";
+import { deliveryFeeFor } from "@/lib/constants";
 import { useI18n } from "@/lib/i18n/context";
 import { formatPrice } from "@/lib/money";
 import {
@@ -35,8 +35,7 @@ export function CartView() {
   }
 
   const subtotal = cartSubtotalCents(items);
-  const delivery = deliveryFeeFor(subtotal);
-  const remainingForFree = Math.max(0, FREE_DELIVERY_FROM - subtotal);
+  const delivery = deliveryFeeFor();
 
   return (
     <div className="mt-10 space-y-8">
@@ -161,11 +160,7 @@ export function CartView() {
             {t.cart.subtotal} {formatPrice(subtotal, locale)}
           </p>
           <p className="text-sm text-muted-foreground">
-            {t.cart.delivery}{" "}
-            {delivery === 0 ? t.common.free : formatPrice(delivery, locale)}
-            {delivery > 0
-              ? t.cart.deliveryAddMore(formatPrice(remainingForFree, locale))
-              : ""}
+            {t.cart.delivery} {formatPrice(delivery, locale)}
           </p>
         </div>
         <Link

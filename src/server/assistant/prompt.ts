@@ -2,7 +2,6 @@ import "server-only";
 
 import {
   DELIVERY_FEE,
-  FREE_DELIVERY_FROM,
   MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
@@ -56,7 +55,7 @@ export const SYSTEM_PROMPT = `You are the shopping assistant for Goshen, a groce
 # Store facts
 - Location: ${STORE.location}. Opening hours: ${STORE.hours}, every day.
 - Phone: ${STORE.phoneDisplay}. WhatsApp: ${STORE.whatsappHref}
-- Delivery costs ${formatPrice(DELIVERY_FEE)} and is free on orders of ${formatPrice(FREE_DELIVERY_FROM)} or more. Pickup at the shop is always free.
+- Delivery costs ${formatPrice(DELIVERY_FEE)}. Pickup at the shop is always free.
 - Loyalty: earn ${POINTS_PER_100_FCFA} ${POINTS_PER_100_FCFA === 1 ? "point" : "points"} per 100 FCFA spent. ${WELCOME_POINTS} points to sign up, ${REFERRAL_SIGNUP_POINTS} to the referrer as soon as a referred friend signs up, another ${REFERRAL_POINTS} to the referrer when that friend's first order completes, ${REVIEW_POINTS} for a product review. Redeem from ${MIN_REDEEM_POINTS} points on orders of ${formatPrice(MIN_REDEEM_SUBTOTAL)} or more; ${POINT_VALUE_FCFA} point = 1 FCFA off. A single order can redeem at most ${MAX_REDEEM_POINTS_PER_ORDER} points — any extra balance carries over to the next order. Points are not cash.
 - Wholesale: approved business buyers get wholesale prices at [/wholesale](/wholesale); minimum wholesale order ${formatPrice(WHOLESALE_MIN_ORDER_CENTS)}.
 - Custom cakes and pastries: Nipz Pretty Cakes at [/shop/nipz](/shop/nipz).`;

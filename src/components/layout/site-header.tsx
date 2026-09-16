@@ -39,8 +39,8 @@ export async function SiteHeader() {
           <div className="page-wrap flex items-center justify-between gap-3 py-2 text-[11px] tracking-wide sm:text-xs">
             <p className="flex min-w-0 items-center gap-2">
               <IconTruck className="size-3.5 shrink-0 text-accent" />
-              <span className="truncate sm:hidden">{t.header.freeDeliveryShort}</span>
-              <span className="hidden sm:inline">{t.header.freeDeliveryLong}</span>
+              <span className="truncate sm:hidden">{t.header.deliveryShort}</span>
+              <span className="hidden sm:inline">{t.header.deliveryLong}</span>
             </p>
             <div className="installed-desktop-hide hidden items-center gap-5 sm:flex">
               <span className="flex items-center gap-1.5">

@@ -6,7 +6,6 @@ import { useState } from "react";
 import { useHasMounted } from "@/hooks/use-has-mounted";
 import {
   DELIVERY_FEE,
-  FREE_DELIVERY_FROM,
   MIN_REDEEM_POINTS,
   deliveryFeeFor,
 } from "@/lib/constants";
@@ -75,7 +74,7 @@ export function CheckoutForm({
 
   const payWithMomo = momoAvailable && paymentMethod === "MOMO";
   const subtotal = cartSubtotalCents(items);
-  const delivery = fulfillment === "DELIVERY" ? deliveryFeeFor(subtotal) : 0;
+  const delivery = fulfillment === "DELIVERY" ? deliveryFeeFor() : 0;
   const canRedeem = canRedeemPoints(points, subtotal) && !payWithMomo;
   const discount =
     redeemPoints && canRedeem ? redeemableDiscount(points, subtotal) : 0;
@@ -360,11 +359,7 @@ export function CheckoutForm({
           </span>
         </label>
         <p className="text-xs text-muted-foreground">
-          {t.checkout.earnsNote(
-            earnedPoints,
-            formatPrice(FREE_DELIVERY_FROM, locale),
-            formatPrice(DELIVERY_FEE, locale),
-          )}
+          {t.checkout.earnsNote(earnedPoints, formatPrice(DELIVERY_FEE, locale))}
         </p>
         {error ? (
           <p role="alert" className="text-sm text-accent">

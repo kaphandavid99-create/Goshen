@@ -3,7 +3,6 @@ import "server-only";
 import type { GroqTool } from "@/server/assistant/groq";
 import {
   DELIVERY_FEE,
-  FREE_DELIVERY_FROM,
   MAX_REDEEM_POINTS_PER_ORDER,
   MIN_REDEEM_POINTS,
   MIN_REDEEM_SUBTOTAL,
@@ -43,7 +42,7 @@ const STATUS_MEANING: Record<string, string> = {
 };
 
 const HELP_TOPICS = {
-  delivery: `Delivery costs ${DELIVERY_FEE.toLocaleString("en-US")} FCFA and is free on orders of ${FREE_DELIVERY_FROM.toLocaleString("en-US")} FCFA or more. Pickup at the shop is free. Choose delivery or pickup at [checkout](/checkout).`,
+  delivery: `Delivery costs ${DELIVERY_FEE.toLocaleString("en-US")} FCFA. Pickup at the shop is free. Choose delivery or pickup at [checkout](/checkout).`,
   payment: `Payment is arranged with the shop after you place the order (mobile money or cash). Place the order at [checkout](/checkout); the shop then confirms it.`,
   wholesale: `Approved business buyers get wholesale prices. See [/wholesale](/wholesale) and apply at [/wholesale/apply](/wholesale/apply). Minimum wholesale order is ${WHOLESALE_MIN_ORDER_CENTS.toLocaleString("en-US")} FCFA.`,
   cakes: `Custom cakes, cupcakes, pastries and dessert tables are from Nipz Pretty Cakes. Browse and request a booking at [/shop/nipz](/shop/nipz).`,

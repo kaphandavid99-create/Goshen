@@ -68,8 +68,8 @@ export const en = {
   },
 
   header: {
-    freeDeliveryShort: "Free delivery from 15,000 FCFA",
-    freeDeliveryLong: "Free delivery in Bamenda from 15,000 FCFA",
+    deliveryShort: "Delivery: 1,000 FCFA",
+    deliveryLong: "Delivery across Bamenda for 1,000 FCFA",
     account: "Account",
     signIn: "Sign in",
     signedIn: "Signed in",
@@ -137,7 +137,6 @@ export const en = {
     quantityFor: (name: string) => `Quantity for ${name}`,
     decreaseQty: (name: string) => `Decrease quantity of ${name}`,
     increaseQty: (name: string) => `Increase quantity of ${name}`,
-    deliveryAddMore: (amount: string) => ` · add ${amount} more for free delivery`,
     open: "Open cart",
   },
 
@@ -196,7 +195,7 @@ export const en = {
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
         `From ${minPoints} points, take 1 FCFA off per point on orders from ${minSubtotal}. Up to ${maxPoints} points per order — the rest carries over. Not cash.`,
       extrasTitle: "Member extras",
-      extrasBody: "Featured deals and free delivery from 15,000 FCFA.",
+      extrasBody: "Featured deals and reliable delivery across Bamenda.",
     },
     testimonials: {
       kicker: "From customers",
@@ -282,8 +281,8 @@ export const en = {
     pointsBelowMin: (n: number, minPoints: number) =>
       `You have ${n} points. Redeeming starts at ${minPoints} points.`,
     pointsNeedSubtotal: "Add items to reach 1,000 FCFA before you can redeem points.",
-    earnsNote: (earned: number, freeFrom: string, fee: string) =>
-      `This order earns ${earned} ${earned === 1 ? "point" : "points"} (1.5 points per 100 FCFA paid). Pay on delivery or at pickup. Free delivery from ${freeFrom}. Standard delivery is ${fee}.`,
+    earnsNote: (earned: number, fee: string) =>
+      `This order earns ${earned} ${earned === 1 ? "point" : "points"} (1.5 points per 100 FCFA paid). Pay on delivery or at pickup. Delivery costs ${fee}; pickup is free.`,
     unableToPlace: "Unable to place the order.",
     networkError: "Network error. Try again.",
     placingOrder: "Placing order…",
@@ -325,7 +324,7 @@ export const en = {
     whereTitle: "Where we are",
     howTitle: "How we sell",
     howBody:
-      "Prices are in FCFA. Pay on delivery or when you pick up at the shop. Delivery is free from 15,000 FCFA.",
+      "Prices are in FCFA. Pay on delivery or when you pick up at the shop. Delivery costs 1,000 FCFA; pickup at the shop is free.",
     browseShop: "Browse the shop",
     contactUs: "Contact us",
   },
@@ -963,7 +962,7 @@ export const en = {
         heading: "3. Orders and payment",
         body: [
           "Prices are shown in FCFA. You can pay in cash on delivery or pickup, or by mobile money (MoMo) at checkout. An order is only confirmed once we accept it — we may decline or cancel an order if an item is out of stock, if the delivery address is outside our service area, or if we suspect fraud or abuse.",
-          "Delivery is free on orders of 15,000 FCFA or more; otherwise a delivery fee applies. It is your responsibility to be reachable and to give a correct address and phone number for delivery.",
+          "A flat delivery fee applies to orders delivered to you; pickup at the shop is always free. It is your responsibility to be reachable and to give a correct address and phone number for delivery.",
         ],
       },
       {
