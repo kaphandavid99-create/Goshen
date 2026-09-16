@@ -59,7 +59,7 @@ export async function SiteHeader() {
             </div>
 
             {/* Center: compact logo, mobile only */}
-            <div className="lg:hidden">
+            <div className="installed-desktop-hide lg:hidden">
               <BrandLogo compact />
             </div>
 

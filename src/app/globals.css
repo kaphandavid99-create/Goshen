@@ -199,10 +199,13 @@ body {
  * When the site is installed as a desktop app (Chrome/Edge "Install app"),
  * the OS window already carries the app's name and icon, so the in-page
  * brand logo/name and the location + contact links in the top bar are
- * redundant. Hide them only for that installed, desktop-width case — the
- * browser tab view and the mobile app keep them.
+ * redundant. Gate on `any-pointer: fine` rather than window width — an
+ * installed desktop window is not always >=1024px wide, but a mouse or
+ * trackpad reliably tells a PC install apart from a phone/tablet one,
+ * which should keep these. Ordinary browser tabs are never standalone,
+ * so this never touches them.
  */
-@media (display-mode: standalone) and (min-width: 1024px) {
+@media (display-mode: standalone) and (any-pointer: fine) {
   .installed-desktop-hide {
     display: none;
   }
