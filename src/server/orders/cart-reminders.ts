@@ -8,9 +8,13 @@ import { createNotification } from "@/server/account/notifications";
  * Finds signed-in customers whose cart (synced from the client — see
  * /api/account/cart-sync) has sat untouched for `CART_REMINDER_DELAY_HOURS`+
  * and nudges them back to it. Meant to run on a schedule (see
- * /api/cron/cart-reminders). A snapshot is only reminded about once per idle
- * stretch: every cart-sync write clears `remindedAt` back to null, so a cart
- * only matches here again once it has changed since its last reminder.
+ * /api/cron/cart-reminders) — currently once daily, since Vercel's Hobby
+ * plan only allows daily-or-less-frequent crons; the idle threshold itself
+ * still checks against `CART_REMINDER_DELAY_HOURS`, so upgrading to an
+ * hourly cron later (Pro plan) needs no code change here, just vercel.json.
+ * A snapshot is only reminded about once per idle stretch: every cart-sync
+ * write clears `remindedAt` back to null, so a cart only matches here again
+ * once it has changed since its last reminder.
  */
 export async function runCartReminders() {
   const cutoff = new Date();
