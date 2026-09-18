@@ -13,7 +13,12 @@ import { cartCount, useCartStore } from "@/stores/cart-store";
  */
 export function CartSync() {
   const items = useCartStore((state) => state.items);
-  const [hydrated, setHydrated] = useState(() => useCartStore.persist.hasHydrated());
+  // `.persist` only exists once this module has evaluated in the browser —
+  // its default storage lookup throws server-side, where there's no
+  // `window`, so the SSR render must not touch it.
+  const [hydrated, setHydrated] = useState(() =>
+    typeof window === "undefined" ? false : useCartStore.persist.hasHydrated(),
+  );
   const lastSynced = useRef<number | null>(null);
 
   useEffect(() => {

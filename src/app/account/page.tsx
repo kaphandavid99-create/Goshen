@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AvatarUploader } from "@/components/account/avatar-uploader";
+import { NotificationNudge } from "@/components/account/notification-nudge";
 import { ProfileForm } from "@/components/account/profile-form";
 import { formatDate } from "@/lib/dates";
 import { getDict, getI18n } from "@/lib/i18n/server";
@@ -24,41 +25,44 @@ export default async function AccountProfilePage() {
   ]);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-      <section className="card p-5 sm:p-6">
-        <h2 className="section-title">{t.account.profile.title}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {t.account.profile.memberSince(
-            profile ? formatDate(profile.createdAt, locale) : "—",
-          )}
-        </p>
-        <div className="mt-5">
-          <AvatarUploader
+    <div>
+      <NotificationNudge />
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <section className="card p-5 sm:p-6">
+          <h2 className="section-title">{t.account.profile.title}</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t.account.profile.memberSince(
+              profile ? formatDate(profile.createdAt, locale) : "—",
+            )}
+          </p>
+          <div className="mt-5">
+            <AvatarUploader
+              name={profile?.name ?? user.name}
+              avatarUrl={profile?.avatarUrl ?? null}
+            />
+          </div>
+          <ProfileForm
             name={profile?.name ?? user.name}
-            avatarUrl={profile?.avatarUrl ?? null}
+            email={profile?.email ?? user.email}
+            phone={profile?.phone ?? ""}
           />
-        </div>
-        <ProfileForm
-          name={profile?.name ?? user.name}
-          email={profile?.email ?? user.email}
-          phone={profile?.phone ?? ""}
-        />
-      </section>
+        </section>
 
-      <section className="grid grid-cols-2 gap-3 content-start">
-        <Stat label={t.account.stats.orders} value={String(dashboard.stats.orderCount)} href="/account/orders" />
-        <Stat label={t.account.stats.points} value={String(dashboard.stats.points)} href="/account/rewards" />
-        <Stat label={t.account.stats.spent} value={formatPrice(dashboard.stats.spent, locale)} href="/account/orders" />
-        <Stat
-          label={t.account.stats.pending}
-          value={String(dashboard.stats.pendingCount)}
-          href="/account/orders"
-        />
-        <Link href="/shop" className="btn btn-primary col-span-2">
-          {t.account.stats.continueShopping}
-        </Link>
-        <WholesaleCard status={user.wholesaleStatus} t={t} />
-      </section>
+        <section className="grid grid-cols-2 gap-3 content-start">
+          <Stat label={t.account.stats.orders} value={String(dashboard.stats.orderCount)} href="/account/orders" />
+          <Stat label={t.account.stats.points} value={String(dashboard.stats.points)} href="/account/rewards" />
+          <Stat label={t.account.stats.spent} value={formatPrice(dashboard.stats.spent, locale)} href="/account/orders" />
+          <Stat
+            label={t.account.stats.pending}
+            value={String(dashboard.stats.pendingCount)}
+            href="/account/orders"
+          />
+          <Link href="/shop" className="btn btn-primary col-span-2">
+            {t.account.stats.continueShopping}
+          </Link>
+          <WholesaleCard status={user.wholesaleStatus} t={t} />
+        </section>
+      </div>
     </div>
   );
 }

@@ -544,6 +544,12 @@ export const en = {
       test: "Send a test alert",
       testSent: "Sent. It should appear on this device in a moment.",
       error: "Something went wrong. Try again.",
+      nudge: {
+        title: "Turn on notifications",
+        body: "Don't miss an update — turn on notifications to be alerted about your orders, bookings, and rewards.",
+        steps:
+          "Tap \"Turn on notifications\" below, then choose Allow when your browser asks.",
+      },
     },
 
     addresses: {

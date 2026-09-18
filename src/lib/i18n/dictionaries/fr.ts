@@ -547,6 +547,12 @@ export const fr: Dictionary = {
       test: "Envoyer une alerte test",
       testSent: "Envoyée. Elle devrait apparaître sur cet appareil dans un instant.",
       error: "Une erreur s'est produite. Réessayez.",
+      nudge: {
+        title: "Activer les notifications",
+        body: "Ne manquez rien — activez les notifications pour être alerté de vos commandes, réservations et récompenses.",
+        steps:
+          "Appuyez sur « Activer les notifications » ci-dessous, puis choisissez Autoriser quand votre navigateur le demande.",
+      },
     },
 
     addresses: {
