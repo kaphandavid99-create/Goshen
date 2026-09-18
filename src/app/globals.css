@@ -253,30 +253,19 @@ body {
 }
 
 .hero-rotate {
-  display: grid;
+  display: block;
+  max-width: 100%;
   margin-top: 0.12em;
-  min-height: 2.4em;
+  min-height: 1.2em;
 }
 
-.hero-phrase {
-  grid-area: 1 / 1;
-  visibility: hidden;
-}
-
-.hero-phrase.is-active {
-  visibility: visible;
-}
-
-.hero-word {
+.hero-type-text {
   display: inline-block;
-  padding-bottom: 0.04em;
-  vertical-align: bottom;
-  white-space: nowrap;
-}
-
-.hero-static-char,
-.hero-loop-char {
-  display: inline-block;
+  max-width: 100%;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  font-family: var(--font-mono);
+  letter-spacing: 0;
 }
 
 .hero-rule {
@@ -424,6 +413,27 @@ body {
 @media (min-width: 1024px) {
   .hero-media {
     border-radius: 1.75rem;
+  }
+}
+
+/* Hero photo: a slow, continuous zoom in and out (Ken Burns effect). */
+@keyframes hero-media-zoom {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.hero-media-zoom {
+  animation: hero-media-zoom 12s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-media-zoom {
+    animation: none;
   }
 }
 
@@ -1308,6 +1318,34 @@ body {
 
 /* ---------- Nipz Pretty Cakes & Pastries ---------- */
 /* --nipz-rose / --nipz-rose-soft / --nipz-ink are themed in :root and .dark */
+
+.nipz-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem 0.55rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--nipz-rose);
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nipz-back svg {
+  transition: transform 0.15s ease;
+}
+
+.nipz-back:hover {
+  background: var(--nipz-rose-soft);
+  border-color: var(--nipz-rose);
+}
+
+.nipz-back:hover svg {
+  transform: translateX(-3px);
+}
 
 .nipz-hero {
   position: relative;

@@ -3,6 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -18,31 +19,11 @@ import {
 import { useT } from "@/lib/i18n/context";
 import type { HeroContent, HeroImage } from "@/types/hero";
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(useGSAP, ScrambleTextPlugin);
 
 const trustIcons = [IconLeaf, IconTag, IconTruck, IconShield] as const;
 const trustKeys = ["quality", "prices", "delivery", "payOnArrival"] as const;
-
-function HeroChars({
-  text,
-  charClass,
-}: {
-  text: string;
-  charClass: string;
-}) {
-  const words = text.split(" ");
-
-  return words.map((word, wordIndex) => (
-    <span key={`${word}-${wordIndex}`} className="hero-word">
-      {Array.from(word).map((char, charIndex) => (
-        <span key={`${char}-${charIndex}`} className={charClass}>
-          {char}
-        </span>
-      ))}
-      {wordIndex < words.length - 1 ? " " : null}
-    </span>
-  ));
-}
+const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 
 function HeroMedia({ images }: { images: HeroImage[] }) {
   const [active, setActive] = useState(0);
@@ -67,7 +48,7 @@ function HeroMedia({ images }: { images: HeroImage[] }) {
           fill
           priority={index === 0}
           sizes="(min-width: 1024px) 36rem, 100vw"
-          className="object-cover transition-opacity duration-700 ease-out"
+          className="hero-media-zoom object-cover transition-opacity duration-700 ease-out"
           style={{ opacity: index === active ? 1 : 0 }}
         />
       ))}
@@ -84,9 +65,9 @@ export function HomeHero({ content }: { content: HeroContent }) {
 
   useGSAP(
     () => {
-      const staticChars = gsap.utils.toArray<HTMLElement>(".hero-static-char");
-      const phrases = gsap.utils.toArray<HTMLElement>(".hero-phrase");
-      if (!staticChars.length || !phrases.length) {
+      const headline = root.current?.querySelector<HTMLElement>(".hero-headline-text");
+      const typeText = root.current?.querySelector<HTMLElement>(".hero-type-text");
+      if (!headline || !typeText) {
         return;
       }
 
@@ -95,12 +76,16 @@ export function HomeHero({ content }: { content: HeroContent }) {
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const revealEls = ".hero-kicker, .hero-lead, .hero-cta, .hero-trust";
 
-      gsap.set(staticChars, { yPercent: 110, autoAlpha: 0 });
-      gsap.set(phrases, { autoAlpha: 0 });
-      gsap.set(phrases[0], { autoAlpha: 1 });
+      typeText.textContent = loopLines[0];
       gsap.set(".hero-rule", { scaleX: 0, transformOrigin: "left center" });
       gsap.set(".hero-kicker", reduce ? {} : { autoAlpha: 0, y: 10 });
+      gsap.set(headline, reduce ? {} : { autoAlpha: 0, y: 14 });
+      gsap.set(typeText, reduce ? {} : { autoAlpha: 0 });
       gsap.set(revealEls, reduce ? { autoAlpha: 1, y: 0 } : { autoAlpha: 0, y: 18 });
+
+      if (reduce) {
+        return;
+      }
 
       const intro = gsap.timeline({
         defaults: { ease: "power3.out" },
@@ -109,71 +94,59 @@ export function HomeHero({ content }: { content: HeroContent }) {
 
       intro
         .to(".hero-kicker", { autoAlpha: 1, y: 0, duration: 0.45 }, 0)
-        .to(staticChars, {
-          yPercent: 0,
-          autoAlpha: 1,
-          stagger: 0.018,
-          duration: 0.55,
-        })
-        .fromTo(
-          phrases[0].querySelectorAll(".hero-loop-char"),
-          { yPercent: 110, autoAlpha: 0 },
+        .to(headline, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.15)
+        .to(
+          headline,
           {
-            yPercent: 0,
-            autoAlpha: 1,
-            stagger: 0.016,
-            duration: 0.55,
+            duration: 0.9,
+            ease: "none",
+            scrambleText: {
+              text: content.headline,
+              chars: SCRAMBLE_CHARS,
+              revealDelay: 0.25,
+              speed: 0.35,
+            },
           },
-          "-=0.35",
+          0.15,
         )
-        .to(".hero-rule", { scaleX: 1, duration: 0.45, ease: "power2.out" }, "-=0.28");
+        .to(".hero-rule", { scaleX: 1, duration: 0.45, ease: "power2.out" }, 0.55)
+        .set(typeText, { autoAlpha: 1 }, 0.9)
+        .to(
+          typeText,
+          {
+            duration: 0.9,
+            ease: "none",
+            scrambleText: {
+              text: loopLines[0],
+              chars: SCRAMBLE_CHARS,
+              revealDelay: 0.25,
+              speed: 0.35,
+            },
+          },
+          0.9,
+        )
+        .to(revealEls, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5 }, 1.05);
 
-      if (!reduce) {
-        intro.to(
-          revealEls,
-          { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5 },
-          "-=0.15",
-        );
-      }
-
-      if (phrases.length < 2) {
+      if (loopLines.length < 2) {
         return;
       }
 
-      const loop = gsap.timeline({
-        repeat: -1,
-        delay: 3.2,
-        repeatDelay: 0.2,
-      });
+      const loop = gsap.timeline({ repeat: -1, delay: 2.2 });
 
-      phrases.forEach((phrase, index) => {
-        const next = phrases[(index + 1) % phrases.length];
-        const outgoing = phrase.querySelectorAll(".hero-loop-char");
-        const incoming = next.querySelectorAll(".hero-loop-char");
-
+      loopLines.forEach((_, index) => {
+        const next = loopLines[(index + 1) % loopLines.length];
         loop
-          .to(outgoing, {
-            yPercent: -100,
-            autoAlpha: 0,
-            stagger: { each: 0.012, from: "end" },
-            duration: 0.4,
-            ease: "power2.in",
-          })
-          .set(phrase, { autoAlpha: 0 })
-          .set(next, { autoAlpha: 1 })
-          .fromTo(
-            incoming,
-            { yPercent: 100, autoAlpha: 0 },
-            {
-              yPercent: 0,
-              autoAlpha: 1,
-              stagger: 0.014,
-              duration: 0.5,
-              ease: "power3.out",
+          .to({}, { duration: 1.8 })
+          .to(typeText, {
+            duration: Math.min(1.3, 0.6 + next.length * 0.025),
+            ease: "none",
+            scrambleText: {
+              text: next,
+              chars: SCRAMBLE_CHARS,
+              revealDelay: 0.25,
+              speed: 0.35,
             },
-            "<0.08",
-          )
-          .to({}, { duration: 2.4 });
+          });
       });
     },
     { scope: root, dependencies: [content.headline, loopLines.join("|")] },
@@ -192,18 +165,9 @@ export function HomeHero({ content }: { content: HeroContent }) {
               {content.headline} {loopLines.join(" ")}
             </span>
             <span className="hero-title-visual" aria-hidden="true">
-              <span className="hero-line">
-                <HeroChars text={content.headline} charClass="hero-static-char" />
-              </span>
+              <span className="hero-line hero-headline-text">{content.headline}</span>
               <span className="hero-rotate hero-title-accent">
-                {loopLines.map((line, index) => (
-                  <span
-                    key={`${line}-${index}`}
-                    className={index === 0 ? "hero-phrase is-active" : "hero-phrase"}
-                  >
-                    <HeroChars text={line} charClass="hero-loop-char" />
-                  </span>
-                ))}
+                <span className="hero-type-text">{loopLines[0]}</span>
               </span>
             </span>
           </h1>

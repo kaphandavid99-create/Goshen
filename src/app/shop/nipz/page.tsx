@@ -3,7 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookingForm } from "@/app/shop/nipz/booking-form";
 import { CakeGallery } from "@/app/shop/nipz/cake-gallery";
-import { IconCake, IconCheck, IconClock, IconPhone, IconPin } from "@/components/icons";
+import {
+  IconArrowRight,
+  IconCake,
+  IconCheck,
+  IconClock,
+  IconPhone,
+  IconPin,
+} from "@/components/icons";
 import { NIPZ, STORE } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
 import { listCakeItems } from "@/server/cakes/queries";
@@ -23,7 +30,8 @@ export default async function NipzPage() {
 
   return (
     <main className="nipz page-wrap flex-1 py-10 sm:py-12">
-      <Link href="/shop" className="btn-ghost text-sm">
+      <Link href="/shop" className="nipz-back">
+        <IconArrowRight className="size-4 rotate-180" />
         {t.nipz.backToShop}
       </Link>
 
