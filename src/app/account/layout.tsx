@@ -4,7 +4,7 @@ import { Avatar } from "@/components/account/avatar";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { PageIntro } from "@/components/layout/page-intro";
 import { getDict } from "@/lib/i18n/server";
-import { countUnreadNotifications } from "@/server/account/hub";
+import { countUnreadNotifications, countWishlist } from "@/server/account/hub";
 import { consumeFirstDashboardVisit } from "@/server/account/welcome";
 import { requireUser } from "@/server/auth/current-user";
 
@@ -14,8 +14,9 @@ export default async function AccountLayout({
   children: ReactNode;
 }) {
   const user = await requireUser();
-  const [unread, isFirstVisit, t] = await Promise.all([
+  const [unread, wishlistCount, isFirstVisit, t] = await Promise.all([
     countUnreadNotifications(user.id).catch(() => 0),
+    countWishlist(user.id).catch(() => 0),
     consumeFirstDashboardVisit(user.id),
     getDict(),
   ]);
@@ -35,7 +36,7 @@ export default async function AccountLayout({
         </div>
         <LogoutButton />
       </div>
-      <AccountNav unread={unread} />
+      <AccountNav unread={unread} wishlistCount={wishlistCount} />
       <div className="mt-8">{children}</div>
     </div>
   );

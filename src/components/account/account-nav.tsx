@@ -28,7 +28,23 @@ function isActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function AccountNav({ unread = 0 }: { unread?: number }) {
+// Orders and Rewards surface the same unread-notification count as Notifications
+// itself — a customer browsing either tab still needs to know something's
+// waiting for them. Wishlist instead counts saved products, its own metric.
+const BADGE_COUNTS: Partial<Record<(typeof LINKS)[number]["key"], "unread" | "wishlist">> = {
+  orders: "unread",
+  rewards: "unread",
+  notifications: "unread",
+  wishlist: "wishlist",
+};
+
+export function AccountNav({
+  unread = 0,
+  wishlistCount = 0,
+}: {
+  unread?: number;
+  wishlistCount?: number;
+}) {
   const pathname = usePathname();
   const t = useT();
 
@@ -40,6 +56,8 @@ export function AccountNav({ unread = 0 }: { unread?: number }) {
       {LINKS.map((link) => {
         const active = isActive(pathname, link.href);
         const Icon = link.icon;
+        const source = BADGE_COUNTS[link.key];
+        const count = source === "unread" ? unread : source === "wishlist" ? wishlistCount : 0;
         return (
           <Link
             key={link.href}
@@ -52,13 +70,13 @@ export function AccountNav({ unread = 0 }: { unread?: number }) {
           >
             <Icon className="size-4" />
             {t.account.nav[link.key]}
-            {link.href === "/account/notifications" && unread > 0 ? (
+            {count > 0 ? (
               <span
                 className={`rounded-full px-1.5 text-xs ${
                   active ? "bg-primary-foreground text-primary" : "bg-accent text-accent-foreground"
                 }`}
               >
-                {unread > 9 ? "9+" : unread}
+                {count > 9 ? "9+" : count}
               </span>
             ) : null}
           </Link>

@@ -201,6 +201,10 @@ export async function listWishlistProductIds(userId: string) {
   return items.map((item) => item.productId);
 }
 
+export async function countWishlist(userId: string) {
+  return prisma.wishlistItem.count({ where: { userId } });
+}
+
 export async function isInWishlist(userId: string, productId: string) {
   const item = await prisma.wishlistItem.findUnique({
     where: { userId_productId: { userId, productId } },
