@@ -151,6 +151,18 @@ export default async function OrderDetailPage({
       <section className="card mt-6 p-6 text-sm">
         <p><span className="text-muted-foreground">{t.orders.name}</span> {order.fullName}</p>
         <p className="mt-1"><span className="text-muted-foreground">{t.orders.phone}</span> {order.phone}</p>
+        {order.payment ? (
+          <>
+            <p className="mt-1">
+              <span className="text-muted-foreground">{t.orders.paymentMethod}</span>{" "}
+              {t.orders.paymentMethodLabel[order.payment.method]}
+            </p>
+            <p className="mt-1">
+              <span className="text-muted-foreground">{t.orders.paymentStatus}</span>{" "}
+              {t.orders.paymentStatusLabel[order.payment.status]}
+            </p>
+          </>
+        ) : null}
         {order.address ? (
           <p className="mt-1">
             <span className="text-muted-foreground">{t.orders.address}</span> {order.address}

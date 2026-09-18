@@ -611,6 +611,17 @@ export const fr: Dictionary = {
     phone: "Téléphone :",
     address: "Adresse :",
     notes: "Remarques :",
+    paymentMethod: "Mode de paiement :",
+    paymentStatus: "Statut du paiement :",
+    paymentMethodLabel: {
+      CASH: "Espèces à la livraison / au retrait",
+      MOMO: "MTN Mobile Money",
+    },
+    paymentStatusLabel: {
+      PENDING: "En attente",
+      SUCCEEDED: "Payé",
+      FAILED: "Échoué",
+    },
     backToOrders: "Retour aux commandes",
     receipt: {
       link: "Voir le reçu",
@@ -762,7 +773,7 @@ export const fr: Dictionary = {
   nipz: {
     metaDescription:
       "Gâteaux, cupcakes, pâtisseries et tables de desserts sur commande chez Goshen à New Bell, Bamenda. Réservez en ligne.",
-    backToShop: "← Retour à la boutique",
+    backToShop: "Retour à la boutique",
     eyebrow: "Chez Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
     titleEm: "& Pâtisseries",

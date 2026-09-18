@@ -1,7 +1,7 @@
 import "server-only";
 
 import { prisma } from "@/lib/db/prisma";
-import type { OrderStatus } from "@prisma/client";
+import type { OrderStatus, PaymentStatus } from "@prisma/client";
 
 function startOfToday() {
   const date = new Date();
@@ -79,12 +79,24 @@ export async function getAdminOverview() {
   };
 }
 
-export async function listAdminOrders(status?: OrderStatus) {
+export async function listAdminOrders(
+  status?: OrderStatus,
+  paymentStatus?: PaymentStatus,
+) {
   return prisma.order.findMany({
-    where: status ? { status } : { status: { not: "AWAITING_PAYMENT" } },
+    where: {
+      ...(status ? { status } : { status: { not: "AWAITING_PAYMENT" } }),
+      ...(paymentStatus ? { payment: { status: paymentStatus } } : {}),
+    },
     orderBy: { createdAt: "desc" },
     include: {
-      payment: { select: { method: true, status: true, paidAt: true } },
+      payment: {
+        select: {
+          method: true,
+          status: true,
+          paidAt: true,
+        },
+      },
       user: { select: { name: true, email: true, avatarUrl: true } },
       items: {
         include: {

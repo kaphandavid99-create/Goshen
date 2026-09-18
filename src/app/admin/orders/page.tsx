@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { OrderStatus } from "@prisma/client";
+import type { OrderStatus, PaymentStatus } from "@prisma/client";
 import Link from "next/link";
 import { Avatar } from "@/components/account/avatar";
 import { ConfirmOrderButton } from "@/components/admin/confirm-order-button";
@@ -14,23 +14,49 @@ export const metadata: Metadata = {
 };
 
 const FILTERS = [
-  { href: "/admin/orders", label: "All", status: undefined },
-  { href: "/admin/orders?status=PENDING", label: "Pending", status: "PENDING" },
-  { href: "/admin/orders?status=CONFIRMED", label: "Confirmed", status: "CONFIRMED" },
-  { href: "/admin/orders?status=RECEIVED", label: "Received", status: "RECEIVED" },
-  { href: "/admin/orders?status=CANCELLED", label: "Cancelled", status: "CANCELLED" },
+  { label: "All", status: undefined },
+  { label: "Pending", status: "PENDING" },
+  { label: "Confirmed", status: "CONFIRMED" },
+  { label: "Received", status: "RECEIVED" },
+  { label: "Cancelled", status: "CANCELLED" },
 ] as const;
+
+const PAYMENT_FILTERS = [
+  { label: "All", paymentStatus: undefined },
+  { label: "Pending Payment", paymentStatus: "PENDING" },
+  { label: "Paid", paymentStatus: "SUCCEEDED" },
+  { label: "Failed", paymentStatus: "FAILED" },
+] as const;
+
+const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
+  PENDING: "Pending",
+  SUCCEEDED: "Paid",
+  FAILED: "Failed",
+};
+
+function filterHref(status: OrderStatus | undefined, paymentStatus: PaymentStatus | undefined) {
+  const params = new URLSearchParams();
+  if (status) params.set("status", status);
+  if (paymentStatus) params.set("paymentStatus", paymentStatus);
+  const query = params.toString();
+  return query ? `/admin/orders?${query}` : "/admin/orders";
+}
 
 export default async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string }>;
+  searchParams: Promise<{ status?: string; paymentStatus?: string }>;
 }) {
-  const { status } = await searchParams;
+  const { status, paymentStatus } = await searchParams;
   const selected = FILTERS.some((filter) => filter.status === status)
     ? (status as OrderStatus)
     : undefined;
-  const orders = await listAdminOrders(selected);
+  const selectedPayment = PAYMENT_FILTERS.some(
+    (filter) => filter.paymentStatus === paymentStatus,
+  )
+    ? (paymentStatus as PaymentStatus)
+    : undefined;
+  const orders = await listAdminOrders(selected, selectedPayment);
 
   return (
     <main>
@@ -46,11 +72,30 @@ export default async function AdminOrdersPage({
           return (
             <Link
               key={filter.label}
-              href={filter.href}
+              href={filterHref(filter.status, selectedPayment)}
               className={
                 active
                   ? "rounded-full bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground"
                   : "rounded-full border border-border bg-card px-3.5 py-1.5 text-sm text-foreground hover:border-primary"
+              }
+            >
+              {filter.label}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <nav className="mt-3 flex flex-wrap gap-2" aria-label="Payment status">
+        {PAYMENT_FILTERS.map((filter) => {
+          const active = filter.paymentStatus === selectedPayment;
+          return (
+            <Link
+              key={filter.label}
+              href={filterHref(selected, filter.paymentStatus)}
+              className={
+                active
+                  ? "rounded-full bg-accent px-3 py-1 text-xs font-medium text-accent-foreground"
+                  : "rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground hover:border-primary"
               }
             >
               {filter.label}
@@ -72,6 +117,7 @@ export default async function AdminOrdersPage({
                   <th>Items</th>
                   <th>Fulfillment</th>
                   <th>Status</th>
+                  <th>Payment</th>
                   <th>Total</th>
                   <th>Action</th>
                 </tr>
@@ -123,6 +169,21 @@ export default async function AdminOrdersPage({
                     <td>{order.fulfillment === "DELIVERY" ? "Delivery" : "Pickup"}</td>
                     <td>
                       <StatusBadge status={order.status} />
+                    </td>
+                    <td>
+                      {order.payment ? (
+                        <>
+                          <p>{order.payment.method === "MOMO" ? "MTN MoMo" : "Cash"}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {PAYMENT_STATUS_LABEL[order.payment.status]}
+                            {order.payment.paidAt
+                              ? ` · ${formatDateTime(order.payment.paidAt)}`
+                              : ""}
+                          </p>
+                        </>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
                     </td>
                     <td className="font-medium">{formatPrice(order.totalCents)}</td>
                     <td>

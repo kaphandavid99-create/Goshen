@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { PaymentStatus } from "@prisma/client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Avatar } from "@/components/account/avatar";
@@ -13,6 +14,12 @@ import {
 } from "@/lib/flavors";
 import { formatPrice } from "@/lib/money";
 import { getAdminOrder } from "@/server/admin/queries";
+
+const PAYMENT_STATUS_LABEL: Record<PaymentStatus, string> = {
+  PENDING: "Pending",
+  SUCCEEDED: "Paid",
+  FAILED: "Failed",
+};
 
 type OrderItem = NonNullable<
   Awaited<ReturnType<typeof getAdminOrder>>
@@ -124,23 +131,29 @@ export default async function AdminOrderPage({
           />
           <Row label="Account email" value={order.user.email} />
           <Row
-            label="Payment"
-            value={
-              order.payment
-                ? order.payment.method === "MOMO"
-                  ? order.payment.status === "SUCCEEDED"
-                    ? `MTN MoMo · paid${
-                        order.payment.paidAt
-                          ? ` ${order.payment.paidAt.toISOString().slice(0, 10)}`
-                          : ""
-                      }`
-                    : order.payment.status === "FAILED"
-                      ? `MTN MoMo · not completed`
-                      : "MTN MoMo · awaiting payment"
-                  : "Cash on delivery / pickup"
-                : "Cash on delivery / pickup"
-            }
+            label="Payment method"
+            value={order.payment?.method === "MOMO" ? "MTN Mobile Money" : "Cash on delivery / pickup"}
           />
+          {order.payment?.method === "MOMO" ? (
+            <>
+              <Row
+                label="Payment status"
+                value={PAYMENT_STATUS_LABEL[order.payment.status]}
+              />
+              <Row
+                label="Payment reference"
+                value={order.payment.momoReferenceId ?? "None"}
+              />
+              <Row
+                label="Date paid"
+                value={
+                  order.payment.paidAt
+                    ? order.payment.paidAt.toISOString().slice(0, 10)
+                    : "Not paid"
+                }
+              />
+            </>
+          ) : null}
           <Row label="Address" value={order.address ?? "Pickup at the shop"} />
           <Row label="Notes" value={order.notes ?? "None"} />
         </dl>

@@ -606,6 +606,17 @@ export const en = {
     phone: "Phone:",
     address: "Address:",
     notes: "Notes:",
+    paymentMethod: "Payment method:",
+    paymentStatus: "Payment status:",
+    paymentMethodLabel: {
+      CASH: "Cash on delivery / pickup",
+      MOMO: "MTN Mobile Money",
+    },
+    paymentStatusLabel: {
+      PENDING: "Pending",
+      SUCCEEDED: "Paid",
+      FAILED: "Failed",
+    },
     backToOrders: "Back to orders",
     receipt: {
       link: "View receipt",
@@ -761,7 +772,7 @@ export const en = {
   nipz: {
     metaDescription:
       "Custom cakes, cupcakes, pastries and dessert tables made to order at Goshen in New Bell, Bamenda. Book online.",
-    backToShop: "← Back to Shop",
+    backToShop: "Back to Shop",
     eyebrow: "Inside Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
     titleEm: "& Pastries",
