@@ -85,7 +85,7 @@ export async function listAdminOrders(status?: OrderStatus) {
     orderBy: { createdAt: "desc" },
     include: {
       payment: { select: { method: true, status: true, paidAt: true } },
-      user: { select: { name: true, email: true } },
+      user: { select: { name: true, email: true, avatarUrl: true } },
       items: {
         include: {
           product: {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { OrderStatus } from "@prisma/client";
 import Link from "next/link";
+import { Avatar } from "@/components/account/avatar";
 import { ConfirmOrderButton } from "@/components/admin/confirm-order-button";
 import { OrderThumbs } from "@/components/admin/order-thumbs";
 import { StatusBadge } from "@/components/admin/status-badge";
@@ -95,8 +96,24 @@ export default async function AdminOrdersPage({
                       ) : null}
                     </td>
                     <td>
-                      <p>{order.fullName}</p>
-                      <p className="text-xs text-muted-foreground">{order.phone}</p>
+                      <div className="flex items-center gap-2.5">
+                        {order.user.avatarUrl ? (
+                          <a
+                            href={order.user.avatarUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="View full photo"
+                          >
+                            <Avatar name={order.user.name} url={order.user.avatarUrl} size={32} />
+                          </a>
+                        ) : (
+                          <Avatar name={order.user.name} url={null} size={32} />
+                        )}
+                        <div>
+                          <p>{order.fullName}</p>
+                          <p className="text-xs text-muted-foreground">{order.phone}</p>
+                        </div>
+                      </div>
                     </td>
                     <td>
                       <Link href={`/admin/orders/${order.id}`}>

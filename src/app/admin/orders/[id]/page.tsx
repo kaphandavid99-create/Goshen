@@ -103,7 +103,13 @@ export default async function AdminOrderPage({
 
       <section className="card mt-6 p-5 sm:p-6">
         <div className="flex items-center gap-3">
-          <Avatar name={order.user.name} url={order.user.avatarUrl} size={40} />
+          {order.user.avatarUrl ? (
+            <a href={order.user.avatarUrl} target="_blank" rel="noreferrer" title="View full photo">
+              <Avatar name={order.user.name} url={order.user.avatarUrl} size={56} />
+            </a>
+          ) : (
+            <Avatar name={order.user.name} url={null} size={56} />
+          )}
           <div>
             <h2 className="section-title">Customer</h2>
             <p className="text-sm text-muted-foreground">{order.user.name}</p>

@@ -40,11 +40,22 @@ export default async function AdminCustomersPage() {
                   <tr key={customer.id}>
                     <td>
                       <span className="flex items-center gap-3">
-                        <Avatar
-                          name={customer.name}
-                          url={customer.avatarUrl}
-                          size={36}
-                        />
+                        {customer.avatarUrl ? (
+                          <a
+                            href={customer.avatarUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="View full photo"
+                          >
+                            <Avatar
+                              name={customer.name}
+                              url={customer.avatarUrl}
+                              size={36}
+                            />
+                          </a>
+                        ) : (
+                          <Avatar name={customer.name} url={null} size={36} />
+                        )}
                         <span className="min-w-0">
                           <span className="block font-semibold text-primary">
                             {customer.name}
