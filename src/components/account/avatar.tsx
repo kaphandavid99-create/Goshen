@@ -32,7 +32,7 @@ export function Avatar({
   if (url) {
     return (
       <span
-        className={`relative shrink-0 overflow-hidden rounded-full bg-muted ${className}`}
+        className={`relative inline-block shrink-0 overflow-hidden rounded-full bg-muted ${className}`}
         style={style}
       >
         <Image
