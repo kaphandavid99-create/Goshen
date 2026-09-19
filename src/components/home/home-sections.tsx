@@ -157,12 +157,10 @@ export function NewArrivals({
           <span className="badge">{t.home.justLanded}</span>
         </div>
         <div className="shop-grid grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4">
-          {arrivals.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              saved={saved.has(product.id)}
-            />
+          {arrivals.map((product, index) => (
+            <div key={product.id} className={index >= 4 ? "hidden sm:block" : undefined}>
+              <ProductCard product={product} saved={saved.has(product.id)} />
+            </div>
           ))}
         </div>
         <div className="mt-5 flex justify-center sm:mt-6">
