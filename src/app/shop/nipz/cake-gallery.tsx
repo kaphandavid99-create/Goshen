@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { requestBooking } from "@/app/shop/nipz/booking-bus";
 import { useI18n } from "@/lib/i18n/context";
 import { formatPrice } from "@/lib/money";
 import type { CakeItem } from "@/types/cakes";
@@ -48,6 +49,11 @@ export function CakeGallery({
     }`;
     const text = t.nipz.orderMessage(businessName, label);
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+  }
+
+  function bookThis(item: CakeItem) {
+    requestBooking(item.name);
+    document.getElementById("book")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   if (items.length === 0) {
@@ -97,14 +103,23 @@ export function CakeGallery({
               <p className="nipz-cake-desc">{item.description}</p>
               <div className="nipz-cake-foot">
                 <span className="nipz-cake-price">{priceLabel(item)}</span>
-                <a
-                  href={orderHref(item)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-rose px-3.5 py-2 text-xs"
-                >
-                  {t.nipz.orderOnWhatsapp}
-                </a>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => bookThis(item)}
+                    className="btn btn-outline px-3.5 py-2 text-xs"
+                  >
+                    {t.nipz.bookThis}
+                  </button>
+                  <a
+                    href={orderHref(item)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-rose px-3.5 py-2 text-xs"
+                  >
+                    {t.nipz.orderOnWhatsapp}
+                  </a>
+                </div>
               </div>
             </div>
           </article>
