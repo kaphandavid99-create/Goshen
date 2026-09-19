@@ -4,24 +4,14 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { readCsrf } from "@/lib/auth/csrf-client";
-import type { HeroContent, HeroImage } from "@/types/hero";
+import type { HeroBilingualText, HeroImage } from "@/types/hero";
 
-type TextValues = Omit<HeroContent, "images" | "rotatingLines"> & {
-  rotatingLines: string[];
-};
+type TextValues = HeroBilingualText;
+type LinesField = "rotatingLines" | "rotatingLinesFr";
 
-export function HeroTextForm({ content }: { content: HeroContent }) {
+export function HeroTextForm({ content }: { content: HeroBilingualText }) {
   const router = useRouter();
-  const [values, setValues] = useState<TextValues>({
-    kicker: content.kicker,
-    headline: content.headline,
-    rotatingLines: content.rotatingLines,
-    lead: content.lead,
-    primaryCtaLabel: content.primaryCtaLabel,
-    primaryCtaHref: content.primaryCtaHref,
-    secondaryCtaLabel: content.secondaryCtaLabel,
-    secondaryCtaHref: content.secondaryCtaHref,
-  });
+  const [values, setValues] = useState<TextValues>(content);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
@@ -30,27 +20,25 @@ export function HeroTextForm({ content }: { content: HeroContent }) {
     setValues((current) => ({ ...current, [key]: value }));
   }
 
-  function setLine(index: number, value: string) {
+  function setLine(field: LinesField, index: number, value: string) {
     setValues((current) => ({
       ...current,
-      rotatingLines: current.rotatingLines.map((line, i) =>
-        i === index ? value : line,
-      ),
+      [field]: current[field].map((line, i) => (i === index ? value : line)),
     }));
   }
 
-  function addLine() {
+  function addLine(field: LinesField) {
     setValues((current) =>
-      current.rotatingLines.length >= 6
+      current[field].length >= 6
         ? current
-        : { ...current, rotatingLines: [...current.rotatingLines, ""] },
+        : { ...current, [field]: [...current[field], ""] },
     );
   }
 
-  function removeLine(index: number) {
+  function removeLine(field: LinesField, index: number) {
     setValues((current) => ({
       ...current,
-      rotatingLines: current.rotatingLines.filter((_, i) => i !== index),
+      [field]: current[field].filter((_, i) => i !== index),
     }));
   }
 
@@ -70,9 +58,8 @@ export function HeroTextForm({ content }: { content: HeroContent }) {
         },
         body: JSON.stringify({
           ...values,
-          rotatingLines: values.rotatingLines
-            .map((line) => line.trim())
-            .filter(Boolean),
+          rotatingLines: values.rotatingLines.map((line) => line.trim()).filter(Boolean),
+          rotatingLinesFr: values.rotatingLinesFr.map((line) => line.trim()).filter(Boolean),
         }),
       });
       const data = (await response.json()) as { error?: string };
@@ -90,116 +77,218 @@ export function HeroTextForm({ content }: { content: HeroContent }) {
   }
 
   return (
-    <form onSubmit={(event) => void onSubmit(event)} className="space-y-4">
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium">Kicker</span>
-        <input
-          className="field"
-          value={values.kicker}
-          onChange={(event) => set("kicker", event.target.value)}
-          maxLength={80}
-          required
-        />
-      </label>
+    <form onSubmit={(event) => void onSubmit(event)} className="space-y-6">
+      <div className="space-y-4">
+        <h3 className="text-sm font-semibold text-primary">English</h3>
 
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium">Headline (fixed first line)</span>
-        <input
-          className="field"
-          value={values.headline}
-          onChange={(event) => set("headline", event.target.value)}
-          maxLength={120}
-          required
-        />
-      </label>
+        <label className="block space-y-2 text-sm">
+          <span className="font-medium">Kicker</span>
+          <input
+            className="field"
+            value={values.kicker}
+            onChange={(event) => set("kicker", event.target.value)}
+            maxLength={80}
+            required
+          />
+        </label>
 
-      <div className="space-y-2 text-sm">
-        <span className="font-medium">Rotating lines</span>
-        <p className="text-xs text-muted-foreground">
-          These cycle under the headline, one after another.
-        </p>
-        <div className="space-y-2">
-          {values.rotatingLines.map((line, index) => (
-            <div key={index} className="flex gap-2">
-              <input
-                className="field"
-                value={line}
-                onChange={(event) => setLine(index, event.target.value)}
-                maxLength={120}
-                placeholder={`Line ${index + 1}`}
-              />
-              <button
-                type="button"
-                onClick={() => removeLine(index)}
-                disabled={values.rotatingLines.length <= 1}
-                className="btn btn-outline shrink-0"
-              >
-                Remove
-              </button>
-            </div>
-          ))}
+        <label className="block space-y-2 text-sm">
+          <span className="font-medium">Headline (fixed first line)</span>
+          <input
+            className="field"
+            value={values.headline}
+            onChange={(event) => set("headline", event.target.value)}
+            maxLength={120}
+            required
+          />
+        </label>
+
+        <div className="space-y-2 text-sm">
+          <span className="font-medium">Rotating lines</span>
+          <p className="text-xs text-muted-foreground">
+            These cycle under the headline, one after another.
+          </p>
+          <div className="space-y-2">
+            {values.rotatingLines.map((line, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  className="field"
+                  value={line}
+                  onChange={(event) => setLine("rotatingLines", index, event.target.value)}
+                  maxLength={120}
+                  placeholder={`Line ${index + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeLine("rotatingLines", index)}
+                  disabled={values.rotatingLines.length <= 1}
+                  className="btn btn-outline shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          {values.rotatingLines.length < 6 ? (
+            <button
+              type="button"
+              onClick={() => addLine("rotatingLines")}
+              className="btn-ghost text-sm"
+            >
+              Add line
+            </button>
+          ) : null}
         </div>
-        {values.rotatingLines.length < 6 ? (
-          <button type="button" onClick={addLine} className="btn-ghost text-sm">
-            Add line
-          </button>
-        ) : null}
+
+        <label className="block space-y-2 text-sm">
+          <span className="font-medium">Lead paragraph</span>
+          <textarea
+            className="field min-h-24"
+            value={values.lead}
+            onChange={(event) => set("lead", event.target.value)}
+            maxLength={400}
+            required
+          />
+        </label>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Primary button label</span>
+            <input
+              className="field"
+              value={values.primaryCtaLabel}
+              onChange={(event) => set("primaryCtaLabel", event.target.value)}
+              maxLength={40}
+              required
+            />
+          </label>
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Primary button link</span>
+            <input
+              className="field"
+              value={values.primaryCtaHref}
+              onChange={(event) => set("primaryCtaHref", event.target.value)}
+              maxLength={200}
+              required
+              placeholder="/shop"
+            />
+          </label>
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Secondary button label</span>
+            <input
+              className="field"
+              value={values.secondaryCtaLabel}
+              onChange={(event) => set("secondaryCtaLabel", event.target.value)}
+              maxLength={40}
+              required
+            />
+          </label>
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Secondary button link</span>
+            <input
+              className="field"
+              value={values.secondaryCtaHref}
+              onChange={(event) => set("secondaryCtaHref", event.target.value)}
+              maxLength={200}
+              required
+              placeholder="/shop?deals=1"
+            />
+          </label>
+        </div>
       </div>
 
-      <label className="block space-y-2 text-sm">
-        <span className="font-medium">Lead paragraph</span>
-        <textarea
-          className="field min-h-24"
-          value={values.lead}
-          onChange={(event) => set("lead", event.target.value)}
-          maxLength={400}
-          required
-        />
-      </label>
+      <div className="space-y-4 border-t border-border pt-6">
+        <div>
+          <h3 className="text-sm font-semibold text-primary">French</h3>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Optional. Leave a field blank and French visitors see the English
+            text instead. Buttons link to the same pages in both languages.
+          </p>
+        </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
         <label className="block space-y-2 text-sm">
-          <span className="font-medium">Primary button label</span>
+          <span className="font-medium">Kicker</span>
           <input
             className="field"
-            value={values.primaryCtaLabel}
-            onChange={(event) => set("primaryCtaLabel", event.target.value)}
-            maxLength={40}
-            required
+            value={values.kickerFr}
+            onChange={(event) => set("kickerFr", event.target.value)}
+            maxLength={80}
           />
         </label>
+
         <label className="block space-y-2 text-sm">
-          <span className="font-medium">Primary button link</span>
+          <span className="font-medium">Headline (fixed first line)</span>
           <input
             className="field"
-            value={values.primaryCtaHref}
-            onChange={(event) => set("primaryCtaHref", event.target.value)}
-            maxLength={200}
-            required
-            placeholder="/shop"
+            value={values.headlineFr}
+            onChange={(event) => set("headlineFr", event.target.value)}
+            maxLength={120}
           />
         </label>
+
+        <div className="space-y-2 text-sm">
+          <span className="font-medium">Rotating lines</span>
+          <div className="space-y-2">
+            {values.rotatingLinesFr.map((line, index) => (
+              <div key={index} className="flex gap-2">
+                <input
+                  className="field"
+                  value={line}
+                  onChange={(event) => setLine("rotatingLinesFr", index, event.target.value)}
+                  maxLength={120}
+                  placeholder={`Line ${index + 1}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => removeLine("rotatingLinesFr", index)}
+                  className="btn btn-outline shrink-0"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+          </div>
+          {values.rotatingLinesFr.length < 6 ? (
+            <button
+              type="button"
+              onClick={() => addLine("rotatingLinesFr")}
+              className="btn-ghost text-sm"
+            >
+              Add line
+            </button>
+          ) : null}
+        </div>
+
         <label className="block space-y-2 text-sm">
-          <span className="font-medium">Secondary button label</span>
-          <input
-            className="field"
-            value={values.secondaryCtaLabel}
-            onChange={(event) => set("secondaryCtaLabel", event.target.value)}
-            maxLength={40}
-            required
+          <span className="font-medium">Lead paragraph</span>
+          <textarea
+            className="field min-h-24"
+            value={values.leadFr}
+            onChange={(event) => set("leadFr", event.target.value)}
+            maxLength={400}
           />
         </label>
-        <label className="block space-y-2 text-sm">
-          <span className="font-medium">Secondary button link</span>
-          <input
-            className="field"
-            value={values.secondaryCtaHref}
-            onChange={(event) => set("secondaryCtaHref", event.target.value)}
-            maxLength={200}
-            required
-            placeholder="/shop?deals=1"
-          />
-        </label>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Primary button label</span>
+            <input
+              className="field"
+              value={values.primaryCtaLabelFr}
+              onChange={(event) => set("primaryCtaLabelFr", event.target.value)}
+              maxLength={40}
+            />
+          </label>
+          <label className="block space-y-2 text-sm">
+            <span className="font-medium">Secondary button label</span>
+            <input
+              className="field"
+              value={values.secondaryCtaLabelFr}
+              onChange={(event) => set("secondaryCtaLabelFr", event.target.value)}
+              maxLength={40}
+            />
+          </label>
+        </div>
       </div>
 
       <div className="flex items-center gap-3">

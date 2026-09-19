@@ -3,7 +3,7 @@ import "server-only";
 import { prisma } from "@/lib/db/prisma";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getLocale } from "@/lib/i18n/server";
-import type { HeroContent } from "@/types/hero";
+import type { HeroBilingualText, HeroContent } from "@/types/hero";
 
 export type { HeroContent, HeroImage } from "@/types/hero";
 
@@ -32,18 +32,19 @@ function heroDefaults(locale: Awaited<ReturnType<typeof getLocale>>): HeroConten
 /** English defaults, for non-request contexts (validators, tests). */
 export const HERO_DEFAULTS: HeroContent = heroDefaults("en");
 
+function toStringList(value: unknown, fallback: string[]): string[] {
+  if (!Array.isArray(value)) return fallback;
+  const lines = value.filter(
+    (entry): entry is string =>
+      typeof entry === "string" && entry.trim().length > 0,
+  );
+  return lines.length > 0 ? lines : fallback;
+}
+
 export async function getHeroContent(): Promise<HeroContent> {
   const locale = await getLocale();
   const defaults = heroDefaults(locale);
-
-  const toStringList = (value: unknown): string[] => {
-    if (!Array.isArray(value)) return defaults.rotatingLines;
-    const lines = value.filter(
-      (entry): entry is string =>
-        typeof entry === "string" && entry.trim().length > 0,
-    );
-    return lines.length > 0 ? lines : defaults.rotatingLines;
-  };
+  const defaultsEn = locale === "en" ? defaults : heroDefaults("en");
 
   try {
     const [settings, images] = await Promise.all([
@@ -57,20 +58,61 @@ export async function getHeroContent(): Promise<HeroContent> {
       alt: image.alt,
     }));
 
+    // English column (falling back to the English default), always resolved
+    // first — French fields fall back to it rather than to generic default
+    // copy, so an admin's custom English text still shows until it's
+    // actually translated.
+    const en = {
+      kicker: settings?.kicker || defaultsEn.kicker,
+      headline: settings?.headline || defaultsEn.headline,
+      rotatingLines: toStringList(settings?.rotatingLines, defaultsEn.rotatingLines),
+      lead: settings?.lead || defaultsEn.lead,
+      primaryCtaLabel: settings?.primaryCtaLabel || defaultsEn.primaryCtaLabel,
+      primaryCtaHref: settings?.primaryCtaHref || defaultsEn.primaryCtaHref,
+      secondaryCtaLabel: settings?.secondaryCtaLabel || defaultsEn.secondaryCtaLabel,
+      secondaryCtaHref: settings?.secondaryCtaHref || defaultsEn.secondaryCtaHref,
+    };
+
+    if (locale !== "fr") {
+      return { ...en, images: gallery.length > 0 ? gallery : defaultsEn.images };
+    }
+
     return {
-      kicker: settings?.kicker || defaults.kicker,
-      headline: settings?.headline || defaults.headline,
-      rotatingLines: toStringList(settings?.rotatingLines),
-      lead: settings?.lead || defaults.lead,
-      primaryCtaLabel: settings?.primaryCtaLabel || defaults.primaryCtaLabel,
-      primaryCtaHref: settings?.primaryCtaHref || defaults.primaryCtaHref,
-      secondaryCtaLabel:
-        settings?.secondaryCtaLabel || defaults.secondaryCtaLabel,
-      secondaryCtaHref:
-        settings?.secondaryCtaHref || defaults.secondaryCtaHref,
+      kicker: settings?.kickerFr || en.kicker,
+      headline: settings?.headlineFr || en.headline,
+      rotatingLines: toStringList(settings?.rotatingLinesFr, en.rotatingLines),
+      lead: settings?.leadFr || en.lead,
+      primaryCtaLabel: settings?.primaryCtaLabelFr || en.primaryCtaLabel,
+      primaryCtaHref: en.primaryCtaHref,
+      secondaryCtaLabel: settings?.secondaryCtaLabelFr || en.secondaryCtaLabel,
+      secondaryCtaHref: en.secondaryCtaHref,
       images: gallery.length > 0 ? gallery : defaults.images,
     };
   } catch {
     return defaults;
   }
+}
+
+/** Both languages at once, for the admin hero editor. */
+export async function getHeroBilingualText(): Promise<HeroBilingualText> {
+  const defaultsEn = heroDefaults("en");
+
+  const settings = await prisma.heroSettings.findUnique({ where: { id: "hero" } });
+
+  return {
+    kicker: settings?.kicker || defaultsEn.kicker,
+    headline: settings?.headline || defaultsEn.headline,
+    rotatingLines: toStringList(settings?.rotatingLines, defaultsEn.rotatingLines),
+    lead: settings?.lead || defaultsEn.lead,
+    primaryCtaLabel: settings?.primaryCtaLabel || defaultsEn.primaryCtaLabel,
+    primaryCtaHref: settings?.primaryCtaHref || defaultsEn.primaryCtaHref,
+    secondaryCtaLabel: settings?.secondaryCtaLabel || defaultsEn.secondaryCtaLabel,
+    secondaryCtaHref: settings?.secondaryCtaHref || defaultsEn.secondaryCtaHref,
+    kickerFr: settings?.kickerFr ?? "",
+    headlineFr: settings?.headlineFr ?? "",
+    rotatingLinesFr: toStringList(settings?.rotatingLinesFr, []),
+    leadFr: settings?.leadFr ?? "",
+    primaryCtaLabelFr: settings?.primaryCtaLabelFr ?? "",
+    secondaryCtaLabelFr: settings?.secondaryCtaLabelFr ?? "",
+  };
 }

@@ -25,13 +25,13 @@ export async function PATCH(request: Request) {
     );
   }
 
-  const { rotatingLines, ...text } = parsed.data;
+  const { rotatingLines, rotatingLinesFr, ...text } = parsed.data;
 
   try {
     await prisma.heroSettings.upsert({
       where: { id: "hero" },
-      update: { ...text, rotatingLines },
-      create: { id: "hero", ...text, rotatingLines },
+      update: { ...text, rotatingLines, rotatingLinesFr },
+      create: { id: "hero", ...text, rotatingLines, rotatingLinesFr },
     });
     return Response.json({ ok: true });
   } catch {

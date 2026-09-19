@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
 import { HeroImageManager, HeroTextForm } from "@/components/admin/hero-editor";
 import { isCloudinaryConfigured } from "@/lib/env";
-import { getHeroContent } from "@/server/site/hero";
+import { getHeroBilingualText, getHeroContent } from "@/server/site/hero";
 
 export const metadata: Metadata = {
   title: "Homepage hero",
 };
 
 export default async function AdminHeroPage() {
-  const content = await getHeroContent();
+  const [content, { images }] = await Promise.all([
+    getHeroBilingualText(),
+    getHeroContent(),
+  ]);
   const configured = isCloudinaryConfigured();
 
   return (
@@ -30,7 +33,7 @@ export default async function AdminHeroPage() {
       <section className="card mt-8 p-5 sm:p-6">
         <h2 className="section-title">Images</h2>
         <div className="mt-5">
-          <HeroImageManager images={content.images} configured={configured} />
+          <HeroImageManager images={images} configured={configured} />
         </div>
       </section>
     </main>

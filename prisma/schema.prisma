@@ -290,16 +290,24 @@ model OrderItem {
 }
 
 model HeroSettings {
-  id                String   @id @default("hero")
-  kicker            String
-  headline          String
-  rotatingLines     Json
-  lead              String   @db.Text
-  primaryCtaLabel   String
-  primaryCtaHref    String
-  secondaryCtaLabel String
-  secondaryCtaHref  String
-  updatedAt         DateTime @updatedAt
+  id                  String   @id @default("hero")
+  kicker              String
+  headline            String
+  rotatingLines       Json
+  lead                String   @db.Text
+  primaryCtaLabel     String
+  primaryCtaHref      String
+  secondaryCtaLabel   String
+  secondaryCtaHref    String
+  // French variants. Optional — left blank until the admin translates them,
+  // in which case the English column is shown to French visitors too.
+  kickerFr            String?
+  headlineFr          String?
+  rotatingLinesFr     Json?
+  leadFr              String?  @db.Text
+  primaryCtaLabelFr   String?
+  secondaryCtaLabelFr String?
+  updatedAt           DateTime @updatedAt
 }
 
 model HeroImage {
