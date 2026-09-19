@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist_Mono, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import { VisitTracker } from "@/components/analytics/visit-tracker";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -31,6 +32,16 @@ const fraunces = Fraunces({
   variable: "--font-brand-loaded",
   subsets: ["latin"],
   style: ["italic"],
+});
+
+// High-contrast display serif, used for the navbar links. Self-hosted
+// (rather than next/font/google) since this variable font file is fixed
+// and doesn't need Google's CDN at build/dev time.
+const playfair = localFont({
+  src: "../fonts/PlayfairDisplay-Variable.woff2",
+  variable: "--font-nav-loaded",
+  weight: "400 900",
+  display: "swap",
 });
 
 export const viewport: Viewport = {
@@ -70,7 +81,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={LOCALE_BCP47[locale]}
       suppressHydrationWarning
-      className={`${inter.variable} ${geistMono.variable} ${fraunces.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${geistMono.variable} ${fraunces.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <LanguageProvider locale={locale}>

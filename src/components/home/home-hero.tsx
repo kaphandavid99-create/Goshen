@@ -11,7 +11,6 @@ import {
   IconArrowRight,
   IconGift,
   IconLeaf,
-  IconPin,
   IconShield,
   IconTag,
   IconTruck,
@@ -24,6 +23,17 @@ gsap.registerPlugin(useGSAP, ScrambleTextPlugin);
 const trustIcons = [IconLeaf, IconTag, IconTruck, IconShield] as const;
 const trustKeys = ["quality", "prices", "delivery", "payOnArrival"] as const;
 const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
+
+// Splits a two-clause kicker like "Shop smart. Live better." into its
+// clauses so they can be styled with different weight. Falls back to a
+// single span for kicker text that isn't shaped that way (e.g. a location).
+function splitKicker(text: string): [string, string] | null {
+  const index = text.indexOf(". ");
+  if (index === -1 || index >= text.length - 2) {
+    return null;
+  }
+  return [text.slice(0, index + 1), text.slice(index + 2)];
+}
 
 function HeroMedia({ images }: { images: HeroImage[] }) {
   const [active, setActive] = useState(0);
@@ -59,6 +69,7 @@ function HeroMedia({ images }: { images: HeroImage[] }) {
 export function HomeHero({ content }: { content: HeroContent }) {
   const root = useRef<HTMLElement>(null);
   const t = useT();
+  const kickerParts = splitKicker(content.kicker);
   const loopLines = content.rotatingLines.length
     ? content.rotatingLines
     : ["right around the corner."];
@@ -157,8 +168,17 @@ export function HomeHero({ content }: { content: HeroContent }) {
       <div className="page-wrap grid grid-cols-1 items-center gap-6 py-8 sm:gap-8 sm:py-10 lg:grid-cols-2 lg:gap-x-12 lg:gap-y-0 lg:py-16">
         <div className="hero-copy min-w-0 lg:col-start-1 lg:row-start-1">
           <p className="hero-kicker">
-            <IconPin className="size-3.5 shrink-0" aria-hidden />
-            <span>{content.kicker}</span>
+            <svg className="hero-kicker-border" aria-hidden="true">
+              <rect x="0" y="0" width="100%" height="100%" rx="9.6" ry="9.6" />
+            </svg>
+            {kickerParts ? (
+              <>
+                <span className="hero-kicker-strong">{kickerParts[0]}</span>
+                <span className="hero-kicker-soft">{kickerParts[1]}</span>
+              </>
+            ) : (
+              <span>{content.kicker}</span>
+            )}
           </p>
           <h1 className="hero-title">
             <span className="sr-only">
