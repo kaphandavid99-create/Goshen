@@ -19,6 +19,12 @@ export function StoreChrome({
     return <>{children}</>;
   }
 
+  // Sign-in / create-account are a focused, distraction-free flow — no nav
+  // to browse away with, no footer.
+  if (pathname.startsWith("/login") || pathname.startsWith("/register")) {
+    return <>{children}</>;
+  }
+
   return (
     <>
       {header}
