@@ -12,17 +12,22 @@ import { POINT_VALUE_FCFA } from "@/lib/constants";
  * (P1002) / closed-connection (P1017). Those clear on a quick retry, so wrap
  * each read batch rather than 500-ing the whole page.
  */
-async function withRetry<T>(run: () => Promise<T>, attempts = 3): Promise<T> {
+async function withRetry<T>(run: () => Promise<T>, attempts = 4): Promise<T> {
   for (let attempt = 1; ; attempt += 1) {
     try {
       return await run();
     } catch (error) {
+      // Prefer instanceof, but Turbopack/RSC bundling can occasionally give
+      // us a Prisma error whose prototype doesn't match this module's copy
+      // of the Prisma namespace — fall back to duck-typing so a real,
+      // retryable connection error is never mistaken for a non-retryable one.
       const code =
         error instanceof Prisma.PrismaClientKnownRequestError
           ? error.code
           : error instanceof Prisma.PrismaClientInitializationError
             ? error.errorCode
-            : undefined;
+            : (error as { code?: string; errorCode?: string } | null)?.code ??
+              (error as { code?: string; errorCode?: string } | null)?.errorCode;
       const retryable =
         code === "P1001" ||
         code === "P1002" ||
@@ -31,7 +36,9 @@ async function withRetry<T>(run: () => Promise<T>, attempts = 3): Promise<T> {
       if (!retryable || attempt >= attempts) {
         throw error;
       }
-      await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
+      await new Promise((resolve) =>
+        setTimeout(resolve, Math.min(2000, 300 * 2 ** (attempt - 1))),
+      );
     }
   }
 }
