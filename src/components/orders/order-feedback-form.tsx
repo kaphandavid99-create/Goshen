@@ -29,7 +29,7 @@ export function OrderFeedbackForm({
   const t = useT();
   const f = t.orders.feedback;
   const existingReviews = new Map((reviews ?? []).map((review) => [review.productId, review]));
-  const [rating, setRating] = useState(testimonial?.rating ?? 5);
+  const [rating, setRating] = useState(testimonial?.rating ?? 0);
   const [message, setMessage] = useState(testimonial?.message ?? "");
   const [itemReviews, setItemReviews] = useState<ReviewDraft[]>(
     items
@@ -37,7 +37,7 @@ export function OrderFeedbackForm({
       .map((item) => ({
         productId: item.productId,
         name: item.name,
-        rating: existingReviews.get(item.productId)?.rating ?? 5,
+        rating: existingReviews.get(item.productId)?.rating ?? 0,
         comment: existingReviews.get(item.productId)?.comment ?? "",
       })),
   );
