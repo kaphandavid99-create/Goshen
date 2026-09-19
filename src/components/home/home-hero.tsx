@@ -147,7 +147,7 @@ export function HomeHero({ content }: { content: HeroContent }) {
       loopLines.forEach((_, index) => {
         const next = loopLines[(index + 1) % loopLines.length];
         loop
-          .to({}, { duration: 1.8 })
+          .to({}, { duration: 5 })
           .to(typeText, {
             duration: Math.min(1.3, 0.6 + next.length * 0.025),
             ease: "none",
