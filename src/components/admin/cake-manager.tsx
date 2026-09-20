@@ -149,6 +149,9 @@ function CakeItemCard({ item }: { item: CakeItem }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
+  const [featured, setFeatured] = useState(item.featured);
+  const [available, setAvailable] = useState(item.available);
   const sample = item.id.startsWith("sample-");
 
   async function patch(body: Record<string, unknown>) {
@@ -172,6 +175,32 @@ function CakeItemCard({ item }: { item: CakeItem }) {
       router.refresh();
     } catch {
       setError("Network error.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onSaveEdit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setBusy(true);
+    setError(null);
+    try {
+      const response = await fetch(`/api/admin/cakes/${item.id}`, {
+        method: "PATCH",
+        credentials: "same-origin",
+        headers: { "x-csrf-token": await readCsrf() },
+        body: new FormData(form),
+      });
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string };
+        setError(data.error ?? "Could not save.");
+        return;
+      }
+      setEditing(false);
+      router.refresh();
+    } catch {
+      setError("Network error. Try again.");
     } finally {
       setBusy(false);
     }
@@ -202,6 +231,123 @@ function CakeItemCard({ item }: { item: CakeItem }) {
     }
   }
 
+  if (editing) {
+    return (
+      <li className="card overflow-hidden">
+        <form onSubmit={(event) => void onSaveEdit(event)} className="space-y-3 p-4">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-muted">
+            <Image
+              src={item.imageUrl}
+              alt={item.name}
+              fill
+              sizes="(min-width: 1280px) 20vw, 45vw"
+              className="object-cover"
+            />
+          </div>
+          <label className="block space-y-1.5 text-sm">
+            <span className="font-medium">Replace photo (optional)</span>
+            <input
+              name="file"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="field"
+            />
+          </label>
+          <label className="block space-y-1.5 text-sm">
+            <span className="font-medium">Name</span>
+            <input
+              name="name"
+              type="text"
+              className="field"
+              defaultValue={item.name}
+              required
+              maxLength={120}
+            />
+          </label>
+          <label className="block space-y-1.5 text-sm">
+            <span className="font-medium">Category</span>
+            <select name="category" className="field" defaultValue={item.category}>
+              {NIPZ.categories.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="block space-y-1.5 text-sm">
+            <span className="font-medium">Description</span>
+            <textarea
+              name="description"
+              className="field min-h-20"
+              defaultValue={item.description}
+              required
+              maxLength={600}
+            />
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="block space-y-1.5 text-sm">
+              <span className="font-medium">Starting price in FCFA</span>
+              <input
+                name="price"
+                inputMode="numeric"
+                className="field"
+                defaultValue={item.priceCents != null ? String(item.priceCents) : ""}
+                placeholder="18000"
+              />
+            </label>
+            <label className="block space-y-1.5 text-sm">
+              <span className="font-medium">Price note</span>
+              <input
+                name="priceNote"
+                type="text"
+                className="field"
+                defaultValue={item.priceNote ?? ""}
+                placeholder="from / Quote on request"
+                maxLength={40}
+              />
+            </label>
+          </div>
+          <div className="flex flex-wrap gap-4">
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="size-4"
+                checked={featured}
+                onChange={(event) => setFeatured(event.target.checked)}
+              />
+              <span className="font-medium">Signature item</span>
+            </label>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                className="size-4"
+                checked={available}
+                onChange={(event) => setAvailable(event.target.checked)}
+              />
+              <span className="font-medium">Visible on the public page</span>
+            </label>
+          </div>
+          <input type="hidden" name="featured" value={featured ? "true" : "false"} />
+          <input type="hidden" name="available" value={available ? "true" : "false"} />
+          <div className="flex flex-wrap gap-2 pt-1">
+            <button type="submit" disabled={busy} className="btn btn-primary">
+              {busy ? "Saving…" : "Save changes"}
+            </button>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => setEditing(false)}
+              className="btn btn-outline"
+            >
+              Cancel
+            </button>
+          </div>
+          {error ? <p className="text-xs text-accent">{error}</p> : null}
+        </form>
+      </li>
+    );
+  }
+
   return (
     <li className="card overflow-hidden">
       <div className="relative aspect-[4/3] bg-muted">
@@ -230,6 +376,14 @@ function CakeItemCard({ item }: { item: CakeItem }) {
           </p>
         ) : (
           <div className="flex flex-wrap gap-2 pt-1">
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => setEditing(true)}
+              className="btn btn-primary"
+            >
+              Edit
+            </button>
             <button
               type="button"
               disabled={busy}

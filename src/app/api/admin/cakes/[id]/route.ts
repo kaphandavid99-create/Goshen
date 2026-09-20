@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db/prisma";
 import { getCurrentUser, isStaffRole } from "@/server/auth/current-user";
 import { assertCsrf } from "@/server/auth/csrf";
 import { jsonError } from "@/server/auth/request";
-import { destroyMedia } from "@/server/media/cloudinary";
+import { destroyMedia, uploadMedia } from "@/server/media/cloudinary";
 import { cakeItemSchema } from "@/validators/cakes";
 
 async function requireStaffRequest(request: Request) {
@@ -26,7 +26,34 @@ export async function PATCH(
   }
 
   const { id } = await params;
-  const body: unknown = await request.json().catch(() => null);
+  const contentType = request.headers.get("content-type") ?? "";
+
+  let body: unknown;
+  let photo: File | null = null;
+
+  if (contentType.includes("multipart/form-data")) {
+    // The full edit form resubmits every field (plus an optional new photo),
+    // unlike the JSON path used by the quick Hide/Show and Feature toggles.
+    const form = await request.formData();
+    const file = form.get("file");
+    if (file instanceof File && file.size > 0) {
+      photo = file;
+    }
+    const priceRaw = String(form.get("price") ?? "").trim();
+    const price = priceRaw ? Number(priceRaw.replace(/[^\d]/g, "")) : NaN;
+    body = {
+      name: String(form.get("name") ?? "").trim(),
+      description: String(form.get("description") ?? "").trim(),
+      category: String(form.get("category") ?? "").trim(),
+      priceCents: Number.isFinite(price) && price > 0 ? Math.round(price) : null,
+      priceNote: String(form.get("priceNote") ?? "").trim(),
+      featured: form.get("featured") === "true",
+      available: form.get("available") === "true",
+    };
+  } else {
+    body = await request.json().catch(() => null);
+  }
+
   const parsed = cakeItemSchema.partial().safeParse(body);
   if (!parsed.success) {
     return jsonError(
@@ -37,7 +64,24 @@ export async function PATCH(
   }
 
   const data = parsed.data;
+
   try {
+    const previous = photo
+      ? await prisma.cakeItem.findUnique({ where: { id }, select: { cloudinaryPublicId: true } })
+      : null;
+
+    let newImage: { imageUrl: string; cloudinaryPublicId: string } | null = null;
+    if (photo) {
+      const uploaded = await uploadMedia(photo, {
+        removeBackground: false,
+        folder: "goshen/cakes",
+      });
+      if (uploaded.resourceType !== "image") {
+        return jsonError("The gallery takes photos only.", 400);
+      }
+      newImage = { imageUrl: uploaded.url, cloudinaryPublicId: uploaded.publicId };
+    }
+
     const item = await prisma.cakeItem.update({
       where: { id },
       data: {
@@ -51,10 +95,19 @@ export async function PATCH(
         ...(data.featured !== undefined ? { featured: data.featured } : {}),
         ...(data.available !== undefined ? { available: data.available } : {}),
         ...(data.sortOrder !== undefined ? { sortOrder: data.sortOrder } : {}),
+        ...(newImage ?? {}),
       },
     });
+
+    if (newImage && previous?.cloudinaryPublicId) {
+      await destroyMedia(previous.cloudinaryPublicId, "image").catch(() => undefined);
+    }
+
     return Response.json({ item });
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && photo) {
+      return jsonError(error.message, 400);
+    }
     return jsonError("Item not found.", 404);
   }
 }
