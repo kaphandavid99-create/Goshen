@@ -171,10 +171,6 @@ export const fr: Dictionary = {
     newArrivals: "Nouveautés",
     justLanded: "Vient d'arriver",
     viewAllNewArrivals: "Voir toutes les nouveautés",
-    bundles: {
-      title: "Lots avantageux",
-      seeAll: "Voir tous les lots",
-    },
     promoStayHome: "Restez chez vous. Nous vous apportons la boutique.",
     promoStayHomeBody:
       "Commandez alimentation et produits ménagers en livraison partout à Bamenda.",

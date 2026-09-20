@@ -173,10 +173,6 @@ export const en = {
     newArrivals: "New arrivals",
     justLanded: "Just landed",
     viewAllNewArrivals: "View all new arrivals",
-    bundles: {
-      title: "Value bundles",
-      seeAll: "See all bundles",
-    },
     promoStayHome: "Stay home. We will bring the shop to you.",
     promoStayHomeBody:
       "Order groceries and household staples for delivery across Bamenda.",
