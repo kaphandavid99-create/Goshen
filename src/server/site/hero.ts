@@ -41,55 +41,79 @@ function toStringList(value: unknown, fallback: string[]): string[] {
   return lines.length > 0 ? lines : fallback;
 }
 
-export async function getHeroContent(): Promise<HeroContent> {
-  const locale = await getLocale();
+type HeroSettingsRow = Awaited<ReturnType<typeof prisma.heroSettings.findUnique>>;
+type HeroImageRow = { id: string; url: string; alt: string };
+
+/** Resolves one locale's hero content from the raw DB row (or defaults). */
+function resolveHeroContent(
+  locale: "en" | "fr",
+  settings: HeroSettingsRow,
+  gallery: HeroImageRow[],
+): HeroContent {
   const defaults = heroDefaults(locale);
   const defaultsEn = locale === "en" ? defaults : heroDefaults("en");
 
+  const en = {
+    kicker: settings?.kicker || defaultsEn.kicker,
+    headline: settings?.headline || defaultsEn.headline,
+    rotatingLines: toStringList(settings?.rotatingLines, defaultsEn.rotatingLines),
+    lead: settings?.lead || defaultsEn.lead,
+    primaryCtaLabel: settings?.primaryCtaLabel || defaultsEn.primaryCtaLabel,
+    primaryCtaHref: settings?.primaryCtaHref || defaultsEn.primaryCtaHref,
+    secondaryCtaLabel: settings?.secondaryCtaLabel || defaultsEn.secondaryCtaLabel,
+    secondaryCtaHref: settings?.secondaryCtaHref || defaultsEn.secondaryCtaHref,
+  };
+
+  if (locale !== "fr") {
+    return { ...en, images: gallery.length > 0 ? gallery : defaultsEn.images };
+  }
+
+  return {
+    kicker: settings?.kickerFr || en.kicker,
+    headline: settings?.headlineFr || en.headline,
+    rotatingLines: toStringList(settings?.rotatingLinesFr, en.rotatingLines),
+    lead: settings?.leadFr || en.lead,
+    primaryCtaLabel: settings?.primaryCtaLabelFr || en.primaryCtaLabel,
+    primaryCtaHref: en.primaryCtaHref,
+    secondaryCtaLabel: settings?.secondaryCtaLabelFr || en.secondaryCtaLabel,
+    secondaryCtaHref: en.secondaryCtaHref,
+    images: gallery.length > 0 ? gallery : defaults.images,
+  };
+}
+
+async function loadHeroRow() {
+  const [settings, images] = await Promise.all([
+    prisma.heroSettings.findUnique({ where: { id: "hero" } }),
+    prisma.heroImage.findMany({ orderBy: { sortOrder: "asc" } }),
+  ]);
+  const gallery = images.map((image) => ({ id: image.id, url: image.url, alt: image.alt }));
+  return { settings, gallery };
+}
+
+export async function getHeroContent(): Promise<HeroContent> {
+  const locale = await getLocale();
   try {
-    const [settings, images] = await Promise.all([
-      prisma.heroSettings.findUnique({ where: { id: "hero" } }),
-      prisma.heroImage.findMany({ orderBy: { sortOrder: "asc" } }),
-    ]);
+    const { settings, gallery } = await loadHeroRow();
+    return resolveHeroContent(locale, settings, gallery);
+  } catch {
+    return heroDefaults(locale);
+  }
+}
 
-    const gallery = images.map((image) => ({
-      id: image.id,
-      url: image.url,
-      alt: image.alt,
-    }));
-
-    // English column (falling back to the English default), always resolved
-    // first — French fields fall back to it rather than to generic default
-    // copy, so an admin's custom English text still shows until it's
-    // actually translated.
-    const en = {
-      kicker: settings?.kicker || defaultsEn.kicker,
-      headline: settings?.headline || defaultsEn.headline,
-      rotatingLines: toStringList(settings?.rotatingLines, defaultsEn.rotatingLines),
-      lead: settings?.lead || defaultsEn.lead,
-      primaryCtaLabel: settings?.primaryCtaLabel || defaultsEn.primaryCtaLabel,
-      primaryCtaHref: settings?.primaryCtaHref || defaultsEn.primaryCtaHref,
-      secondaryCtaLabel: settings?.secondaryCtaLabel || defaultsEn.secondaryCtaLabel,
-      secondaryCtaHref: settings?.secondaryCtaHref || defaultsEn.secondaryCtaHref,
-    };
-
-    if (locale !== "fr") {
-      return { ...en, images: gallery.length > 0 ? gallery : defaultsEn.images };
-    }
-
+/**
+ * Both languages, fully resolved, in one DB round trip — lets the client
+ * switch the hero's language instantly (no server refetch), the same way
+ * the rest of the UI's static strings already switch instantly.
+ */
+export async function getHeroContentBothLocales(): Promise<{ en: HeroContent; fr: HeroContent }> {
+  try {
+    const { settings, gallery } = await loadHeroRow();
     return {
-      kicker: settings?.kickerFr || en.kicker,
-      headline: settings?.headlineFr || en.headline,
-      rotatingLines: toStringList(settings?.rotatingLinesFr, en.rotatingLines),
-      lead: settings?.leadFr || en.lead,
-      primaryCtaLabel: settings?.primaryCtaLabelFr || en.primaryCtaLabel,
-      primaryCtaHref: en.primaryCtaHref,
-      secondaryCtaLabel: settings?.secondaryCtaLabelFr || en.secondaryCtaLabel,
-      secondaryCtaHref: en.secondaryCtaHref,
-      images: gallery.length > 0 ? gallery : defaults.images,
+      en: resolveHeroContent("en", settings, gallery),
+      fr: resolveHeroContent("fr", settings, gallery),
     };
   } catch {
-    return defaults;
+    return { en: heroDefaults("en"), fr: heroDefaults("fr") };
   }
 }
 

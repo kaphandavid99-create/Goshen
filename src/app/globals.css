@@ -142,6 +142,7 @@
   --font-display: var(--font-brand-loaded);
   --font-mono: var(--font-geist-mono);
   --font-nav: var(--font-nav-loaded);
+  --font-hero: var(--font-hero-loaded);
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
   --radius-lg: 1rem;
@@ -273,9 +274,10 @@ body {
 }
 
 .hero-title {
+  font-family: var(--font-hero), var(--font-sans);
   font-size: clamp(2.1rem, 7.6vw, 4rem);
   font-weight: 700;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   line-height: 1.08;
   color: var(--primary);
 }
@@ -293,19 +295,24 @@ body {
 }
 
 .hero-rotate {
-  display: block;
-  max-width: 100%;
+  display: grid;
   margin-top: 0.12em;
-  min-height: 1.2em;
+  min-height: 2.4em;
 }
 
-.hero-type-text {
-  display: inline-block;
+.hero-phrase {
+  grid-area: 1 / 1;
+  visibility: hidden;
   max-width: 100%;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  font-family: var(--font-mono);
-  letter-spacing: 0;
+}
+
+.hero-phrase.is-active {
+  visibility: visible;
+}
+
+.hero-word-pop {
+  display: inline-block;
+  padding-bottom: 0.04em;
 }
 
 .hero-rule {

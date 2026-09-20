@@ -3,7 +3,6 @@
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -15,14 +14,13 @@ import {
   IconTag,
   IconTruck,
 } from "@/components/icons";
-import { useT } from "@/lib/i18n/context";
+import { useLocale, useT } from "@/lib/i18n/context";
 import type { HeroContent, HeroImage } from "@/types/hero";
 
-gsap.registerPlugin(useGSAP, ScrambleTextPlugin);
+gsap.registerPlugin(useGSAP);
 
 const trustIcons = [IconLeaf, IconTag, IconTruck, IconShield] as const;
 const trustKeys = ["quality", "prices", "delivery", "payOnArrival"] as const;
-const SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
 
 // Splits a two-clause kicker like "Shop smart. Live better." into its
 // clauses so they can be styled with different weight. Falls back to a
@@ -33,6 +31,18 @@ function splitKicker(text: string): [string, string] | null {
     return null;
   }
   return [text.slice(0, index + 1), text.slice(index + 2)];
+}
+
+// Renders each word as its own span (for independent pop-in animation),
+// with plain space text nodes between them so spacing needs no styling.
+function HeroWords({ text }: { text: string }) {
+  const words = text.split(" ");
+  return words.map((word, index) => (
+    <span key={`${word}-${index}`}>
+      <span className="hero-word-pop">{word}</span>
+      {index < words.length - 1 ? " " : null}
+    </span>
+  ));
 }
 
 function HeroMedia({ images }: { images: HeroImage[] }) {
@@ -66,9 +76,19 @@ function HeroMedia({ images }: { images: HeroImage[] }) {
   );
 }
 
-export function HomeHero({ content }: { content: HeroContent }) {
+export function HomeHero({
+  contentByLocale,
+}: {
+  contentByLocale: { en: HeroContent; fr: HeroContent };
+}) {
   const root = useRef<HTMLElement>(null);
   const t = useT();
+  const locale = useLocale();
+  // Picked from a client-side value that updates instantly on language
+  // toggle, rather than a prop that only updates once router.refresh()'s
+  // server round trip completes — otherwise the hero briefly shows the old
+  // language after the rest of the page (nav, buttons) has already switched.
+  const content = contentByLocale[locale] ?? contentByLocale.en;
   const kickerParts = splitKicker(content.kicker);
   const loopLines = content.rotatingLines.length
     ? content.rotatingLines
@@ -76,9 +96,11 @@ export function HomeHero({ content }: { content: HeroContent }) {
 
   useGSAP(
     () => {
-      const headline = root.current?.querySelector<HTMLElement>(".hero-headline-text");
-      const typeText = root.current?.querySelector<HTMLElement>(".hero-type-text");
-      if (!headline || !typeText) {
+      const headlineWords = gsap.utils.toArray<HTMLElement>(
+        root.current?.querySelectorAll(".hero-headline-text .hero-word-pop") ?? [],
+      );
+      const phrases = gsap.utils.toArray<HTMLElement>(".hero-phrase");
+      if (!headlineWords.length || !phrases.length) {
         return;
       }
 
@@ -87,11 +109,12 @@ export function HomeHero({ content }: { content: HeroContent }) {
         window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const revealEls = ".hero-kicker, .hero-lead, .hero-cta, .hero-trust";
 
-      typeText.textContent = loopLines[0];
       gsap.set(".hero-rule", { scaleX: 0, transformOrigin: "left center" });
       gsap.set(".hero-kicker", reduce ? {} : { autoAlpha: 0, y: 10 });
-      gsap.set(headline, reduce ? {} : { autoAlpha: 0, y: 14 });
-      gsap.set(typeText, reduce ? {} : { autoAlpha: 0 });
+      gsap.set(headlineWords, reduce ? {} : { scale: 0, autoAlpha: 0 });
+      gsap.set(phrases, { autoAlpha: 0 });
+      gsap.set(phrases[0], { autoAlpha: 1 });
+      gsap.set(phrases[0].querySelectorAll(".hero-word-pop"), reduce ? {} : { scale: 0, autoAlpha: 0 });
       gsap.set(revealEls, reduce ? { autoAlpha: 1, y: 0 } : { autoAlpha: 0, y: 18 });
 
       if (reduce) {
@@ -105,62 +128,61 @@ export function HomeHero({ content }: { content: HeroContent }) {
 
       intro
         .to(".hero-kicker", { autoAlpha: 1, y: 0, duration: 0.45 }, 0)
-        .to(headline, { autoAlpha: 1, y: 0, duration: 0.5 }, 0.15)
+        .to(headlineWords, { scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.07, ease: "back.out(1.8)" }, 0.15)
         .to(
-          headline,
-          {
-            duration: 0.9,
-            ease: "none",
-            scrambleText: {
-              text: content.headline,
-              chars: SCRAMBLE_CHARS,
-              revealDelay: 0.25,
-              speed: 0.35,
-            },
-          },
-          0.15,
+          phrases[0].querySelectorAll(".hero-word-pop"),
+          { scale: 1, autoAlpha: 1, duration: 0.65, stagger: 0.06, ease: "back.out(1.8)" },
+          "-=0.35",
         )
-        .to(".hero-rule", { scaleX: 1, duration: 0.45, ease: "power2.out" }, 0.55)
-        .set(typeText, { autoAlpha: 1 }, 0.9)
-        .to(
-          typeText,
-          {
-            duration: 0.9,
-            ease: "none",
-            scrambleText: {
-              text: loopLines[0],
-              chars: SCRAMBLE_CHARS,
-              revealDelay: 0.25,
-              speed: 0.35,
-            },
-          },
-          0.9,
-        )
-        .to(revealEls, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5 }, 1.05);
+        .to(".hero-rule", { scaleX: 1, duration: 0.45, ease: "power2.out" }, "-=0.3")
+        .to(revealEls, { autoAlpha: 1, y: 0, stagger: 0.07, duration: 0.5 }, "-=0.15");
 
-      if (loopLines.length < 2) {
+      if (phrases.length < 2) {
         return;
       }
 
       const loop = gsap.timeline({ repeat: -1, delay: 2.2 });
 
-      loopLines.forEach((_, index) => {
-        const next = loopLines[(index + 1) % loopLines.length];
+      phrases.forEach((phrase, index) => {
+        const next = phrases[(index + 1) % phrases.length];
+        const outgoing = phrase.querySelectorAll(".hero-word-pop");
+        const incoming = next.querySelectorAll(".hero-word-pop");
+
         loop
           .to({}, { duration: 5 })
-          .to(typeText, {
-            duration: Math.min(1.3, 0.6 + next.length * 0.025),
-            ease: "none",
-            scrambleText: {
-              text: next,
-              chars: SCRAMBLE_CHARS,
-              revealDelay: 0.25,
-              speed: 0.35,
+          .to(outgoing, {
+            scale: 0.4,
+            autoAlpha: 0,
+            stagger: 0.04,
+            duration: 0.3,
+            ease: "power2.in",
+          })
+          .set(phrase, { autoAlpha: 0 })
+          .set(next, { autoAlpha: 1 })
+          .fromTo(
+            incoming,
+            { scale: 0, autoAlpha: 0 },
+            {
+              scale: 1,
+              autoAlpha: 1,
+              stagger: 0.06,
+              duration: 0.6,
+              ease: "back.out(1.8)",
             },
-          });
+            "-=0.05",
+          );
       });
     },
-    { scope: root, dependencies: [content.headline, loopLines.join("|")] },
+    {
+      scope: root,
+      dependencies: [content.headline, loopLines.join("|")],
+      // Without this, useGSAP defers reverting the old context until unmount
+      // (its documented default), so every locale switch stacked a brand new
+      // infinite loop timeline on top of the previous one instead of
+      // replacing it — leaving multiple timelines fighting over the same
+      // elements, each cycling its own language on its own schedule.
+      revertOnUpdate: true,
+    },
   );
 
   return (
@@ -185,9 +207,18 @@ export function HomeHero({ content }: { content: HeroContent }) {
               {content.headline} {loopLines.join(" ")}
             </span>
             <span className="hero-title-visual" aria-hidden="true">
-              <span className="hero-line hero-headline-text">{content.headline}</span>
+              <span className="hero-line hero-headline-text">
+                <HeroWords text={content.headline} />
+              </span>
               <span className="hero-rotate hero-title-accent">
-                <span className="hero-type-text">{loopLines[0]}</span>
+                {loopLines.map((line, index) => (
+                  <span
+                    key={`${line}-${index}`}
+                    className={index === 0 ? "hero-phrase is-active" : "hero-phrase"}
+                  >
+                    <HeroWords text={line} />
+                  </span>
+                ))}
               </span>
             </span>
           </h1>

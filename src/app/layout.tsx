@@ -48,6 +48,16 @@ const playfair = localFont({
   display: "swap",
 });
 
+// Modern geometric sans, used for the homepage hero headline and rotating
+// line. Self-hosted from the start given Google's Fonts CDN has repeatedly
+// hung/timed out in this dev environment.
+const spaceGrotesk = localFont({
+  src: "../fonts/SpaceGrotesk-Variable.woff2",
+  variable: "--font-hero-loaded",
+  weight: "300 700",
+  display: "swap",
+});
+
 export const viewport: Viewport = {
   themeColor: BRAND_COLORS.green,
 };
@@ -85,7 +95,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang={LOCALE_BCP47[locale]}
       suppressHydrationWarning
-      className={`${inter.variable} ${geistMono.variable} ${fraunces.variable} ${playfair.variable} h-full scroll-smooth antialiased`}
+      className={`${inter.variable} ${geistMono.variable} ${fraunces.variable} ${playfair.variable} ${spaceGrotesk.variable} h-full scroll-smooth antialiased`}
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <LanguageProvider locale={locale}>
