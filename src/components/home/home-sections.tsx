@@ -196,18 +196,12 @@ export function NipzTeaser({ items }: { items: CakeItem[] }) {
   return (
     <Reveal>
       <section id="nipz" className="page-wrap scroll-mt-28 py-6 sm:py-10">
-        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5">
-          <div>
-            <p className="kicker nipz-teaser-kicker">{t.home.nipzTeaser.kicker}</p>
-            <h2 className="section-title">{t.home.nipzTeaser.title}</h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-              {t.home.nipzTeaser.body}
-            </p>
-          </div>
-          <Link href="/shop/nipz" className="btn btn-rose shrink-0">
-            {t.home.nipzTeaser.cta}
-            <IconArrowRight className="size-4" />
-          </Link>
+        <div className="mb-4 sm:mb-5">
+          <p className="kicker nipz-teaser-kicker">{t.home.nipzTeaser.kicker}</p>
+          <h2 className="section-title">{t.home.nipzTeaser.title}</h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
+            {t.home.nipzTeaser.body}
+          </p>
         </div>
         <div className="nipz-gallery">
           {shown.map((item) => {
@@ -239,6 +233,12 @@ export function NipzTeaser({ items }: { items: CakeItem[] }) {
               </Link>
             );
           })}
+        </div>
+        <div className="mt-5 flex justify-center sm:mt-6">
+          <Link href="/shop/nipz" className="btn btn-rose">
+            {t.home.nipzTeaser.cta}
+            <IconArrowRight className="size-4" />
+          </Link>
         </div>
       </section>
     </Reveal>
