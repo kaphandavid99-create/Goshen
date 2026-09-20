@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Geist_Mono, Inter } from "next/font/google";
+import { Fraunces, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { VisitTracker } from "@/components/analytics/visit-tracker";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
@@ -16,9 +16,13 @@ import { APP_NAME, BRAND_COLORS } from "@/lib/constants";
 import { env } from "@/lib/env";
 import "./globals.css";
 
-const inter = Inter({
+// Self-hosted (rather than next/font/google) since fetching Inter from
+// Google's CDN has repeatedly hung/timed out in this dev environment.
+const inter = localFont({
+  src: "../fonts/Inter-Variable.woff2",
   variable: "--font-sans-loaded",
-  subsets: ["latin"],
+  weight: "100 900",
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
