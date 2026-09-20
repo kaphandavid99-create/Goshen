@@ -171,6 +171,12 @@ export const fr: Dictionary = {
     newArrivals: "Nouveautés",
     justLanded: "Vient d'arriver",
     viewAllNewArrivals: "Voir toutes les nouveautés",
+    nipzTeaser: {
+      kicker: "Nipz Pretty Cakes & Pastries",
+      title: "Gâteaux personnalisés, sur commande",
+      body: "Gâteaux d'anniversaire, cupcakes et tables de desserts préparés à New Bell, Bamenda — choisissez un modèle dans la galerie ou proposez votre propre idée, et nous nous occupons du reste.",
+      cta: "Découvrir Nipz Pretty Cakes",
+    },
     promoStayHome: "Restez chez vous. Nous vous apportons la boutique.",
     promoStayHomeBody:
       "Commandez alimentation et produits ménagers en livraison partout à Bamenda.",

@@ -173,6 +173,12 @@ export const en = {
     newArrivals: "New arrivals",
     justLanded: "Just landed",
     viewAllNewArrivals: "View all new arrivals",
+    nipzTeaser: {
+      kicker: "Nipz Pretty Cakes & Pastries",
+      title: "Custom cakes, made to order",
+      body: "Birthday cakes, cupcakes, and dessert tables baked fresh in New Bell, Bamenda — pick a design from the gallery or bring your own idea, and we'll take it from there.",
+      cta: "Explore Nipz Pretty Cakes",
+    },
     promoStayHome: "Stay home. We will bring the shop to you.",
     promoStayHomeBody:
       "Order groceries and household staples for delivery across Bamenda.",

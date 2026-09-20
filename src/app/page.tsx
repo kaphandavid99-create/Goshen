@@ -1,6 +1,7 @@
 import { HomeHero } from "@/components/home/home-hero";
 import {
   NewArrivals,
+  NipzTeaser,
   PromoSidebar,
   RewardsBar,
   ShopByCategory,
@@ -9,16 +10,18 @@ import {
 import { HomeTestimonials } from "@/components/home/home-testimonials";
 import { InfoRibbon } from "@/components/home/info-ribbon";
 import { listCategories, listProducts } from "@/server/catalog/queries";
+import { listCakeItems } from "@/server/cakes/queries";
 import { getHeroContentBothLocales } from "@/server/site/hero";
 import { listWishlistProductIds } from "@/server/account/hub";
 import { getCurrentUser } from "@/server/auth/current-user";
 
 export default async function HomePage() {
   const user = await getCurrentUser();
-  const [hero, categories, products, savedIds] = await Promise.all([
+  const [hero, categories, products, cakeItems, savedIds] = await Promise.all([
     getHeroContentBothLocales(),
     listCategories(),
     listProducts(),
+    listCakeItems(),
     user ? listWishlistProductIds(user.id).catch(() => [] as string[]) : Promise.resolve([] as string[]),
   ]);
 
@@ -38,6 +41,7 @@ export default async function HomePage() {
           <TodaysDeals products={products} savedIds={savedIds} />
         </div>
       </section>
+      <NipzTeaser items={cakeItems} />
       <HomeTestimonials />
       <RewardsBar />
     </main>

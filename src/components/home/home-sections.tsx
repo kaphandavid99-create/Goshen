@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/shop/product-card";
 import { primaryMedia } from "@/components/shop/product-media";
-import { IconGift, IconTag, IconTruck } from "@/components/icons";
+import { IconArrowRight, IconGift, IconTag, IconTruck } from "@/components/icons";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import {
   MAX_REDEEM_POINTS_PER_ORDER,
@@ -18,6 +18,7 @@ import { useLocale, useT } from "@/lib/i18n/context";
 import { formatPrice } from "@/lib/money";
 import { isNewArrival } from "@/lib/new-arrivals";
 import type { CatalogCategory, CatalogProduct } from "@/types/catalog";
+import type { CakeItem } from "@/types/cakes";
 
 export function ShopByCategory({
   categories,
@@ -167,6 +168,77 @@ export function NewArrivals({
           <Link href="/shop?new=1" className="btn btn-outline">
             {t.home.viewAllNewArrivals}
           </Link>
+        </div>
+      </section>
+    </Reveal>
+  );
+}
+
+export function NipzTeaser({ items }: { items: CakeItem[] }) {
+  const t = useT();
+  const locale = useLocale();
+  // Signature items first, so the three shown are the ones most worth showing off.
+  const shown = [...items]
+    .sort((a, b) => Number(b.featured) - Number(a.featured))
+    .slice(0, 3);
+
+  if (shown.length === 0) {
+    return null;
+  }
+
+  function priceParts(item: CakeItem): { note: string | null; amount: string } {
+    if (item.priceCents != null) {
+      return { note: item.priceNote || null, amount: formatPrice(item.priceCents, locale) };
+    }
+    return { note: null, amount: item.priceNote || t.nipz.priceOnRequest };
+  }
+
+  return (
+    <Reveal>
+      <section id="nipz" className="page-wrap scroll-mt-28 py-6 sm:py-10">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5">
+          <div>
+            <p className="kicker nipz-teaser-kicker">{t.home.nipzTeaser.kicker}</p>
+            <h2 className="section-title">{t.home.nipzTeaser.title}</h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
+              {t.home.nipzTeaser.body}
+            </p>
+          </div>
+          <Link href="/shop/nipz" className="btn btn-rose shrink-0">
+            {t.home.nipzTeaser.cta}
+            <IconArrowRight className="size-4" />
+          </Link>
+        </div>
+        <div className="nipz-gallery">
+          {shown.map((item) => {
+            const price = priceParts(item);
+            return (
+              <Link key={item.id} href="/shop/nipz" className="nipz-cake-card">
+                <div className="nipz-cake-media">
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    fill
+                    sizes="(min-width: 960px) 30vw, (min-width: 560px) 45vw, 90vw"
+                    className="object-cover"
+                  />
+                  {item.featured ? (
+                    <span className="nipz-cake-badge">{t.nipz.signature}</span>
+                  ) : null}
+                </div>
+                <div className="nipz-cake-body">
+                  <p className="nipz-cake-cat">{item.category}</p>
+                  <h3 className="nipz-cake-name">{item.name}</h3>
+                  <div className="nipz-cake-foot">
+                    <span className="nipz-cake-price">
+                      {price.note ? <span>{price.note}</span> : null}
+                      {price.amount}
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </section>
     </Reveal>

@@ -1358,6 +1358,10 @@ body {
 /* ---------- Nipz Pretty Cakes & Pastries ---------- */
 /* --nipz-rose / --nipz-rose-soft / --nipz-ink are themed in :root and .dark */
 
+.nipz-teaser-kicker {
+  color: var(--nipz-rose);
+}
+
 .nipz-back {
   display: inline-flex;
   align-items: center;
