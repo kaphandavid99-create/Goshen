@@ -43,6 +43,15 @@ export function CakeGallery({
     return item.priceNote || t.nipz.priceOnRequest;
   }
 
+  // Split for the ribbon-tag price display: a small note ("from") ahead of
+  // the bold amount, rather than one plain run of text.
+  function priceParts(item: CakeItem): { note: string | null; amount: string } {
+    if (item.priceCents != null) {
+      return { note: item.priceNote || null, amount: formatPrice(item.priceCents, locale) };
+    }
+    return { note: null, amount: item.priceNote || t.nipz.priceOnRequest };
+  }
+
   function orderHref(item: CakeItem) {
     const label = `${item.name}${
       item.priceCents != null || item.priceNote ? ` — ${priceLabel(item)}` : ""
@@ -102,7 +111,15 @@ export function CakeGallery({
               <h3 className="nipz-cake-name">{item.name}</h3>
               <p className="nipz-cake-desc">{item.description}</p>
               <div className="nipz-cake-foot">
-                <span className="nipz-cake-price">{priceLabel(item)}</span>
+                {(() => {
+                  const price = priceParts(item);
+                  return (
+                    <span className="nipz-cake-price">
+                      {price.note ? <span>{price.note}</span> : null}
+                      {price.amount}
+                    </span>
+                  );
+                })()}
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
