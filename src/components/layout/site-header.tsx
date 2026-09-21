@@ -36,7 +36,7 @@ export async function SiteHeader() {
       ) : null}
       <header className="sticky top-0 z-50">
         <div className="relative border-b border-border bg-card">
-          <div className="page-wrap flex items-center gap-4 py-3.5 lg:gap-8">
+          <div className="page-wrap flex items-center gap-4 py-3.5 lg:gap-6 min-[1320px]:!gap-8">
             {/* Left: hamburger on mobile, full logo on desktop */}
             <div className="flex flex-1 items-center justify-start lg:flex-none">
               <MobileNav />
@@ -54,7 +54,7 @@ export async function SiteHeader() {
 
             <Suspense
               fallback={
-                <nav aria-label={t.nav.primary} className="hidden items-center gap-4 xl:gap-7 lg:flex">
+                <nav aria-label={t.nav.primary} className="hidden items-center gap-3 min-[1320px]:!gap-7 lg:flex">
                   {DESKTOP_NAV_LINKS.map((link) => (
                     <Link key={link.key} href={link.href} className="nav-link">
                       {t.nav[link.key]}
@@ -63,7 +63,7 @@ export async function SiteHeader() {
                 </nav>
               }
             >
-              <nav aria-label={t.nav.primary} className="hidden items-center gap-4 xl:gap-7 lg:flex">
+              <nav aria-label={t.nav.primary} className="hidden items-center gap-3 min-[1320px]:!gap-7 lg:flex">
                 {DESKTOP_NAV_LINKS.map((link) => (
                   <NavLink key={link.key} href={link.href} className="nav-link">
                     {t.nav[link.key]}
@@ -73,7 +73,7 @@ export async function SiteHeader() {
             </Suspense>
 
             {/* Right: search + cart on mobile; + theme + account on desktop */}
-            <div className="flex flex-1 items-center justify-end gap-2 sm:gap-4">
+            <div className="flex flex-1 items-center justify-end gap-2 sm:gap-4 lg:gap-2 min-[1320px]:!gap-4">
               <SearchBar />
               <LanguageToggle className="hidden lg:inline-flex" />
               <ThemeToggle className="hidden lg:inline-flex" />
@@ -89,7 +89,7 @@ export async function SiteHeader() {
                   )}
                   {user ? <NotificationBadge initialCount={unread} /> : null}
                 </span>
-                <span className="leading-tight">
+                <span className="hidden leading-tight min-[1320px]:!block">
                   <span className="block text-[11px] text-muted-foreground">
                     {user ? t.header.signedIn : t.header.account}
                   </span>

@@ -209,6 +209,16 @@ body {
   }
 }
 
+/* The header's nav row is tight in the 1024-1319px window (desktop nav has
+   just appeared but there isn't yet the extra room the wider breakpoint
+   gives everywhere else) — pull padding back in just for the header there
+   so the cart icon isn't pushed off-screen. */
+@media (min-width: 1024px) and (max-width: 1319px) {
+  header .page-wrap {
+    padding-inline: 1.25rem;
+  }
+}
+
 .page-title {
   font-size: clamp(1.65rem, 7vw, 3rem);
   font-weight: 700;

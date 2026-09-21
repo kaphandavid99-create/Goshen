@@ -28,7 +28,7 @@ export function HeaderCart() {
           </span>
         ) : null}
       </span>
-      <span className="hidden text-right leading-tight sm:block">
+      <span className="hidden text-right leading-tight sm:block lg:hidden min-[1320px]:!block">
         <span className="block text-[11px] text-muted-foreground">
           {t.header.cartLabel}
         </span>
