@@ -29,7 +29,7 @@ export async function runPointsReminders() {
     await createNotification(prisma, {
       userId: customer.id,
       title: "Points ready to redeem",
-      body: `You have ${customer.points} points — use them as a discount at checkout.`,
+      body: `You have ${customer.points} points. Use them as a discount at checkout.`,
       href: "/account/rewards",
     });
 

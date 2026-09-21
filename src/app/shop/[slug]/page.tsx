@@ -106,7 +106,7 @@ export default async function ProductPage({
             <span className="font-semibold text-primary">
               {formatPrice(product.wholesalePriceCents, locale)}
             </span>{" "}
-            / {product.unit} —{" "}
+            / {product.unit},{" "}
             <Link href="/wholesale" className="underline">
               {t.shop.forApprovedBuyers}
             </Link>

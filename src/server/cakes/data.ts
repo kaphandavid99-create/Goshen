@@ -27,7 +27,7 @@ export const fallbackCakeItems: CakeItem[] = [
     id: "sample-naked-berry",
     name: "Naked Berry Cake",
     description:
-      "Lightly frosted sponge layered with fresh cream and seasonal berries — elegant for weddings and showers.",
+      "Lightly frosted sponge layered with fresh cream and seasonal berries, elegant for weddings and showers.",
     category: "Cakes",
     priceCents: 25_000,
     priceNote: "from",
@@ -68,7 +68,7 @@ export const fallbackCakeItems: CakeItem[] = [
     id: "sample-pastry-platter",
     name: "Breakfast Pastry Platter",
     description:
-      "Croissants, palmiers, and cinnamon rolls baked the same morning — great for meetings and brunch.",
+      "Croissants, palmiers, and cinnamon rolls baked the same morning, great for meetings and brunch.",
     category: "Pastries",
     priceCents: 9_000,
     priceNote: "from",

@@ -262,7 +262,7 @@ function formatProducts(result: unknown, query: string): string {
     ]
       .filter(Boolean)
       .join(", ");
-    return `- [${p.name}](${p.url}) — ${price}${flags ? ` (${flags})` : ""}`;
+    return `- [${p.name}](${p.url}): ${price}${flags ? ` (${flags})` : ""}`;
   });
 
   const more =
@@ -297,7 +297,7 @@ function formatOrders(result: unknown): string {
 
   const lines = orders.map(
     (o) =>
-      `- [${o.orderNumber}](${o.url}) — **${o.status}**, ${formatPrice(o.totalFcfa)}, placed ${o.placedAt}`,
+      `- [${o.orderNumber}](${o.url}): **${o.status}**, ${formatPrice(o.totalFcfa)}, placed ${o.placedAt}`,
   );
   return `Your recent orders:\n${lines.join("\n")}\n\nOpen one for the full details.`;
 }
@@ -331,7 +331,7 @@ function formatOrder(result: unknown): string {
     .join(", ");
 
   return (
-    `**${o.orderNumber}** — ${o.status}. ${o.statusMeaning ?? ""}\n` +
+    `**${o.orderNumber}**: ${o.status}. ${o.statusMeaning ?? ""}\n` +
     `${o.fulfillment === "DELIVERY" ? "Delivery" : "Pickup"} · ${items || "no items listed"}\n` +
     `Total ${formatPrice(o.totalFcfa ?? 0)}. [Open the order](${o.url})`
   );
@@ -368,7 +368,7 @@ function formatLoyalty(result: unknown): string {
     `You have **${points.toLocaleString("en-US")} points** (1 point = 1 FCFA off).`,
     redeem
       ? canNow
-        ? `You can redeem now on orders of ${formatPrice(redeem.minOrderFcfa)} or more — up to ${redeem.maxPointsPerOrder} points per order, the rest carries over.`
+        ? `You can redeem now on orders of ${formatPrice(redeem.minOrderFcfa)} or more, up to ${redeem.maxPointsPerOrder} points per order, the rest carries over.`
         : `You can redeem once you reach ${redeem.minPoints} points, on orders of ${formatPrice(redeem.minOrderFcfa)} or more.`
       : null,
     d.earn

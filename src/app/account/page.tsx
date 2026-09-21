@@ -32,7 +32,7 @@ export default async function AccountProfilePage() {
           <h2 className="section-title">{t.account.profile.title}</h2>
           <p className="mt-2 text-sm text-muted-foreground">
             {t.account.profile.memberSince(
-              profile ? formatDate(profile.createdAt, locale) : "—",
+              profile ? formatDate(profile.createdAt, locale) : "…",
             )}
           </p>
           <div className="mt-5">

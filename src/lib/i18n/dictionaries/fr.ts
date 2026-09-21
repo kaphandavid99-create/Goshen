@@ -90,7 +90,7 @@ export const fr: Dictionary = {
     closedNow: "Fermé",
     eyebrow: "La boutique du quartier",
     headline: ["Faites vos courses", "près de chez", "vous."],
-    lead: "Alimentation, maison et soins personnels —",
+    lead: "Alimentation, maison et soins personnels,",
     leadEm: " commandés en ligne, payés à la livraison.",
     visitTitle: "Venir à la boutique",
     location: "Adresse",
@@ -101,7 +101,7 @@ export const fr: Dictionary = {
     accountCol: "Compte",
     rewardsCol: "Fidélité",
     rewardsCopy: (signupBonus: number, referral: number, minPoints: number) =>
-      `Gagnez 1,5 point par tranche de 100 FCFA. Recevez ${signupBonus} points quand un ami s'inscrit, puis ${referral} points de plus lors de sa première commande. Utilisez vos points dès ${minPoints} comme remise en boutique — non convertibles en espèces.`,
+      `Gagnez 1,5 point par tranche de 100 FCFA. Recevez ${signupBonus} points quand un ami s'inscrit, puis ${referral} points de plus lors de sa première commande. Utilisez vos points dès ${minPoints} comme remise en boutique, non convertibles en espèces.`,
     howRewardsWork: "Comment fonctionne la fidélité",
     rightsReserved: (year: number) => `© ${year} Goshen. Tous droits réservés.`,
     termsLink: "Conditions",
@@ -145,7 +145,7 @@ export const fr: Dictionary = {
         "payé à la livraison.",
         "depuis la boutique de New Bell.",
       ],
-      lead: "Alimentation, maison et soins personnels — commandés en ligne, payés à la livraison ou au retrait.",
+      lead: "Alimentation, maison et soins personnels, commandés en ligne, payés à la livraison ou au retrait.",
       primaryCtaLabel: "Acheter",
       secondaryCtaLabel: "Promos du jour",
       imageAlt:
@@ -174,7 +174,7 @@ export const fr: Dictionary = {
     nipzTeaser: {
       kicker: "Nipz Pretty Cakes & Pastries",
       title: "Gâteaux personnalisés, sur commande",
-      body: "Gâteaux d'anniversaire, cupcakes et tables de desserts préparés à New Bell, Bamenda — choisissez un modèle dans la galerie ou proposez votre propre idée, et nous nous occupons du reste.",
+      body: "Gâteaux d'anniversaire, cupcakes et tables de desserts préparés à New Bell, Bamenda. Choisissez un modèle dans la galerie ou proposez votre propre idée, et nous nous occupons du reste.",
       cta: "Découvrir Nipz Pretty Cakes",
     },
     promoStayHome: "Restez chez vous. Nous vous apportons la boutique.",
@@ -190,7 +190,7 @@ export const fr: Dictionary = {
       earnBody: "1,5 point par 100 FCFA payés. 100 points à l'inscription.",
       redeemTitle: "Utilisez et économisez",
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `Dès ${minPoints} points, 1 FCFA de remise par point sur les commandes à partir de ${minSubtotal}. Jusqu'à ${maxPoints} points par commande — le reste est conservé. Non convertible en espèces.`,
+        `Dès ${minPoints} points, 1 FCFA de remise par point sur les commandes à partir de ${minSubtotal}. Jusqu'à ${maxPoints} points par commande ; le reste est conservé. Non convertible en espèces.`,
       extrasTitle: "Avantages membres",
       extrasBody: "Promos exclusives et livraison fiable partout à Bamenda.",
     },
@@ -207,7 +207,7 @@ export const fr: Dictionary = {
     kicker: "Gagnez du temps",
     title: "Lots",
     intro:
-      "Des ensembles prêts à l'emploi à un seul prix — toute une course en un clic.",
+      "Des ensembles prêts à l'emploi à un seul prix. Toute une course en un clic.",
     empty: "Aucun lot pour le moment.",
     whatsInside: "Ce que contient le lot",
     someOut: "Un des produits de ce lot est en rupture de stock pour l'instant.",
@@ -224,7 +224,7 @@ export const fr: Dictionary = {
     categoriesLabel: "Catégories",
     all: "Tous",
     nipzBannerDesc:
-      "Gâteaux & pâtisseries sur commande — parcourez la galerie et réservez en ligne",
+      "Gâteaux & pâtisseries sur commande. Parcourez la galerie et réservez en ligne",
     resultsFor: "Résultats pour",
     noProducts: "Aucun produit dans cette sélection pour l'instant.",
     choose: "Choisir",
@@ -304,10 +304,10 @@ export const fr: Dictionary = {
       "Approuvez la demande de paiement MTN MoMo avec votre code PIN. Cette page se met à jour automatiquement.",
     stillPending: "En attente d'approbation",
     stillPendingHint:
-      "Cela prend plus de temps que d'habitude. Approuvez-le sur votre téléphone, ou revenez plus tard — nous vous préviendrons dès que c'est validé.",
+      "Cela prend plus de temps que d'habitude. Approuvez-le sur votre téléphone, ou revenez plus tard. Nous vous préviendrons dès que c'est validé.",
     keepWaiting: "Continuer à attendre",
     goToOrder: "Voir la commande",
-    paid: "Paiement reçu — redirection vers votre commande.",
+    paid: "Paiement reçu. Redirection vers votre commande.",
     failed: "Le paiement n'a pas abouti",
     tryAgain: "Réessayer",
     cancelOrder: "Annuler cette commande",
@@ -319,7 +319,7 @@ export const fr: Dictionary = {
     kicker: "À propos de Goshen",
     title: "L'épicerie de New Bell, Bamenda",
     intro:
-      "Goshen est une épicerie et boutique de produits ménagers de quartier. Nous proposons l'alimentation du quotidien, les produits d'entretien et les soins personnels pour que les familles de Bamenda fassent leurs courses près de chez elles — ou se fassent livrer.",
+      "Goshen est une épicerie et boutique de produits ménagers de quartier. Nous proposons l'alimentation du quotidien, les produits d'entretien et les soins personnels pour que les familles de Bamenda fassent leurs courses près de chez elles, ou se fassent livrer.",
     whereTitle: "Où nous trouver",
     howTitle: "Comment nous vendons",
     howBody:
@@ -362,6 +362,7 @@ export const fr: Dictionary = {
 
   auth: {
     kicker: "Compte",
+    backToHome: "Retour à l'accueil",
     signInTitle: "Se connecter",
     signInIntro:
       "Continuez avec Google ou connectez-vous avec votre e-mail Goshen.",
@@ -397,7 +398,7 @@ export const fr: Dictionary = {
     kicker: "Fidélité",
     title: "Des points à chaque achat",
     intro:
-      "Gagnez des points à l'inscription, lors de vos achats, en parrainant un ami ou en évaluant un produit. Utilisez-les uniquement comme remise au paiement — jamais en espèces.",
+      "Gagnez des points à l'inscription, lors de vos achats, en parrainant un ami ou en évaluant un produit. Utilisez-les uniquement comme remise au paiement, jamais en espèces.",
     yourInvite: "Votre invitation",
     signInForLink: "Connectez-vous pour obtenir un lien de parrainage personnel.",
     openDashboard: "Ouvrir le tableau de bord",
@@ -415,7 +416,7 @@ export const fr: Dictionary = {
         `Après réception d'une commande, chaque avis produit ajoute ${review} points.`,
       redeemTitle: "Utilisez en boutique",
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `Dès ${minPoints} points, utilisez-les comme remise sur votre prochaine commande de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande — le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Les points ne sont pas versés en espèces.`,
+        `Dès ${minPoints} points, utilisez-les comme remise sur votre prochaine commande de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande ; le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Les points ne sont pas versés en espèces.`,
     },
   },
 
@@ -501,7 +502,7 @@ export const fr: Dictionary = {
       title: "Fidélité",
       pointsAmount: (n: number) => `${n} points`,
       redeemHint: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `Utilisez dès ${minPoints} points sur les commandes de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande — le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Non convertible en espèces.`,
+        `Utilisez dès ${minPoints} points sur les commandes de ${minSubtotal} ou plus. Jusqu'à ${maxPoints} points par commande ; le reste est conservé pour votre prochain achat. 1 point = 1 FCFA de remise. Non convertible en espèces.`,
       redeemAtCheckout: "Utiliser au paiement",
       progressReady: "Prêt à échanger",
       progressLocked: "Continuez à gagner",
@@ -536,7 +537,7 @@ export const fr: Dictionary = {
     push: {
       title: "Alertes sur le téléphone",
       blurb:
-        "Recevez une alerte sur ce téléphone pour chaque mise à jour de commande, réservation et récompense — même quand Goshen est fermé dans votre navigateur.",
+        "Recevez une alerte sur ce téléphone pour chaque mise à jour de commande, réservation et récompense, même quand Goshen est fermé dans votre navigateur.",
       loading: "Vérification de cet appareil…",
       unsupported:
         "Ce navigateur ne peut pas afficher les alertes. Installez Goshen sur votre écran d'accueil et ouvrez-le depuis là.",
@@ -551,7 +552,7 @@ export const fr: Dictionary = {
       error: "Une erreur s'est produite. Réessayez.",
       nudge: {
         title: "Activer les notifications",
-        body: "Ne manquez rien — activez les notifications pour être alerté de vos commandes, réservations et récompenses.",
+        body: "Ne manquez rien. Activez les notifications pour être alerté de vos commandes, réservations et récompenses.",
         steps:
           "Appuyez sur « Activer les notifications » ci-dessous, puis choisissez Autoriser quand votre navigateur le demande.",
       },
@@ -764,11 +765,11 @@ export const fr: Dictionary = {
     install: {
       title: "Ajoutez Goshen à votre téléphone",
       blurb:
-        "Installez la boutique comme une application — une icône sur l'écran d'accueil, une navigation plein écran et un chargement plus rapide. Sans passer par un store.",
+        "Installez la boutique comme une application : une icône sur l'écran d'accueil, une navigation plein écran et un chargement plus rapide. Sans passer par un store.",
       action: "Installer l'application",
       iosHint:
         "Appuyez sur le bouton Partager dans Safari, puis choisissez « Sur l'écran d'accueil » pour installer Goshen.",
-      dismiss: "Fermer",
+      dismiss: "Annuler",
     },
   },
 
@@ -779,7 +780,7 @@ export const fr: Dictionary = {
     eyebrow: "Chez Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
     titleEm: "& Pâtisseries",
-    lead: "Gâteaux, pâtisseries & tables de desserts sur commande — cuits frais à New Bell, Bamenda. Chaque commande est réalisée sur mesure — choisissez un style dans la galerie ou apportez votre propre idée.",
+    lead: "Gâteaux, pâtisseries & tables de desserts sur commande, cuits frais à New Bell, Bamenda. Chaque commande est réalisée sur mesure. Choisissez un style dans la galerie ou apportez votre propre idée.",
     bookACake: "Réserver un gâteau",
     browseGallery: "Parcourir la galerie",
     whatsappBakery: "WhatsApp la pâtisserie",
@@ -794,7 +795,7 @@ export const fr: Dictionary = {
     galleryKicker: "Le menu",
     galleryTitle: "Gâteaux & pâtisseries",
     galleryIntro:
-      "Ce qui sort de la cuisine Goshen. Les prix sont un point de départ et varient selon la taille, les étages et les détails — appuyez sur Commander sur WhatsApp pour confirmer.",
+      "Ce qui sort de la cuisine Goshen. Les prix sont un point de départ et varient selon la taille, les étages et les détails. Appuyez sur Commander sur WhatsApp pour confirmer.",
     galleryEmpty:
       "De nouvelles photos arrivent bientôt. Contactez la pâtisserie pour le menu actuel.",
     all: "Tous",
@@ -829,7 +830,7 @@ export const fr: Dictionary = {
     bookChecks: [
       "Envoyez des photos d'inspiration sur WhatsApp après l'envoi.",
       "Un acompte réserve votre date ; le solde à la remise.",
-      "Les commandes urgentes sont parfois possibles — demandez.",
+      "Les commandes urgentes sont parfois possibles, demandez.",
     ],
     form: {
       yourName: "Votre nom",
@@ -973,20 +974,20 @@ export const fr: Dictionary = {
         heading: "2. Votre compte",
         body: [
           "Vous pouvez créer un compte avec un e-mail et un mot de passe, ou en vous connectant avec Google. Vous êtes responsable de la confidentialité de vos identifiants et de toute activité sur votre compte.",
-          "Fournissez des informations exactes — votre nom, votre numéro de téléphone et votre adresse de livraison servent à traiter vos commandes et à vous contacter à leur sujet. Un compte par personne ; ne créez pas plusieurs comptes pour réclamer plusieurs fois les points de bienvenue ou de parrainage.",
+          "Fournissez des informations exactes : votre nom, votre numéro de téléphone et votre adresse de livraison servent à traiter vos commandes et à vous contacter à leur sujet. Un compte par personne ; ne créez pas plusieurs comptes pour réclamer plusieurs fois les points de bienvenue ou de parrainage.",
         ],
       },
       {
         heading: "3. Commandes et paiement",
         body: [
-          "Les prix sont affichés en FCFA. Vous pouvez payer en espèces à la livraison ou au retrait, ou par mobile money (MoMo) au moment du paiement. Une commande n'est confirmée qu'une fois que nous l'acceptons — nous pouvons refuser ou annuler une commande si un article est en rupture de stock, si l'adresse de livraison est en dehors de notre zone de service, ou en cas de suspicion de fraude ou d'abus.",
+          "Les prix sont affichés en FCFA. Vous pouvez payer en espèces à la livraison ou au retrait, ou par mobile money (MoMo) au moment du paiement. Une commande n'est confirmée qu'une fois que nous l'acceptons. Nous pouvons refuser ou annuler une commande si un article est en rupture de stock, si l'adresse de livraison est en dehors de notre zone de service, ou en cas de suspicion de fraude ou d'abus.",
           "Des frais de livraison fixes s'appliquent aux commandes livrées ; le retrait en boutique est toujours gratuit. Il vous appartient d'être joignable et de fournir une adresse et un numéro de téléphone corrects pour la livraison.",
         ],
       },
       {
         heading: "4. Points de fidélité et parrainage",
         body: [
-          "Vous inscrire, dépenser, parrainer des amis et évaluer des produits vous fait gagner des points de fidélité, visibles dans votre compte. Les points ne peuvent être utilisés que comme remise au paiement, dans la limite indiquée par commande sur la page Fidélité — ils ne sont jamais versés en espèces et ne peuvent pas être transférés entre comptes.",
+          "Vous inscrire, dépenser, parrainer des amis et évaluer des produits vous fait gagner des points de fidélité, visibles dans votre compte. Les points ne peuvent être utilisés que comme remise au paiement, dans la limite indiquée par commande sur la page Fidélité. Ils ne sont jamais versés en espèces et ne peuvent pas être transférés entre comptes.",
           "Les récompenses de parrainage sont destinées à de véritables nouveaux clients. Nous pouvons refuser ou annuler des points obtenus par de faux comptes, de l'auto-parrainage ou tout autre abus du programme, et pouvons modifier à tout moment le programme de points, la valeur des points ou les limites d'utilisation.",
         ],
       },
@@ -999,7 +1000,7 @@ export const fr: Dictionary = {
       {
         heading: "6. Avis et autres contenus",
         body: [
-          "Vous pouvez évaluer un produit après réception d'une commande. Les avis doivent être honnêtes et basés sur votre propre expérience — aucun contenu offensant, trompeur ou faux. Nous pouvons supprimer un avis ou restreindre un compte qui ne respecte pas cette règle.",
+          "Vous pouvez évaluer un produit après réception d'une commande. Les avis doivent être honnêtes et basés sur votre propre expérience : aucun contenu offensant, trompeur ou faux. Nous pouvons supprimer un avis ou restreindre un compte qui ne respecte pas cette règle.",
         ],
       },
       {
@@ -1045,7 +1046,7 @@ export const fr: Dictionary = {
       {
         heading: "1. Informations que nous collectons",
         body: [
-          "Détails du compte : votre nom, adresse e-mail, numéro de téléphone, adresse de livraison, et un mot de passe stocké de façon sécurisée — nous ne stockons jamais votre mot de passe en clair. Si vous vous connectez avec Google, nous recevons votre nom, votre e-mail et votre identifiant de compte Google.",
+          "Détails du compte : votre nom, adresse e-mail, numéro de téléphone, adresse de livraison, et un mot de passe stocké de façon sécurisée. Nous ne stockons jamais votre mot de passe en clair. Si vous vous connectez avec Google, nous recevons votre nom, votre e-mail et votre identifiant de compte Google.",
           "Détails des commandes : articles achetés, choix de livraison ou de retrait, moyen de paiement et statut de la commande.",
           "Demandes grossiste : le nom et les informations de votre entreprise, si vous demandez des prix de gros.",
           "Contenu que vous ajoutez : avis produits, préférences de notification, et messages que vous nous envoyez.",
@@ -1055,14 +1056,14 @@ export const fr: Dictionary = {
       {
         heading: "2. Cookies",
         body: [
-          "Nous utilisons un petit nombre de cookies : un pour vous garder connecté, un pour la sécurité (protection CSRF), et un identifiant anonyme de longue durée utilisé uniquement pour compter les visites du site de façon globale — il ne sert jamais à vous identifier personnellement.",
+          "Nous utilisons un petit nombre de cookies : un pour vous garder connecté, un pour la sécurité (protection CSRF), et un identifiant anonyme de longue durée utilisé uniquement pour compter les visites du site de façon globale. Il ne sert jamais à vous identifier personnellement.",
         ],
       },
       {
         heading: "3. Comment nous utilisons vos informations",
         body: [
           "Pour créer et gérer votre compte, traiter et livrer vos commandes, et vous contacter à leur sujet.",
-          "Pour gérer le programme de points de fidélité et de parrainage, et pour envoyer des notifications de compte, de commande et de récompense — y compris des notifications push, uniquement si vous les activez.",
+          "Pour gérer le programme de points de fidélité et de parrainage, et pour envoyer des notifications de compte, de commande et de récompense, y compris des notifications push, uniquement si vous les activez.",
           "Pour répondre aux messages envoyés via la page Contact ou WhatsApp, et pour examiner les demandes grossiste.",
           "Pour comprendre la fréquentation globale du site et l'améliorer, à partir de données de visite agrégées et anonymisées.",
           "Pour assurer la sécurité de la plateforme et prévenir la fraude ou les abus des comptes, des commandes et du programme de parrainage.",
@@ -1084,7 +1085,7 @@ export const fr: Dictionary = {
       {
         heading: "6. Vos choix",
         body: [
-          "Vous pouvez mettre à jour les informations de votre profil à tout moment depuis votre compte, désactiver les notifications push depuis les réglages de votre appareil ou navigateur, et nous demander — via la page Contact ou WhatsApp — de consulter, corriger, exporter ou supprimer les informations personnelles que nous détenons sur vous.",
+          "Vous pouvez mettre à jour les informations de votre profil à tout moment depuis votre compte, désactiver les notifications push depuis les réglages de votre appareil ou navigateur, et nous demander, via la page Contact ou WhatsApp, de consulter, corriger, exporter ou supprimer les informations personnelles que nous détenons sur vous.",
         ],
       },
       {

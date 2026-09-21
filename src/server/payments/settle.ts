@@ -91,7 +91,7 @@ async function finalizePaidOrder(
     await createNotification(tx, {
       userId: order.userId,
       title: "Payment received",
-      body: `${order.orderNumber} is paid — the shop will confirm it shortly.`,
+      body: `${order.orderNumber} is paid. The shop will confirm it shortly.`,
       href: `/account/orders/${order.id}`,
     });
     await notifyStaffOfNewOrder(tx, order);

@@ -57,7 +57,7 @@ export async function notifyStaffOfNewOrder(
       createNotification(db, {
         userId: s.id,
         title: "New order",
-        body: `${order.orderNumber} from ${order.fullName} — ${formatPrice(order.totalCents)}.`,
+        body: `${order.orderNumber} from ${order.fullName}: ${formatPrice(order.totalCents)}.`,
         href: `/admin/orders/${order.id}`,
       }),
     ),
@@ -124,7 +124,7 @@ export async function notifyCustomersOfNewProduct(
       createNotification(db, {
         userId: c.id,
         title: "New in store",
-        body: `${product.name} — ${formatPrice(product.priceCents)} just landed. Take a look.`,
+        body: `${product.name} (${formatPrice(product.priceCents)}) just landed. Take a look.`,
         href: `/shop/${product.slug}`,
       }),
     ),

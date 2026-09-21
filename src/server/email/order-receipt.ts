@@ -80,8 +80,8 @@ export async function sendOrderReceiptEmail(orderId: string) {
     .map((line) => {
       const detail = [line.flavors, line.bundle ? `Contains: ${line.bundle}` : null]
         .filter(Boolean)
-        .join(" — ");
-      return `${line.name} × ${line.quantity}${detail ? ` (${detail})` : ""} — ${formatPrice(line.lineTotal)}`;
+        .join("; ");
+      return `${line.name} × ${line.quantity}${detail ? ` (${detail})` : ""}: ${formatPrice(line.lineTotal)}`;
     })
     .join("\n");
 
@@ -97,7 +97,7 @@ export async function sendOrderReceiptEmail(orderId: string) {
     ["Total", formatPrice(order.totalCents)],
   ];
 
-  const subject = `Your Goshen receipt — ${order.orderNumber}`;
+  const subject = `Your Goshen receipt: ${order.orderNumber}`;
 
   const html = `
     <div style="font-family:system-ui,-apple-system,sans-serif;max-width:560px;margin:0 auto;color:#111827;">

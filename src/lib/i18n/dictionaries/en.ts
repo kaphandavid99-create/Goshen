@@ -1,5 +1,5 @@
 /**
- * English dictionary — the source of truth for the storefront's UI copy.
+ * English dictionary: the source of truth for the storefront's UI copy.
  *
  * `fr.ts` must mirror this shape exactly (it's typed as `Dictionary`, so the
  * compiler flags any missing or extra key). Dynamic strings are expressed as
@@ -92,7 +92,7 @@ export const en = {
     closedNow: "Closed now",
     eyebrow: "The neighborhood shop",
     headline: ["Shop", "close to", "home."],
-    lead: "Groceries, household, and personal care —",
+    lead: "Groceries, household, and personal care,",
     leadEm: " ordered online, paid when it arrives.",
     visitTitle: "Visit the shop",
     location: "Location",
@@ -103,7 +103,7 @@ export const en = {
     accountCol: "Account",
     rewardsCol: "Rewards",
     rewardsCopy: (signupBonus: number, referral: number, minPoints: number) =>
-      `Earn 1.5 points per 100 FCFA. Get ${signupBonus} when a friend joins and ${referral} more when they make their first purchase. Redeem from ${minPoints} points as a shop discount — not cash.`,
+      `Earn 1.5 points per 100 FCFA. Get ${signupBonus} when a friend joins and ${referral} more when they make their first purchase. Redeem from ${minPoints} points as a shop discount, not cash.`,
     howRewardsWork: "How rewards work",
     rightsReserved: (year: number) => `© ${year} Goshen. All rights reserved.`,
     termsLink: "Terms",
@@ -147,7 +147,7 @@ export const en = {
         "paid when it arrives.",
         "from the New Bell shop.",
       ],
-      lead: "Groceries, household, and personal care — ordered online, paid when it arrives or when you collect it.",
+      lead: "Groceries, household, and personal care, ordered online, paid when it arrives or when you collect it.",
       primaryCtaLabel: "Shop now",
       secondaryCtaLabel: "Today's deals",
       imageAlt:
@@ -176,7 +176,7 @@ export const en = {
     nipzTeaser: {
       kicker: "Nipz Pretty Cakes & Pastries",
       title: "Custom cakes, made to order",
-      body: "Birthday cakes, cupcakes, and dessert tables baked fresh in New Bell, Bamenda — pick a design from the gallery or bring your own idea, and we'll take it from there.",
+      body: "Birthday cakes, cupcakes, and dessert tables baked fresh in New Bell, Bamenda. Pick a design from the gallery or bring your own idea, and we'll take it from there.",
       cta: "Explore Nipz Pretty Cakes",
     },
     promoStayHome: "Stay home. We will bring the shop to you.",
@@ -192,7 +192,7 @@ export const en = {
       earnBody: "1.5 points per 100 FCFA you pay. Sign up for 100.",
       redeemTitle: "Redeem and save",
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `From ${minPoints} points, take 1 FCFA off per point on orders from ${minSubtotal}. Up to ${maxPoints} points per order — the rest carries over. Not cash.`,
+        `From ${minPoints} points, take 1 FCFA off per point on orders from ${minSubtotal}. Up to ${maxPoints} points per order; the rest carries over. Not cash.`,
       extrasTitle: "Member extras",
       extrasBody: "Featured deals and reliable delivery across Bamenda.",
     },
@@ -209,7 +209,7 @@ export const en = {
     kicker: "Save time",
     title: "Bundles",
     intro:
-      "Ready-made sets at one price — add a whole shop in a single tap.",
+      "Ready-made sets at one price. Add a whole shop in a single tap.",
     empty: "No bundles right now.",
     whatsInside: "What's inside",
     someOut: "One of the products in this bundle is out of stock right now.",
@@ -226,7 +226,7 @@ export const en = {
     categoriesLabel: "Categories",
     all: "All",
     nipzBannerDesc:
-      "Custom cakes & pastries — browse the gallery and book online",
+      "Custom cakes & pastries. Browse the gallery and book online",
     resultsFor: "Results for",
     noProducts: "No products in this selection yet.",
     choose: "Choose",
@@ -304,10 +304,10 @@ export const en = {
       "Approve the MTN MoMo payment request with your PIN. This page updates on its own.",
     stillPending: "Still waiting for approval",
     stillPendingHint:
-      "It's taking longer than usual. Approve it on your phone, or check the order later — we'll notify you once it clears.",
+      "It's taking longer than usual. Approve it on your phone, or check the order later. We'll notify you once it clears.",
     keepWaiting: "Keep waiting",
     goToOrder: "Go to the order",
-    paid: "Payment received — taking you to your order.",
+    paid: "Payment received. Taking you to your order.",
     failed: "Payment didn't go through",
     tryAgain: "Try again",
     cancelOrder: "Cancel this order",
@@ -319,7 +319,7 @@ export const en = {
     kicker: "About Goshen",
     title: "Groceries from New Bell, Bamenda",
     intro:
-      "Goshen is a neighborhood grocery and household store. We stock everyday food, cleaning supplies, and personal care so families in Bamenda can shop close to home — or have an order delivered.",
+      "Goshen is a neighborhood grocery and household store. We stock everyday food, cleaning supplies, and personal care so families in Bamenda can shop close to home, or have an order delivered.",
     whereTitle: "Where we are",
     howTitle: "How we sell",
     howBody:
@@ -362,6 +362,7 @@ export const en = {
 
   auth: {
     kicker: "Account",
+    backToHome: "Back to home",
     signInTitle: "Sign in",
     signInIntro: "Continue with Google, or sign in with your Goshen email.",
     registerTitle: "Create account",
@@ -395,7 +396,7 @@ export const en = {
     kicker: "Rewards",
     title: "Points on every shop",
     intro:
-      "Earn points when you join, shop, refer a friend, or review a product. Redeem them only as a discount at checkout — never as cash.",
+      "Earn points when you join, shop, refer a friend, or review a product. Redeem them only as a discount at checkout, never as cash.",
     yourInvite: "Your invite",
     signInForLink: "Sign in to get a personal referral link.",
     openDashboard: "Open dashboard",
@@ -413,7 +414,7 @@ export const en = {
         `After you receive an order, each product review adds ${review} points.`,
       redeemTitle: "Redeem in the shop",
       redeemBody: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `From ${minPoints} points, use them as a discount on your next order of ${minSubtotal} or more. Up to ${maxPoints} points per order — any extra carries over to your next purchase. 1 point = 1 FCFA off. Points are not paid as cash.`,
+        `From ${minPoints} points, use them as a discount on your next order of ${minSubtotal} or more. Up to ${maxPoints} points per order; any extra carries over to your next purchase. 1 point = 1 FCFA off. Points are not paid as cash.`,
     },
   },
 
@@ -498,7 +499,7 @@ export const en = {
       title: "Rewards",
       pointsAmount: (n: number) => `${n} points`,
       redeemHint: (minPoints: number, maxPoints: number, minSubtotal: string) =>
-        `Redeem from ${minPoints} points on orders of ${minSubtotal} or more. Up to ${maxPoints} points per order — any extra carries over to your next purchase. 1 point = 1 FCFA off. Not cash.`,
+        `Redeem from ${minPoints} points on orders of ${minSubtotal} or more. Up to ${maxPoints} points per order; any extra carries over to your next purchase. 1 point = 1 FCFA off. Not cash.`,
       redeemAtCheckout: "Redeem at checkout",
       progressReady: "Ready to redeem",
       progressLocked: "Keep earning",
@@ -533,7 +534,7 @@ export const en = {
     push: {
       title: "Phone alerts",
       blurb:
-        "Get a pop-up on this phone for every order update, booking and reward — even when Goshen is closed in your browser.",
+        "Get a pop-up on this phone for every order update, booking and reward, even when Goshen is closed in your browser.",
       loading: "Checking this device…",
       unsupported:
         "This browser can't show phone alerts. Install Goshen to your home screen and open it from there.",
@@ -548,7 +549,7 @@ export const en = {
       error: "Something went wrong. Try again.",
       nudge: {
         title: "Turn on notifications",
-        body: "Don't miss an update — turn on notifications to be alerted about your orders, bookings, and rewards.",
+        body: "Don't miss an update. Turn on notifications to be alerted about your orders, bookings, and rewards.",
         steps:
           "Tap \"Turn on notifications\" below, then choose Allow when your browser asks.",
       },
@@ -763,11 +764,11 @@ export const en = {
     install: {
       title: "Add Goshen to your phone",
       blurb:
-        "Install the shop like an app — a home-screen icon, full-screen browsing and faster loads. No app store needed.",
+        "Install the shop like an app: a home-screen icon, full-screen browsing and faster loads. No app store needed.",
       action: "Install app",
       iosHint:
         "Tap the Share button in Safari, then choose “Add to Home Screen” to install Goshen.",
-      dismiss: "Dismiss",
+      dismiss: "Cancel",
     },
   },
 
@@ -778,7 +779,7 @@ export const en = {
     eyebrow: "Inside Goshen · New Bell, Bamenda",
     title: "Nipz Pretty Cakes",
     titleEm: "& Pastries",
-    lead: "Custom cakes, pastries & dessert tables — baked fresh in New Bell, Bamenda. Every order is made to order — pick a style from the gallery or bring your own idea.",
+    lead: "Custom cakes, pastries & dessert tables, baked fresh in New Bell, Bamenda. Every order is made to order. Pick a style from the gallery or bring your own idea.",
     bookACake: "Book a cake",
     browseGallery: "Browse the gallery",
     whatsappBakery: "WhatsApp the bakery",
@@ -793,7 +794,7 @@ export const en = {
     galleryKicker: "The menu",
     galleryTitle: "Cakes & pastries",
     galleryIntro:
-      "What comes out of the Goshen kitchen. Prices are a starting point and change with size, tiers and detail — tap Order on WhatsApp to confirm.",
+      "What comes out of the Goshen kitchen. Prices are a starting point and change with size, tiers and detail. Tap Order on WhatsApp to confirm.",
     galleryEmpty:
       "Fresh photos are on the way. Message the bakery for the current menu.",
     all: "All",
@@ -828,7 +829,7 @@ export const en = {
     bookChecks: [
       "Send inspiration photos on WhatsApp after you submit.",
       "A deposit reserves your date; balance on handover.",
-      "Rush orders are sometimes possible — just ask.",
+      "Rush orders are sometimes possible. Just ask.",
     ],
     form: {
       yourName: "Your name",
@@ -971,20 +972,20 @@ export const en = {
         heading: "2. Your account",
         body: [
           "You can create an account with an email and password, or by signing in with Google. You are responsible for keeping your login details safe and for all activity on your account.",
-          "Give us accurate information — your name, phone number, and delivery address are used to fulfil orders and contact you about them. One account per person; do not create multiple accounts to claim repeat welcome or referral rewards.",
+          "Give us accurate information: your name, phone number, and delivery address are used to fulfil orders and contact you about them. One account per person; do not create multiple accounts to claim repeat welcome or referral rewards.",
         ],
       },
       {
         heading: "3. Orders and payment",
         body: [
-          "Prices are shown in FCFA. You can pay in cash on delivery or pickup, or by mobile money (MoMo) at checkout. An order is only confirmed once we accept it — we may decline or cancel an order if an item is out of stock, if the delivery address is outside our service area, or if we suspect fraud or abuse.",
+          "Prices are shown in FCFA. You can pay in cash on delivery or pickup, or by mobile money (MoMo) at checkout. An order is only confirmed once we accept it. We may decline or cancel an order if an item is out of stock, if the delivery address is outside our service area, or if we suspect fraud or abuse.",
           "A flat delivery fee applies to orders delivered to you; pickup at the shop is always free. It is your responsibility to be reachable and to give a correct address and phone number for delivery.",
         ],
       },
       {
         heading: "4. Loyalty points and referrals",
         body: [
-          "Signing up, spending, referring friends, and reviewing products earns loyalty points, shown in your account. Points can only be redeemed as a discount at checkout, up to the per-order limit shown on the Rewards page — they are never paid out as cash and cannot be transferred between accounts.",
+          "Signing up, spending, referring friends, and reviewing products earns loyalty points, shown in your account. Points can only be redeemed as a discount at checkout, up to the per-order limit shown on the Rewards page. They are never paid out as cash and cannot be transferred between accounts.",
           "Referral rewards are meant for genuine new customers. We may withhold or reverse points earned through fake accounts, self-referrals, or other abuse of the program, and may change the points program, point values, or redemption limits at any time.",
         ],
       },
@@ -997,7 +998,7 @@ export const en = {
       {
         heading: "6. Reviews and other content",
         body: [
-          "You can review a product after receiving an order. Reviews must be honest and based on your own experience — no offensive, misleading, or fake content. We may remove a review or restrict an account that violates this.",
+          "You can review a product after receiving an order. Reviews must be honest and based on your own experience: no offensive, misleading, or fake content. We may remove a review or restrict an account that violates this.",
         ],
       },
       {
@@ -1043,7 +1044,7 @@ export const en = {
       {
         heading: "1. Information we collect",
         body: [
-          "Account details: your name, email address, phone number, delivery address, and a securely hashed password — we never store your password in plain text. If you sign in with Google, we receive your name, email, and Google account ID.",
+          "Account details: your name, email address, phone number, delivery address, and a securely hashed password. We never store your password in plain text. If you sign in with Google, we receive your name, email, and Google account ID.",
           "Order details: items purchased, delivery or pickup choice, payment method, and order status.",
           "Wholesale applications: your business name and details, if you apply for wholesale pricing.",
           "Content you add: product reviews, notification preferences, and messages you send us.",
@@ -1053,14 +1054,14 @@ export const en = {
       {
         heading: "2. Cookies",
         body: [
-          "We use a small number of cookies: one to keep you signed in, one for security (CSRF protection), and one anonymous, long-lived identifier used only to count visits to the shop in aggregate — it is never used to identify you personally.",
+          "We use a small number of cookies: one to keep you signed in, one for security (CSRF protection), and one anonymous, long-lived identifier used only to count visits to the shop in aggregate. It is never used to identify you personally.",
         ],
       },
       {
         heading: "3. How we use your information",
         body: [
           "To create and manage your account, take and fulfil orders, and contact you about them.",
-          "To run the loyalty points and referral program, and to send account, order, and reward notifications — including push notifications, only if you turn them on.",
+          "To run the loyalty points and referral program, and to send account, order, and reward notifications, including push notifications, only if you turn them on.",
           "To respond to messages sent through the Contact page or WhatsApp, and to review wholesale applications.",
           "To understand overall shop traffic and improve the site, using aggregated, anonymised visit data.",
           "To keep the platform secure and prevent fraud or abuse of accounts, orders, and the referral program.",
@@ -1082,7 +1083,7 @@ export const en = {
       {
         heading: "6. Your choices",
         body: [
-          "You can update your profile details from your account at any time, turn push notifications off from your device or browser settings, and ask us — via the Contact page or WhatsApp — to see, correct, export, or delete the personal information we hold about you.",
+          "You can update your profile details from your account at any time, turn push notifications off from your device or browser settings, and ask us, via the Contact page or WhatsApp, to see, correct, export, or delete the personal information we hold about you.",
         ],
       },
       {

@@ -121,23 +121,33 @@ export function InstallBanner() {
           </p>
         </div>
         {mode === "prompt" ? (
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={dismiss}
+              className="btn-ghost px-3 py-2 text-sm"
+            >
+              {c.dismiss}
+            </button>
+            <button
+              type="button"
+              onClick={install}
+              className="btn btn-rose inline-flex items-center gap-1.5 px-3 py-2 text-sm"
+            >
+              {c.action}
+              <IconArrowRight className="size-4" />
+            </button>
+          </div>
+        ) : (
           <button
             type="button"
-            onClick={install}
-            className="btn btn-rose inline-flex shrink-0 items-center gap-1.5 px-3 py-2 text-sm"
+            onClick={dismiss}
+            aria-label={c.dismiss}
+            className="btn-ghost shrink-0 p-1.5"
           >
-            {c.action}
-            <IconArrowRight className="size-4" />
+            <IconClose className="size-4" />
           </button>
-        ) : null}
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label={c.dismiss}
-          className="btn-ghost shrink-0 p-1.5"
-        >
-          <IconClose className="size-4" />
-        </button>
+        )}
       </div>
     </div>
   );

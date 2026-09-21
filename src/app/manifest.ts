@@ -5,10 +5,10 @@ import { APP_NAME, BRAND_COLORS } from "@/lib/constants";
 // The icon is the 500x500 public/logo.png served at any size the OS asks for.
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${APP_NAME} — New Bell, Bamenda`,
+    name: `${APP_NAME}, New Bell, Bamenda`,
     short_name: APP_NAME,
     description:
-      "Groceries, household and personal care, plus Nipz Pretty Cakes — order from Goshen in New Bell, Bamenda.",
+      "Groceries, household and personal care, plus Nipz Pretty Cakes. Order from Goshen in New Bell, Bamenda.",
     id: "/",
     start_url: "/?source=pwa",
     scope: "/",

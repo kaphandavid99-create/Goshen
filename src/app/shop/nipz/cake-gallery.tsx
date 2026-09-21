@@ -54,7 +54,7 @@ export function CakeGallery({
 
   function orderHref(item: CakeItem) {
     const label = `${item.name}${
-      item.priceCents != null || item.priceNote ? ` — ${priceLabel(item)}` : ""
+      item.priceCents != null || item.priceNote ? `, ${priceLabel(item)}` : ""
     }`;
     const text = t.nipz.orderMessage(businessName, label);
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;

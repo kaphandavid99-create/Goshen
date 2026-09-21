@@ -45,7 +45,7 @@ export async function createCakeBooking(
           await createNotification(tx, {
             userId,
             title: "Cake booking received",
-            body: `${booking.reference} — the bakery will contact you to confirm the details.`,
+            body: `${booking.reference}: the bakery will contact you to confirm the details.`,
             href: "/account/orders",
           });
         }
