@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Fraunces, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import { VisitTracker } from "@/components/analytics/visit-tracker";
-import { WaveLinesBackground } from "@/components/home/wave-lines-background";
 import { ScrollToHash } from "@/components/layout/scroll-to-hash";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
@@ -103,11 +102,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <ThemeProvider>
             <ScrollToHash />
             <VisitTracker />
-            <WaveLinesBackground />
-            {/* Explicit stacking layer above the background effect — needed
-                because not every child here (e.g. the footer) sets its own
-                z-index, and WaveLinesBackground is fixed-position at z-0. */}
-            <div className="relative z-10 flex min-h-full flex-1 flex-col">
+            <div className="relative flex min-h-full flex-1 flex-col">
               <StoreChrome header={<SiteHeader />} footer={<SiteFooter />}>
                 <PageTransition>{children}</PageTransition>
               </StoreChrome>
