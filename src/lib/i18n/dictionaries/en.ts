@@ -62,6 +62,7 @@ export const en = {
     about: "About Us",
     contact: "Contact",
     dashboard: "Dashboard",
+    adminDashboard: "Admin Dashboard",
     primary: "Primary",
     appearance: "Appearance",
   },

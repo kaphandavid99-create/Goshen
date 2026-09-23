@@ -60,6 +60,7 @@ export const fr: Dictionary = {
     about: "À propos",
     contact: "Contact",
     dashboard: "Mon compte",
+    adminDashboard: "Tableau de bord admin",
     primary: "Principal",
     appearance: "Apparence",
   },

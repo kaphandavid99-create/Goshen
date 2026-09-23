@@ -25,6 +25,7 @@ const DESKTOP_NAV_LINKS = NAV_LINKS.filter((link) => link.key !== "bundles");
 export async function SiteHeader() {
   const [user, t] = await Promise.all([getCurrentUser(), getDict()]);
   const unread = user ? await countUnreadNotifications(user.id).catch(() => 0) : 0;
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <>
@@ -39,7 +40,7 @@ export async function SiteHeader() {
           <div className="page-wrap flex items-center gap-4 py-3.5 lg:gap-6 min-[1320px]:!gap-8">
             {/* Left: hamburger on mobile, full logo on desktop */}
             <div className="flex flex-1 items-center justify-start lg:flex-none">
-              <MobileNav />
+              <MobileNav isAdmin={isAdmin} />
               <span className="hidden lg:block">
                 <BrandLogo />
               </span>
@@ -60,6 +61,11 @@ export async function SiteHeader() {
                       {t.nav[link.key]}
                     </Link>
                   ))}
+                  {isAdmin ? (
+                    <Link href="/admin" className="nav-link">
+                      {t.nav.adminDashboard}
+                    </Link>
+                  ) : null}
                 </nav>
               }
             >
@@ -69,6 +75,11 @@ export async function SiteHeader() {
                     {t.nav[link.key]}
                   </NavLink>
                 ))}
+                {isAdmin ? (
+                  <NavLink href="/admin" className="nav-link">
+                    {t.nav.adminDashboard}
+                  </NavLink>
+                ) : null}
               </nav>
             </Suspense>
 

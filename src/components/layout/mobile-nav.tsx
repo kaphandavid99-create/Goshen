@@ -12,16 +12,16 @@ import { useT } from "@/lib/i18n/context";
 const TAB_HREFS = new Set<string>(MOBILE_NAV_TABS.map((tab) => tab.href));
 const MENU_LINKS = NAV_LINKS.filter((link) => !TAB_HREFS.has(link.href));
 
-export function MobileNav() {
+export function MobileNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const t = useT();
   return (
     <Suspense fallback={<MenuTrigger disabled label={t.common.menu} />}>
-      <MobileNavMenu />
+      <MobileNavMenu isAdmin={isAdmin} />
     </Suspense>
   );
 }
 
-function MobileNavMenu() {
+function MobileNavMenu({ isAdmin }: { isAdmin: boolean }) {
   const [open, setOpen] = useState(false);
   const t = useT();
 
@@ -49,6 +49,17 @@ function MobileNavMenu() {
                 </NavLink>
               </li>
             ))}
+            {isAdmin ? (
+              <li>
+                <NavLink
+                  href="/admin"
+                  className="nav-link nav-link-mobile"
+                  onClick={() => setOpen(false)}
+                >
+                  {t.nav.adminDashboard}
+                </NavLink>
+              </li>
+            ) : null}
           </ul>
           <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-sm font-medium text-muted-foreground">
             <span>{t.language.label}</span>
