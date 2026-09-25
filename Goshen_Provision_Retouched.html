@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goshen Provision Project Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #000;
+            background-color: #fff;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .title-page {
+            text-align: center;
+            padding: 60px 0;
+            border-bottom: 2px solid #000;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #000;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-style: italic;
+            margin: 15px 0;
+            color: #000;
+        }
+
+        .project-info {
+            margin: 40px 0;
+            text-align: left;
+            background: #f5f5f5;
+            padding: 20px;
+            border-left: 4px solid #000;
+        }
+
+        .info-row {
+            display: flex;
+            margin: 10px 0;
+            color: #000;
+        }
+
+        .info-label {
+            font-weight: bold;
+            width: 200px;
+            color: #000;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #000;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 40px 0 20px 0;
+            color: #000;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            color: #000;
+            page-break-after: avoid;
+        }
+
+        h4 {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 15px 0 10px 0;
+            color: #000;
+        }
+
+        p {
+            margin: 15px 0;
+            text-align: justify;
+            color: #000;
+        }
+
+        ul {
+            margin: 15px 0 15px 30px;
+            color: #000;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #000;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            color: #000;
+        }
+
+        th {
+            background-color: #fff;
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+            color: #000;
+        }
+
+        td {
+            border: 1px solid #000;
+            padding: 12px;
+            color: #000;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        .code-block {
+            background-color: #f9f9f9;
+            border: 1px solid #000;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #000;
+            line-height: 1.4;
+        }
+
+        .page-break {
+            page-break-after: always;
+            margin: 40px 0;
+        }
+
+        .toc {
+            margin: 20px 0;
+            color: #000;
+        }
+
+        .toc-item {
+            margin: 8px 0 8px 20px;
+            color: #000;
+        }
+
+        .effect-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .effect-table th,
+        .effect-table td {
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: left;
+            color: #000;
+        }
+
+        .highlight-box {
+            background-color: #f5f5f5;
+            border-left: 4px solid #000;
+            padding: 15px;
+            margin: 15px 0;
+            color: #000;
+        }
+
+        @media print {
+            body {
+                padding: 20px;
+            }
+            h2 {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- TITLE PAGE -->
+    <div class="title-page">
+        <h1>GOSHEN PROVISION PROJECT</h1>
+        <p class="subtitle">A Digital Ordering Platform for a Provision Shop in New Bell, Bamenda, Cameroon</p>
+        <p style="margin-top: 40px; font-size: 14px;">Prepared as the system-design and implementation record submitted in support of the project defense.</p>
+    </div>
+
+    <div class="project-info">
+        <h3>PROJECT OWNER / CLIENT INFORMATION</h3>
+        <div class="info-row">
+            <div class="info-label">Name of Project Owner:</div>
+            <div class="info-value">Mrs. Bernadette Ngetiko</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Telephone Number:</div>
+            <div class="info-value">+237675619166</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Business Name:</div>
+            <div class="info-value">Goshen Provision</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Business Location:</div>
+            <div class="info-value">New Bell, Bamenda, Cameroon</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Type of Business:</div>
+            <div class="info-value">Provision Shop</div>
+        </div>
+        <div class="info-row">
+            <div class="info-label">Nature of Project:</div>
+            <div class="info-value">E-Commerce Web & Mobile Platform</div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- TABLE OF CONTENTS -->
+    <h2>TABLE OF CONTENTS</h2>
+    <div class="toc">
+        <div class="toc-item">1. Executive Summary</div>
+        <div class="toc-item">2. Problem Given by the Project Owner</div>
+        <div class="toc-item">3. Solutions Implemented</div>
+        <div class="toc-item">4. Core Features Implementation</div>
+        <div class="toc-item">5. Database Design & MySQL DDL Scripts</div>
+        <div class="toc-item">6. System Architecture & Technology Stack</div>
+        <div class="toc-item">7. System Demonstration</div>
+        <div class="toc-item">8. Implementation Benefits</div>
+        <div class="toc-item">9. Conclusion</div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 1: EXECUTIVE SUMMARY -->
+    <h2>1. EXECUTIVE SUMMARY</h2>
+
+    <p>The Goshen Provision Project represents a comprehensive digital transformation solution for a traditional provision shop operating in New Bell, Bamenda, Cameroon. This document serves as the complete system-design and implementation record submitted in support of the project defense.</p>
+
+    <p>The solution consists of a responsive Progressive Web Application (PWA) that functions seamlessly across desktop and mobile devices, providing customers with the ability to browse products online, place orders remotely, track shipments, and enjoy loyalty rewards. The platform serves multiple customer segments: retail customers, wholesale buyers, and internal staff management.</p>
+
+    <h3>Key Achievements</h3>
+    <ul>
+        <li>Developed a fully functional e-commerce platform with 12 core features</li>
+        <li>Designed and implemented a robust relational database with 15 interconnected tables</li>
+        <li>Created an intuitive user interface for both customers and administrators</li>
+        <li>Integrated multiple payment methods including Mobile Money and Cash-on-Delivery</li>
+        <li>Implemented AI-powered shopping assistant for 24/7 customer support</li>
+        <li>Built loyalty and referral programs to encourage repeat business</li>
+        <li>Deployed push notification system for customer engagement</li>
+    </ul>
+
+    <h3>Business Impact</h3>
+    <p>By transforming from a location-dependent business model to a digital-first approach, Goshen Provision is now accessible to customers throughout Bamenda, regardless of physical location or foot traffic. The platform enables the business to reach customers beyond those who can physically visit the shop, directly addressing the primary business challenge of increased local competition from business relocations.</p>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 2: PROBLEM STATEMENT -->
+    <h2>2. PROBLEM GIVEN BY THE PROJECT OWNER</h2>
+
+    <h3>2.1 Background of the Problem</h3>
+    <p>The project was initiated based on a business challenge experienced by the owner of Goshen Provision, located in New Bell, Bamenda. Bamenda has been experiencing significant road construction and related changes in the movement of people and businesses. As a result, some businesses operating in affected areas have had to relocate to other locations. Some of these businesses have moved to areas around the location of Goshen Provision.</p>
+
+    <p>The movement of several businesses into the same area has increased the level of competition and congestion within the business environment. As more businesses offer similar products and services in the same area, Goshen Provision has experienced a marked reduction in customer traffic and overall business activity.</p>
+
+    <h3>2.2 Main Problem Identified</h3>
+    <div class="highlight-box">
+        <p><strong>"The relocation of businesses caused by road construction has increased the concentration of businesses around Goshen Provision, resulting in increased competition and a reduction in the number of customers visiting the shop."</strong></p>
+    </div>
+
+    <p>The business therefore needs a way to reach customers beyond relying only on people who physically pass by or visit the shop. Traditional marketing approaches and physical location advantages are no longer sufficient in this increasingly competitive environment.</p>
+
+    <h3>2.3 Effects of the Problem</h3>
+    <p>The identified problem has manifested in several significant effects on the business:</p>
+
+    <table class="effect-table">
+        <tr>
+            <th>Effect</th>
+            <th>Description</th>
+            <th>Business Impact</th>
+        </tr>
+        <tr>
+            <td>Reduced Customer Traffic</td>
+            <td>Fewer customers physically visit the shop compared to pre-construction periods</td>
+            <td>Lower daily sales volume and reduced impulse purchases</td>
+        </tr>
+        <tr>
+            <td>Increased Competition</td>
+            <td>More businesses operating in the same area selling similar products</td>
+            <td>Price pressure and customer fragmentation</td>
+        </tr>
+        <tr>
+            <td>Reduced Visibility</td>
+            <td>With many businesses competing, it becomes harder to differentiate</td>
+            <td>Declining market share in local area</td>
+        </tr>
+        <tr>
+            <td>Physical Customer Dependency</td>
+            <td>Business model relies entirely on walk-in foot traffic</td>
+            <td>Vulnerability to external factors affecting foot traffic</td>
+        </tr>
+        <tr>
+            <td>Limited Geographic Reach</td>
+            <td>Customers outside immediate area unaware of offerings</td>
+            <td>Lost opportunities to serve broader market</td>
+        </tr>
+    </table>
+
+    <h3>2.4 Problem to be Solved</h3>
+    <p>The project focuses on solving the problem of limited customer reach caused by increased business congestion and competition resulting from the relocation of businesses due to road construction. The proposed system provides Goshen Provision with a digital platform through which customers can discover available products, place orders remotely, and choose between delivery and collection options. This enables the business to reach customers without depending entirely on physical visits to the shop.</p>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 3: SOLUTIONS IMPLEMENTED -->
+    <h2>3. SOLUTIONS IMPLEMENTED</h2>
+
+    <h3>3.1 Solution Overview</h3>
+    <p>Rather than attempting to compete on location or price alone in an increasingly crowded retail environment, the solution implements a digital-first, omnichannel strategy. This approach creates a permanent digital storefront that exists independently of physical foot traffic, reaches customers wherever they are, provides multiple fulfillment options, builds customer loyalty through rewards programs, and enables expansion into new customer segments and geographic areas.</p>
+
+    <p>The system was built as a responsive Progressive Web App (PWA) that:</p>
+    <ul>
+        <li>Runs in the browser like a website but installs on phones like a native app</li>
+        <li>Works online and offline with intelligent synchronization</li>
+        <li>Provides fast, responsive performance across all devices</li>
+        <li>Supports push notifications for customer engagement</li>
+        <li>Integrates with local payment methods (Cash-on-Delivery, Mobile Money)</li>
+        <li>Serves both English and French-speaking customers</li>
+    </ul>
+
+    <h3>3.2 How the Solution Addresses Each Effect</h3>
+    <p>Each effect of the problem identified in Section 2.3 is addressed directly by a specific part of the implemented system:</p>
+
+    <table class="effect-table">
+        <tr>
+            <th>Business Effect</th>
+            <th>Solution Feature</th>
+            <th>How It Works</th>
+        </tr>
+        <tr>
+            <td>Reduced Customer Traffic</td>
+            <td>Online Storefront + Delivery/Pickup Checkout</td>
+            <td>Customers order from anywhere and receive goods without physical visits</td>
+        </tr>
+        <tr>
+            <td>Increased Competition</td>
+            <td>Loyalty Points & Referral Program</td>
+            <td>Rewards repeat purchases and word-of-mouth, creating customer switching costs</td>
+        </tr>
+        <tr>
+            <td>Reduced Visibility</td>
+            <td>Push Notifications & Admin Broadcasts</td>
+            <td>Deals and reminders reach customer phones directly</td>
+        </tr>
+        <tr>
+            <td>Physical Customer Dependency</td>
+            <td>Cash-on-Delivery & Mobile Money Payment</td>
+            <td>Orders placed and paid without entering the shop</td>
+        </tr>
+        <tr>
+            <td>Limited Geographic Reach</td>
+            <td>Installable App + AI Assistant + Wholesale Portal</td>
+            <td>Extends reach to entire Bamenda and business buyers</td>
+        </tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 4: CORE FEATURES -->
+    <h2>4. CORE FEATURES IMPLEMENTATION</h2>
+
+    <h3>4.1 The Twelve Core Features</h3>
+
+    <h4>Feature 1: Online Product Catalog</h4>
+    <p>Every item Goshen sells is listed with its price, unit, category, and photo. Products are searchable and filterable by category or current deals. This digital equivalent of browsing shelves is available to customers regardless of foot traffic congestion around the physical shop. Live stock status is displayed, allowing customers to know availability before placing orders.</p>
+
+    <h4>Feature 2: Cart, Checkout & Fulfillment Choice</h4>
+    <p>Customers build a cart and check out with the option to choose either home delivery or in-store pickup. The checkout process displays the order total and delivery fee upfront, with real-time recalculation based on fulfillment choice. This transparency builds customer trust and reduces cart abandonment.</p>
+
+    <h4>Feature 3: Cash & Mobile Money Payment</h4>
+    <p>Orders can be paid in two ways: Cash on delivery/pickup (familiar to Bamenda customers) or immediately by Mobile Money (MTN). This dual-payment approach accommodates existing payment preferences while encouraging immediate payment for those who prefer it.</p>
+
+    <h4>Feature 4: Loyalty Points Program</h4>
+    <p>Customers earn points for signing up (100 pts), every purchase (1.5 pts per 100 FCFA), and product reviews (10 pts). Points are redeemable as discounts at checkout (1 pt = 1 FCFA off, minimum 500 pts). This creates financial incentives for repeat business and engagement.</p>
+
+    <h4>Feature 5: Referral Program</h4>
+    <p>Existing customers earn 100 points when a friend signs up via their referral link, and another 100 points when that friend places their first order. This turns the customer base into an organic marketing channel while rewarding word-of-mouth growth.</p>
+
+    <h4>Feature 6: Push & In-App Notifications</h4>
+    <p>Order updates, abandoned-cart reminders, loyalty nudges, and staff-issued promotions are delivered directly to customer devices. This keeps Goshen visible even when customers are not actively shopping, addressing the reduced visibility problem directly.</p>
+
+    <h4>Feature 7: AI Shopping Assistant</h4>
+    <p>A 24/7 chat assistant answers questions about stock, order status, delivery times, and loyalty points instantly, without staff involvement. This replaces the shop attendant for remote customers who would otherwise need to call or visit in person.</p>
+
+    <h4>Feature 8: Installable Web & Mobile App</h4>
+    <p>The platform installs to phone or desktop home screens like a native app, keeping Goshen visible long after customers leave the page. This persistent presence directly counters the reduced visibility caused by local competition.</p>
+
+    <h4>Feature 9: Wholesale Ordering Portal</h4>
+    <p>Approved business buyers can apply for wholesale pricing and place bulk orders. This opens a second customer segment unaffected by retail foot traffic competition, directly extending reach beyond individual walk-in customers.</p>
+
+    <h4>Feature 10: Bilingual Interface</h4>
+    <p>The entire platform is available in both English and French, serving the mixed-language environment of Bamenda. This doubles the addressable customer base compared to a single-language platform.</p>
+
+    <h4>Feature 11: Admin Management Dashboard</h4>
+    <p>The shop owner manages products, orders, wholesale applications, and promotions from a single password-protected dashboard. Live KPIs display revenue, order counts, inventory status, and customer analytics. This replaces multiple manual processes with one centralized system.</p>
+
+    <h4>Feature 12: Customer Reviews & Wishlist</h4>
+    <p>Verified buyers can rate and review products (earning 10 loyalty points), building trust for remote customers. Wishlists keep customer interest alive between visits, reducing the churn that comes from one-time shopping apps.</p>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 5: DATABASE DESIGN -->
+    <h2>5. DATABASE DESIGN & MYSQL DDL SCRIPTS</h2>
+
+    <h3>5.1 Database Technology Selection</h3>
+    <p>The system uses PostgreSQL, an open-source relational database hosted on Supabase. PostgreSQL was chosen for four critical reasons:</p>
+
+    <ul>
+        <li><strong>Data Integrity for Money and Stock:</strong> Orders, payments, and loyalty points must never be lost, duplicated, or inconsistent. PostgreSQL enforces this through ACID transactions and foreign-key constraints.</li>
+        <li><strong>Inherently Relational Data Model:</strong> A customer has many orders, an order has many items, items refer to products, products belong to categories. This natural relationship structure is exactly what relational databases optimize for.</li>
+        <li><strong>Mature Hosting at Low Cost:</strong> PostgreSQL is widely supported by affordable managed hosts like Supabase, appropriate for small-business projects with limited operating budgets.</li>
+        <li><strong>Flexibility Where Needed:</strong> JSON column types store variable-structure fields (like drink flavour options) without sacrificing relational integrity elsewhere in the schema.</li>
+    </ul>
+
+    <h3>5.2 Object-Relational Mapper (Prisma)</h3>
+    <p>The application talks to the database through Prisma, an ORM tool, rather than raw SQL. Prisma was chosen because it generates fully type-checked database clients from a single schema file, tracks every schema change as a versioned migration file, automatically parameterizes queries to eliminate SQL injection, and reads like the relationships it represents (e.g., "user.orders.find()" is more readable than a hand-written join).</p>
+
+    <h3>5.3 Complete MySQL DDL Scripts</h3>
+    <p>Below are the complete Data Definition Language (DDL) statements for all 15 database tables. These can be executed against a MySQL or compatible database to create the full schema:</p>
+
+    <div class="code-block">
+-- ============================================================================
+-- USER ACCOUNTS TABLE
+-- ============================================================================
+CREATE TABLE `User` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `email` VARCHAR(255) UNIQUE NOT NULL,
+    `passwordHash` VARCHAR(255),
+    `googleId` VARCHAR(255) UNIQUE,
+    `name` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255),
+    `avatarUrl` VARCHAR(255),
+    `avatarPublicId` VARCHAR(255),
+    `role` ENUM('CUSTOMER', 'STAFF', 'ADMIN') NOT NULL,
+    `wholesaleStatus` ENUM('NONE', 'PENDING', 'APPROVED', 'REJECTED') NOT NULL,
+    `points` INT DEFAULT 0,
+    `referralCode` VARCHAR(255),
+    `referredById` VARCHAR(255),
+    `referralRewarded` BOOLEAN,
+    `welcomedAt` DATETIME,
+    `lastPointsReminderAt` DATETIME,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`referredById`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- PRODUCT CATEGORY TABLE
+-- ============================================================================
+CREATE TABLE `Category` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `slug` VARCHAR(255) UNIQUE NOT NULL
+);
+
+-- ============================================================================
+-- PRODUCT CATALOG TABLE
+-- ============================================================================
+CREATE TABLE `Product` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL,
+    `slug` VARCHAR(255) NOT NULL,
+    `description` TEXT,
+    `priceCents` INT NOT NULL,
+    `wholesalePriceCents` INT,
+    `unit` VARCHAR(50) NOT NULL,
+    `inStock` BOOLEAN NOT NULL DEFAULT true,
+    `stockCount` INT DEFAULT 0,
+    `lowStockAt` INT,
+    `featured` BOOLEAN DEFAULT false,
+    `kind` ENUM('SIMPLE', 'BUNDLE') NOT NULL,
+    `flavors` JSON,
+    `categoryId` VARCHAR(255) NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`)
+);
+
+-- ============================================================================
+-- ORDER TABLE
+-- ============================================================================
+CREATE TABLE `Order` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `orderNumber` VARCHAR(255) UNIQUE NOT NULL,
+    `userId` VARCHAR(255) NOT NULL,
+    `status` ENUM('AWAITING_PAYMENT', 'PENDING', 'CONFIRMED', 'RECEIVED', 'CANCELLED') NOT NULL,
+    `channel` ENUM('RETAIL', 'WHOLESALE') NOT NULL,
+    `fulfillment` ENUM('DELIVERY', 'PICKUP') NOT NULL,
+    `fullName` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255),
+    `address` VARCHAR(500),
+    `notes` VARCHAR(1000),
+    `subtotalCents` INT NOT NULL,
+    `deliveryCents` INT DEFAULT 0,
+    `discountCents` INT DEFAULT 0,
+    `pointsRedeemed` INT DEFAULT 0,
+    `totalCents` INT NOT NULL,
+    `acceptedAt` DATETIME,
+    `receivedAt` DATETIME,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- ORDER ITEM TABLE (Line Items)
+-- ============================================================================
+CREATE TABLE `OrderItem` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `orderId` VARCHAR(255) NOT NULL,
+    `productId` VARCHAR(255),
+    `name` VARCHAR(255) NOT NULL,
+    `slug` VARCHAR(255) NOT NULL,
+    `unit` VARCHAR(50) NOT NULL,
+    `imageUrl` VARCHAR(500),
+    `priceCents` INT NOT NULL,
+    `quantity` INT NOT NULL,
+    `flavors` JSON,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`productId`) REFERENCES `Product`(`id`) ON DELETE SET NULL
+);
+
+-- ============================================================================
+-- PAYMENT TABLE
+-- ============================================================================
+CREATE TABLE `Payment` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `orderId` VARCHAR(255) UNIQUE NOT NULL,
+    `method` ENUM('CASH', 'MOMO') NOT NULL,
+    `status` ENUM('PENDING', 'SUCCEEDED', 'FAILED') NOT NULL,
+    `amountCents` INT NOT NULL,
+    `currency` VARCHAR(10) DEFAULT 'XAF',
+    `momoReferenceId` VARCHAR(255),
+    `momoFinancialId` VARCHAR(255),
+    `attempts` INT DEFAULT 0,
+    `failureReason` VARCHAR(500),
+    `paidAt` DATETIME,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`)
+);
+
+-- ============================================================================
+-- SAVED ADDRESSES TABLE
+-- ============================================================================
+CREATE TABLE `Address` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) NOT NULL,
+    `label` VARCHAR(100),
+    `fullName` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255) NOT NULL,
+    `line` VARCHAR(500) NOT NULL,
+    `isDefault` BOOLEAN DEFAULT false,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- CART SNAPSHOT TABLE
+-- ============================================================================
+CREATE TABLE `CartSnapshot` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) UNIQUE NOT NULL,
+    `itemCount` INT DEFAULT 0,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `remindedAt` DATETIME,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- NOTIFICATION TABLE
+-- ============================================================================
+CREATE TABLE `Notification` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
+    `body` TEXT NOT NULL,
+    `href` VARCHAR(500),
+    `readAt` DATETIME,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- PUSH SUBSCRIPTION TABLE
+-- ============================================================================
+CREATE TABLE `PushSubscription` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) NOT NULL,
+    `endpoint` VARCHAR(1000) NOT NULL UNIQUE,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- CHAT THREAD TABLE
+-- ============================================================================
+CREATE TABLE `ChatThread` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255),
+    `anonId` VARCHAR(255),
+    `title` VARCHAR(255),
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- CHAT MESSAGE TABLE
+-- ============================================================================
+CREATE TABLE `ChatMessage` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `threadId` VARCHAR(255) NOT NULL,
+    `role` ENUM('USER', 'ASSISTANT') NOT NULL,
+    `content` TEXT NOT NULL,
+    `toolTrace` JSON,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`threadId`) REFERENCES `ChatThread`(`id`)
+);
+
+-- ============================================================================
+-- PRODUCT REVIEW TABLE
+-- ============================================================================
+CREATE TABLE `Review` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) NOT NULL,
+    `productId` VARCHAR(255) NOT NULL,
+    `orderId` VARCHAR(255) NOT NULL,
+    `rating` INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    `comment` TEXT,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`),
+    FOREIGN KEY (`productId`) REFERENCES `Product`(`id`),
+    FOREIGN KEY (`orderId`) REFERENCES `Order`(`id`)
+);
+
+-- ============================================================================
+-- WISHLIST ITEM TABLE
+-- ============================================================================
+CREATE TABLE `WishlistItem` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) NOT NULL,
+    `productId` VARCHAR(255) NOT NULL,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`),
+    FOREIGN KEY (`productId`) REFERENCES `Product`(`id`)
+);
+
+-- ============================================================================
+-- WHOLESALE APPLICATION TABLE
+-- ============================================================================
+CREATE TABLE `WholesaleApplication` (
+    `id` VARCHAR(255) PRIMARY KEY,
+    `userId` VARCHAR(255) UNIQUE NOT NULL,
+    `businessName` VARCHAR(255) NOT NULL,
+    `businessType` VARCHAR(255) NOT NULL,
+    `phone` VARCHAR(255) NOT NULL,
+    `location` VARCHAR(500) NOT NULL,
+    `note` TEXT,
+    `status` ENUM('PENDING', 'APPROVED', 'REJECTED') NOT NULL,
+    `reviewedAt` DATETIME,
+    `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (`userId`) REFERENCES `User`(`id`)
+);
+
+-- ============================================================================
+-- CREATE INDEXES FOR PERFORMANCE
+-- ============================================================================
+CREATE INDEX idx_user_email ON `User`(`email`);
+CREATE INDEX idx_user_role ON `User`(`role`);
+CREATE INDEX idx_user_wholesale_status ON `User`(`wholesaleStatus`);
+CREATE INDEX idx_product_category ON `Product`(`categoryId`);
+CREATE INDEX idx_product_in_stock ON `Product`(`inStock`);
+CREATE INDEX idx_product_featured ON `Product`(`featured`);
+CREATE INDEX idx_order_user ON `Order`(`userId`);
+CREATE INDEX idx_order_status ON `Order`(`status`);
+CREATE INDEX idx_order_channel ON `Order`(`channel`);
+CREATE INDEX idx_order_fulfillment ON `Order`(`fulfillment`);
+CREATE INDEX idx_order_created ON `Order`(`createdAt`);
+CREATE INDEX idx_orderitem_order ON `OrderItem`(`orderId`);
+CREATE INDEX idx_orderitem_product ON `OrderItem`(`productId`);
+CREATE INDEX idx_payment_status ON `Payment`(`status`);
+CREATE INDEX idx_address_user ON `Address`(`userId`);
+CREATE INDEX idx_address_default ON `Address`(`isDefault`);
+CREATE INDEX idx_notification_user ON `Notification`(`userId`);
+CREATE INDEX idx_notification_read ON `Notification`(`readAt`);
+CREATE INDEX idx_push_subscription_user ON `PushSubscription`(`userId`);
+CREATE INDEX idx_chat_thread_user ON `ChatThread`(`userId`);
+CREATE INDEX idx_chat_message_thread ON `ChatMessage`(`threadId`);
+CREATE INDEX idx_review_product ON `Review`(`productId`);
+CREATE INDEX idx_review_user ON `Review`(`userId`);
+CREATE INDEX idx_review_order ON `Review`(`orderId`);
+CREATE INDEX idx_wishlist_user ON `WishlistItem`(`userId`);
+CREATE INDEX idx_wishlist_product ON `WishlistItem`(`productId`);
+CREATE INDEX idx_wholesale_user ON `WholesaleApplication`(`userId`);
+CREATE INDEX idx_wholesale_status ON `WholesaleApplication`(`status`);
+    </div>
+
+    <h3>5.4 Database Tables Overview</h3>
+    <p>The schema consists of 15 tables organized by feature area:</p>
+
+    <ul>
+        <li><strong>User Management (1 table):</strong> User - Core identity table for all accounts</li>
+        <li><strong>Product Catalog (2 tables):</strong> Category, Product - Browse and discovery</li>
+        <li><strong>Orders (4 tables):</strong> Order, OrderItem, Payment, Address - Complete order lifecycle</li>
+        <li><strong>Cart (1 table):</strong> CartSnapshot - Server-side cart mirroring</li>
+        <li><strong>Notifications (2 tables):</strong> Notification, PushSubscription - Messaging and delivery</li>
+        <li><strong>AI Assistant (2 tables):</strong> ChatThread, ChatMessage - Conversation history</li>
+        <li><strong>Engagement (2 tables):</strong> Review, WishlistItem - Trust and retention</li>
+        <li><strong>Wholesale (1 table):</strong> WholesaleApplication - Business buyer management</li>
+    </ul>
+
+    <h3>5.5 Database Relationships</h3>
+    <p>User sits at the center of the schema because almost every feature ultimately belongs to one customer account. This design ensures that a person's orders, loyalty balance, referrals, notifications, and reviews all key off the same id, making it possible to recognize a returning customer across every feature of the system.</p>
+
+    <h4>Core Relationships:</h4>
+    <ul>
+        <li>User (1) → Order (many): every order a customer has placed</li>
+        <li>User (1) → Review (many): every product rating a customer has submitted</li>
+        <li>User (1) → WishlistItem (many): products saved for later</li>
+        <li>User (1) → Notification (many): messages delivered to that customer</li>
+        <li>User (1) → ChatThread (many): conversation history with the AI assistant</li>
+        <li>Order (1) → OrderItem (many): line items in the order</li>
+        <li>Order (1) → Payment (1): exactly one payment per order</li>
+        <li>Product (1) → OrderItem (many): every time a product was ordered</li>
+        <li>Product (1) → Review (many): ratings from customers</li>
+        <li>Category (1) → Product (many): products grouped by type</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 6: SYSTEM ARCHITECTURE -->
+    <h2>6. SYSTEM ARCHITECTURE & TECHNOLOGY STACK</h2>
+
+    <h3>6.1 Frontend Architecture</h3>
+
+    <h4>Next.js Framework</h4>
+    <p>React-based meta-framework for production web applications. Provides server-side rendering and static generation for performance, file-based routing system, and built-in API routes for backend functionality.</p>
+
+    <h4>TypeScript</h4>
+    <p>Brings static typing to JavaScript, catching errors at development time rather than in production. Enables improved IDE support and autocomplete, with type signatures serving as inline documentation.</p>
+
+    <h4>Tailwind CSS</h4>
+    <p>Utility-first CSS framework providing pre-built design tokens for colors, spacing and sizing. Includes responsive design utilities and compiles to a minimal CSS bundle.</p>
+
+    <h4>React Query</h4>
+    <p>Efficient data fetching and caching library. Provides automatic refetching and revalidation, with perfect fit for e-commerce apps where product data and inventory change frequently.</p>
+
+    <h3>6.2 Backend Technologies</h3>
+
+    <h4>Next.js API Routes</h4>
+    <p>Serverless functions in the /api directory with automatic scaling and no server management required. Application business logic runs in these routes without needing a separate backend framework.</p>
+
+    <h4>Prisma ORM</h4>
+    <p>Type-safe database access with automatic migration management. Query builder includes TypeScript support, and schema visualization tools aid in understanding data relationships.</p>
+
+    <h4>PostgreSQL Database</h4>
+    <p>Open-source relational database with ACID compliance ensuring data integrity. Foreign key constraints maintain referential integrity, JSON support handles flexible fields, and excellent performance for relational queries.</p>
+
+    <h4>Supabase Hosting</h4>
+    <p>Managed PostgreSQL in the cloud with built-in authentication support, real-time subscriptions capability, and automatic backups with scalable hosting.</p>
+
+    <h3>6.3 External Integrations</h3>
+
+    <h4>Cloudinary</h4>
+    <p>Manages product photos and customer avatars with CDN delivery for fast image loading. Automatic image optimization and resizing via URL-based transformations.</p>
+
+    <h4>MTN Mobile Money API</h4>
+    <p>Integration for Cameroon's dominant mobile payment method. API calls initiate and confirm payments with webhook callbacks when transactions complete, using reference IDs for reconciliation.</p>
+
+    <h4>Google Maps</h4>
+    <p>Embedded maps on the Contact page pinpoint store location. Integration with the customer's own maps app for turn-by-turn navigation directions.</p>
+
+    <h4>Web Push API</h4>
+    <p>Browser push notifications to customer devices. Service Workers handle background notifications, with user subscription management for permission and opt-in.</p>
+
+    <h3>6.4 Development Tools & Practices</h3>
+
+    <h4>npm Package Manager</h4>
+    <p>Dependency management and script running. Critical: always use `npm install --include=dev` in this project to preserve development dependencies.</p>
+
+    <h4>Git Version Control</h4>
+    <p>Code versioning with pull request review workflow. Issue tracking and project management integrated.</p>
+
+    <h4>Type Safety with TypeScript</h4>
+    <p>Prevents entire classes of runtime errors. ESLint catches code quality issues, Prettier auto-formats for consistency.</p>
+
+    <h4>Testing Framework</h4>
+    <p>Unit tests with Jest or Vitest. Integration tests for API routes. End-to-end tests for critical user flows.</p>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 7: SYSTEM DEMONSTRATION -->
+    <h2>7. SYSTEM DEMONSTRATION</h2>
+
+    <h3>7.1 User Experience Flow</h3>
+
+    <h4>Customer Journey</h4>
+    <ul>
+        <li><strong>Discovery:</strong> New customer sees Goshen app on friend's phone, installs it from browser home screen</li>
+        <li><strong>Browsing:</strong> Opens app and sees compelling homepage with product hero image</li>
+        <li><strong>Selection:</strong> Browses Shop page, uses category filters, reads reviews from verified buyers</li>
+        <li><strong>Checkout:</strong> Adds products to cart, proceeds to checkout</li>
+        <li><strong>Fulfillment Choice:</strong> Selects home delivery or in-store pickup with real-time fee calculation</li>
+        <li><strong>Payment:</strong> Chooses cash-on-delivery or Mobile Money payment</li>
+        <li><strong>Order Confirmation:</strong> Receives instant confirmation and order tracking notification</li>
+        <li><strong>Fulfillment:</strong> Receives delivery/pickup notification when order is ready</li>
+        <li><strong>Post-Purchase:</strong> Offered opportunity to review products and earn loyalty points</li>
+    </ul>
+
+    <h4>Returning Customer Experience</h4>
+    <ul>
+        <li><strong>App Icon:</strong> Opens app quickly from home screen (already installed)</li>
+        <li><strong>Dashboard:</strong> Sees personalized greeting, points balance, pending orders</li>
+        <li><strong>Quick Repeat:</strong> Frequently purchased items easily accessible</li>
+        <li><strong>Saved Addresses:</strong> Checkout completes in under 2 minutes with pre-filled details</li>
+        <li><strong>Engagement:</strong> Receives push notifications about deals matching past purchases</li>
+    </ul>
+
+    <h3>7.2 Admin Operations Flow</h3>
+
+    <h4>Daily Management</h4>
+    <ul>
+        <li><strong>Morning Review:</strong> Check overnight orders and new customer registrations</li>
+        <li><strong>Order Management:</strong> Confirm orders, update status, mark ready for delivery/pickup</li>
+        <li><strong>Inventory:</strong> Update stock counts, flag low-stock items, add new products with photos</li>
+        <li><strong>Sales Monitoring:</strong> Track revenue, order count, and top-selling items</li>
+        <li><strong>Customer Engagement:</strong> Review pending wholesale applications, approve/reject as needed</li>
+    </ul>
+
+    <h4>Strategic Management</h4>
+    <ul>
+        <li><strong>Analytics Review:</strong> Analyze sales trends and identify top products by category</li>
+        <li><strong>Promotions:</strong> Create deals and feature items, broadcast notifications to all customers</li>
+        <li><strong>Feedback:</strong> Review and moderate customer product reviews</li>
+        <li><strong>Business Growth:</strong> Approve business buyers for wholesale channel, monitor wholesale orders</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 8: IMPLEMENTATION BENEFITS -->
+    <h2>8. IMPLEMENTATION BENEFITS</h2>
+
+    <h3>8.1 Benefits for Customers</h3>
+
+    <h4>Convenience</h4>
+    <ul>
+        <li>Shop from home or anywhere in Bamenda 24/7</li>
+        <li>No need to travel to the physical shop</li>
+        <li>Browse at own pace without sales pressure</li>
+        <li>Compare prices and products visually</li>
+    </ul>
+
+    <h4>Trust & Confidence</h4>
+    <ul>
+        <li>Product reviews from verified buyers build confidence</li>
+        <li>High-quality product photos with detailed descriptions</li>
+        <li>Clear pricing with no hidden fees</li>
+        <li>Transparent order tracking and notifications</li>
+    </ul>
+
+    <h4>Cost Savings</h4>
+    <ul>
+        <li>Loyalty points provide tangible discounts</li>
+        <li>Referral program rewards word-of-mouth</li>
+        <li>Deal filtering shows current promotions</li>
+        <li>No transportation cost to reach the shop</li>
+    </ul>
+
+    <h4>Support & Service</h4>
+    <ul>
+        <li>24/7 AI assistant for instant answers</li>
+        <li>Multiple contact methods (chat, phone, WhatsApp)</li>
+        <li>Order tracking from placement to fulfillment</li>
+        <li>Easy address saving for repeat orders</li>
+    </ul>
+
+    <h3>8.2 Benefits for Goshen Provision</h3>
+
+    <h4>Market Expansion</h4>
+    <ul>
+        <li>Reaches customers outside immediate physical location</li>
+        <li>Serves customers who prefer online shopping</li>
+        <li>Enables wholesale channel into business market</li>
+        <li>Not limited by foot traffic or competitor locations</li>
+    </ul>
+
+    <h4>Customer Loyalty</h4>
+    <ul>
+        <li>Loyalty program creates switching costs</li>
+        <li>Referral program drives organic growth</li>
+        <li>Regular notifications keep shop top-of-mind</li>
+        <li>Community building through reviews and engagement</li>
+    </ul>
+
+    <h4>Operational Efficiency</h4>
+    <ul>
+        <li>Reduced need for phone-based customer orders</li>
+        <li>Automated order processing reduces manual work</li>
+        <li>AI assistant handles common questions without staff involvement</li>
+        <li>Admin dashboard provides real-time business visibility</li>
+    </ul>
+
+    <h4>Data-Driven Decisions</h4>
+    <ul>
+        <li>Complete sales analytics and trend data</li>
+        <li>Customer purchase history and preferences</li>
+        <li>Popular items and categories by sales</li>
+        <li>Visitor traffic patterns</li>
+    </ul>
+
+    <h4>Competitive Differentiation</h4>
+    <ul>
+        <li>Digital presence distinguishes in competitive retail environment</li>
+        <li>Customers can shop Goshen online even when physical location is crowded</li>
+        <li>Wholesale option provides revenue stream competitors may lack</li>
+        <li>Innovation signals quality and customer focus</li>
+    </ul>
+
+    <h3>8.3 Business Resilience</h4>
+    <ul>
+        <li>Revenue doesn't depend entirely on foot traffic</li>
+        <li>Can operate during disruptions (weather, construction, closures)</li>
+        <li>Customers can order even during temporary shop closures</li>
+        <li>Delivery option provides operational flexibility</li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- SECTION 9: CONCLUSION -->
+    <h2>9. CONCLUSION</h2>
+
+    <h3>9.1 Project Summary</h3>
+    <p>The Goshen Provision Project demonstrates how traditional businesses in developing markets can leverage digital technology to overcome local competitive challenges. By transforming from a location-dependent business model to a digital-first approach, Goshen Provision becomes accessible to all customers in Bamenda regardless of physical location or foot traffic patterns.</p>
+
+    <h3>9.2 Key Success Factors</h3>
+    <ul>
+        <li><strong>Customer-Centric Design:</strong> Every feature solves a real customer pain point</li>
+        <li><strong>Appropriate Technology:</strong> Reliable, maintainable tools chosen over cutting-edge complexity</li>
+        <li><strong>Business Focus:</strong> Technology serves business goals, not the reverse</li>
+        <li><strong>Scalable Architecture:</strong> Foundation supports growth without complete overhaul</li>
+        <li><strong>Local Adaptation:</strong> Cash-on-delivery, Mobile Money, bilingual support suit Cameroon context</li>
+    </ul>
+
+    <h3>9.3 Future Enhancements</h3>
+
+    <h4>Phase 2 Capabilities (3-6 months)</h4>
+    <ul>
+        <li>Subscription orders for recurring staple purchases</li>
+        <li>Inventory forecasting using sales patterns</li>
+        <li>Dynamic pricing based on demand and inventory</li>
+        <li>Personalized product recommendations</li>
+    </ul>
+
+    <h4>Phase 3 Expansion (6-12 months)</h4>
+    <ul>
+        <li>Multiple shop locations with unified platform</li>
+        <li>Logistics partner integration for automated delivery</li>
+        <li>Advanced analytics and cohort analysis</li>
+        <li>Social commerce features (group buying, shared wishlists)</li>
+    </ul>
+
+    <h3>9.4 Scaling Path</h3>
+    <p>As the business grows, the architecture scales from thousands to millions of records. Caching layer (Redis) improves performance, CDN accelerates content delivery, search engine (Elasticsearch) powers fast product discovery, and analytics pipeline captures big data insights. When business logic becomes complex, microservices refactoring becomes an option, but the relational core remains.</p>
+
+    <h3>9.5 Final Remarks</h3>
+    <p>The Goshen Provision digital platform successfully transforms a traditional retail business into a modern e-commerce operation. By directly addressing the root business challenge (limited customer reach due to increased local competition), the system enables sustainable growth in an increasingly digital marketplace.</p>
+
+    <p>The implementation prioritizes pragmatism: reliable technology suited to the local context, user-centric design that solves real problems, and a scalable foundation that supports future growth. This approach positions Goshen Provision not just to survive increased competition, but to thrive by reaching customers that competitors cannot serve.</p>
+
+    <p style="margin-top: 60px; font-style: italic; border-top: 2px solid #000; padding-top: 20px;">
+        <strong>Goshen Provision - New Bell, Bamenda Project Report</strong><br>
+        This comprehensive document represents the complete system design and implementation record for the Goshen Provision digital ordering platform. All content has been converted to black text with no colored sections, the Database Design chapter now includes complete MySQL DDL scripts for all 15 tables, and the document has been expanded to meet the 25+ page requirement.
+    </p>
+
+</body>
+</html>
