@@ -131,27 +131,6 @@ export function AuthForm({ mode }: AuthFormProps) {
 
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="group flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-gradient-to-r from-slate-50 to-slate-100 hover:from-slate-100 hover:to-slate-200 border border-slate-200 hover:border-slate-300 text-slate-700 hover:text-slate-900 font-medium transition-all duration-200 mb-6 shadow-sm hover:shadow-md"
-      >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="group-hover:-translate-x-1 transition-transform duration-200"
-        >
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-        <span>Back to Home</span>
-      </button>
-
       <a
         href={googleStartHref(mode, safeNext, activeReferral)}
         className="btn btn-outline w-full"
