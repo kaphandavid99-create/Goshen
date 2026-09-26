@@ -243,6 +243,15 @@ export function IconBell(props: IconProps) {
   );
 }
 
+export function IconCopy(props: IconProps) {
+  return (
+    <svg {...icon(props)}>
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  );
+}
+
 // Google's actual brand mark (four-colour "G"), not a themed line icon — it
 // always renders in Google's own colours regardless of the site's theme.
 export function IconGoogle(props: IconProps) {

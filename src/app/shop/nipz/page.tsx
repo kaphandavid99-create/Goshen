@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { BookingForm } from "@/app/shop/nipz/booking-form";
 import { CakeGallery } from "@/app/shop/nipz/cake-gallery";
+import { AdminBookingLink } from "@/app/shop/nipz/admin-booking-link";
 import {
   IconArrowRight,
   IconCake,
@@ -13,6 +14,7 @@ import {
 } from "@/components/icons";
 import { NIPZ, STORE } from "@/lib/constants";
 import { getDict } from "@/lib/i18n/server";
+import { getCurrentUser } from "@/server/auth/current-user";
 import { listCakeItems } from "@/server/cakes/queries";
 import { getNipzContent } from "@/server/site/nipz";
 
@@ -22,11 +24,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function NipzPage() {
-  const [nipz, items, t] = await Promise.all([
+  const [nipz, items, t, user] = await Promise.all([
     getNipzContent(),
     listCakeItems(),
     getDict(),
+    getCurrentUser(),
   ]);
+
+  const isAdmin = user?.role === "ADMIN";
 
   return (
     <main className="nipz page-wrap flex-1 py-10 sm:py-12">
@@ -133,6 +138,12 @@ export default async function NipzPage() {
           ))}
         </div>
       </section>
+
+      {isAdmin ? (
+        <section className="mt-16">
+          <AdminBookingLink />
+        </section>
+      ) : null}
 
       <section id="book" className="mt-16 scroll-mt-24">
         <div className="nipz-book">
