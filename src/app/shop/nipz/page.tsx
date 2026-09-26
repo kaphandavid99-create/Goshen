@@ -20,7 +20,24 @@ import { getNipzContent } from "@/server/site/nipz";
 
 export async function generateMetadata(): Promise<Metadata> {
   const [nipz, t] = await Promise.all([getNipzContent(), getDict()]);
-  return { title: nipz.businessName, description: t.nipz.metaDescription };
+  const heroImage = nipz.images[0];
+
+  return {
+    title: nipz.businessName,
+    description: t.nipz.metaDescription,
+    openGraph: {
+      title: nipz.businessName,
+      description: t.nipz.metaDescription,
+      type: "website",
+      images: heroImage ? [{ url: heroImage.url, alt: heroImage.alt }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: nipz.businessName,
+      description: t.nipz.metaDescription,
+      images: heroImage ? [heroImage.url] : [],
+    },
+  };
 }
 
 export default async function NipzPage() {
