@@ -431,18 +431,29 @@ function WhyShopCard({
 
   return (
     <motion.div
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:border-accent/40 hover:shadow-[0_8px_20px_rgb(0_0_0/0.08)] dark:hover:shadow-[0_8px_20px_rgb(0_0_0/0.32)]"
-      whileHover={reduce ? undefined : { y: -4 }}
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/50 bg-card p-7 sm:p-8 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_16px_40px_rgb(0_0_0/0.12)] dark:hover:shadow-[0_16px_40px_rgb(0_0_0/0.4)]"
+      whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
       <span
         aria-hidden
-        className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
+        className="absolute inset-x-0 top-0 h-1.5 origin-left scale-x-0 bg-accent transition-transform duration-500 group-hover:scale-x-100"
       />
-      <span className="icon-well mb-4 inline-flex w-fit rounded-full bg-accent/10 text-accent">
-        <Icon className="size-6" />
+      <span
+        aria-hidden
+        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+      />
+
+      <span className="relative z-10 mb-6 inline-flex w-fit rounded-2xl bg-accent/15 p-4 text-accent transition-all duration-300 group-hover:bg-accent/20">
+        <Icon className="size-8" />
       </span>
-      <h3 className="font-semibold text-primary">{title}</h3>
-      <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{description}</p>
+
+      <h3 className="relative z-10 text-lg font-bold tracking-tight text-primary leading-snug">{title}</h3>
+      <p className="relative z-10 mt-3 flex-1 text-sm leading-7 text-muted-foreground">{description}</p>
+
+      <span
+        aria-hidden
+        className="absolute -left-4 -bottom-4 h-24 w-24 rounded-full bg-accent/3 transition-all duration-500 group-hover:scale-150"
+      />
     </motion.div>
   );
 }
