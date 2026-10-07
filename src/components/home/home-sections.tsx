@@ -443,36 +443,36 @@ function WhyShopCard({
       whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
       {/* Thin decorative left border with alternating accent dots */}
-      <span aria-hidden className="absolute left-0 top-0 h-full w-1 bg-orange-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute left-1.5 top-0 bottom-0 w-0.5 bg-green-500 z-50 pointer-events-none opacity-70" />
+      <span aria-hidden className="absolute left-0 top-0 h-full w-1 bg-orange-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute left-1.5 top-0 bottom-0 w-0.5 bg-green-500 z-10 pointer-events-none opacity-70" />
 
       {/* Thin decorative right border with alternating accent dots */}
-      <span aria-hidden className="absolute right-0 top-0 h-full w-1 bg-green-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute right-1.5 top-0 bottom-0 w-0.5 bg-orange-500 z-50 pointer-events-none opacity-70" />
+      <span aria-hidden className="absolute right-0 top-0 h-full w-1 bg-green-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute right-1.5 top-0 bottom-0 w-0.5 bg-orange-500 z-10 pointer-events-none opacity-70" />
 
       {/* Thin decorative top border */}
-      <span aria-hidden className="absolute top-0 left-0 h-1 w-full bg-orange-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute top-1.5 left-0 right-0 h-0.5 bg-green-500 z-50 pointer-events-none opacity-70" />
+      <span aria-hidden className="absolute top-0 left-0 h-1 w-full bg-orange-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute top-1.5 left-0 right-0 h-0.5 bg-green-500 z-10 pointer-events-none opacity-70" />
 
       {/* Decorative corner accent - top left */}
-      <span aria-hidden className="absolute top-3 left-3 w-6 h-0.5 bg-orange-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute top-3 left-3 w-0.5 h-6 bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-3 left-3 w-6 h-0.5 bg-orange-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute top-3 left-3 w-0.5 h-6 bg-green-500 z-10 pointer-events-none" />
 
       {/* Decorative corner accent - top right */}
-      <span aria-hidden className="absolute top-3 right-3 w-6 h-0.5 bg-green-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute top-3 right-3 w-0.5 h-6 bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-3 right-3 w-6 h-0.5 bg-green-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute top-3 right-3 w-0.5 h-6 bg-orange-500 z-10 pointer-events-none" />
 
       {/* Thin decorative bottom border */}
-      <span aria-hidden className="absolute bottom-0 left-0 h-1 w-full bg-green-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute bottom-1.5 left-0 right-0 h-0.5 bg-orange-500 z-50 pointer-events-none opacity-70" />
+      <span aria-hidden className="absolute bottom-0 left-0 h-1 w-full bg-green-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-1.5 left-0 right-0 h-0.5 bg-orange-500 z-10 pointer-events-none opacity-70" />
 
       {/* Decorative corner accent - bottom left */}
-      <span aria-hidden className="absolute bottom-3 left-3 w-6 h-0.5 bg-green-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute bottom-3 left-3 w-0.5 h-6 bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3 left-3 w-6 h-0.5 bg-green-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3 left-3 w-0.5 h-6 bg-orange-500 z-10 pointer-events-none" />
 
       {/* Decorative corner accent - bottom right */}
-      <span aria-hidden className="absolute bottom-3 right-3 w-6 h-0.5 bg-orange-500 z-50 pointer-events-none" />
-      <span aria-hidden className="absolute bottom-3 right-3 w-0.5 h-6 bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3 right-3 w-6 h-0.5 bg-orange-500 z-10 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3 right-3 w-0.5 h-6 bg-green-500 z-10 pointer-events-none" />
       <div
         className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
         style={{
