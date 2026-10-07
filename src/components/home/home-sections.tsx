@@ -442,21 +442,21 @@ function WhyShopCard({
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/50 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_16px_40px_rgb(0_0_0/0.12)] dark:hover:shadow-[0_16px_40px_rgb(0_0_0/0.4)]"
       whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
-      {/* Left edge stripes */}
-      <span aria-hidden className="absolute left-0 top-0 h-full w-1 bg-accent/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <span aria-hidden className="absolute left-2 top-0 h-full w-0.5 bg-accent/20" />
+      {/* Left edge stripes - Bold visible */}
+      <span aria-hidden className="absolute left-0 top-0 h-full w-2.5 bg-accent z-50 pointer-events-none" />
+      <span aria-hidden className="absolute left-3.5 top-0 h-full w-1.5 bg-accent/70 z-50 pointer-events-none" />
 
-      {/* Right edge stripes */}
-      <span aria-hidden className="absolute right-0 top-0 h-full w-1 bg-accent/30 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <span aria-hidden className="absolute right-2 top-0 h-full w-0.5 bg-accent/20" />
+      {/* Right edge stripes - Bold visible */}
+      <span aria-hidden className="absolute right-0 top-0 h-full w-2.5 bg-accent z-50 pointer-events-none" />
+      <span aria-hidden className="absolute right-3.5 top-0 h-full w-1.5 bg-accent/70 z-50 pointer-events-none" />
 
-      {/* Top edge stripes */}
-      <span aria-hidden className="absolute top-0 left-0 h-1 w-full bg-accent/20" />
-      <span aria-hidden className="absolute top-2 left-0 h-0.5 w-full bg-accent/10 opacity-60" />
+      {/* Top edge stripes - Bold visible */}
+      <span aria-hidden className="absolute top-0 left-0 h-2.5 w-full bg-accent z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-3.5 left-0 h-1.5 w-full bg-accent/70 z-50 pointer-events-none" />
 
-      {/* Bottom edge stripes */}
-      <span aria-hidden className="absolute bottom-0 left-0 h-1 w-full bg-accent/15 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-      <span aria-hidden className="absolute bottom-2 left-0 h-0.5 w-full bg-accent/10 opacity-40" />
+      {/* Bottom edge stripes - Bold visible */}
+      <span aria-hidden className="absolute bottom-0 left-0 h-2.5 w-full bg-accent z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3.5 left-0 h-1.5 w-full bg-accent/70 z-50 pointer-events-none" />
       <div
         className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
         style={{
