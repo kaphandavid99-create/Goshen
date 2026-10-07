@@ -452,7 +452,12 @@ function WhyShopCard({
         }}
       />
 
-      <div className="absolute inset-0 bg-black/25 transition-all duration-500 group-hover:bg-black/30" />
+      <div
+        className="absolute inset-0 transition-all duration-500"
+        style={{
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.65) 100%)",
+        }}
+      />
 
       <span
         aria-hidden
@@ -464,12 +469,12 @@ function WhyShopCard({
       />
 
       <div className="relative z-10 flex h-full flex-col p-7 sm:p-8">
-        <span className="mb-6 inline-flex w-fit rounded-2xl bg-accent/20 p-4 text-accent transition-all duration-300 group-hover:bg-accent/30 backdrop-blur-sm">
+        <span className="mb-6 inline-flex w-fit rounded-2xl bg-accent/25 p-4 text-accent transition-all duration-300 group-hover:bg-accent/35 backdrop-blur-md">
           <Icon className="size-8" />
         </span>
 
-        <h3 className="text-lg font-bold tracking-tight text-white leading-snug">{title}</h3>
-        <p className="mt-3 flex-1 text-sm leading-7 text-white/90">{description}</p>
+        <h3 className="text-lg font-bold tracking-tight text-white leading-snug drop-shadow-lg" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>{title}</h3>
+        <p className="mt-3 flex-1 text-sm leading-7 text-white drop-shadow-md" style={{ textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>{description}</p>
       </div>
 
       <span
