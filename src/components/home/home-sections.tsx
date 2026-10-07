@@ -368,26 +368,31 @@ export function WhyShopWithGoshen() {
       icon: IconTruck,
       title: t.home.whyShop?.fastDelivery || "Fast & Reliable Delivery",
       description: t.home.whyShop?.fastDeliveryDesc || "Same-day and next-day delivery options available for your convenience",
+      backgroundImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?w=800&q=80",
     },
     {
       icon: IconLeaf,
       title: t.home.whyShop?.premium || "Premium Quality Products",
       description: t.home.whyShop?.premiumDesc || "Carefully selected and curated items to meet the highest standards",
+      backgroundImage: "https://images.unsplash.com/photo-1488459716781-6818ecf01d64?w=800&q=80",
     },
     {
       icon: IconShield,
       title: t.home.whyShop?.secure || "Secure & Trusted",
       description: t.home.whyShop?.secureDesc || "100% secure transactions with buyer protection on every purchase",
+      backgroundImage: "https://images.unsplash.com/photo-1563013544-74d440642117?w=800&q=80",
     },
     {
       icon: IconUsers,
       title: t.home.whyShop?.community || "Loyal Community",
       description: t.home.whyShop?.communityDesc || "Join thousands of satisfied customers and earn rewards on every order",
+      backgroundImage: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&q=80",
     },
     {
       icon: IconCheck,
       title: t.home.whyShop?.support || "Expert Support",
       description: t.home.whyShop?.supportDesc || "Dedicated customer service team ready to help you 24/7",
+      backgroundImage: "https://images.unsplash.com/photo-1560264357-8d9766a67f5d?w=800&q=80",
     },
   ];
 
@@ -409,6 +414,7 @@ export function WhyShopWithGoshen() {
                 icon={benefit.icon}
                 title={benefit.title}
                 description={benefit.description}
+                backgroundImage={benefit.backgroundImage}
               />
             </StaggerItem>
           ))}
@@ -422,37 +428,48 @@ function WhyShopCard({
   icon: Icon,
   title,
   description,
+  backgroundImage,
 }: {
   icon: typeof IconTruck;
   title: string;
   description: string;
+  backgroundImage: string;
 }) {
   const reduce = useReducedMotion();
 
   return (
     <motion.div
-      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/50 bg-card p-7 sm:p-8 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_16px_40px_rgb(0_0_0/0.12)] dark:hover:shadow-[0_16px_40px_rgb(0_0_0/0.4)]"
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/50 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_16px_40px_rgb(0_0_0/0.12)] dark:hover:shadow-[0_16px_40px_rgb(0_0_0/0.4)]"
       whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110"
+        style={{ backgroundImage: `url(${backgroundImage})` }}
+      />
+
+      <div className="absolute inset-0 bg-black/45 transition-all duration-500 group-hover:bg-black/50" />
+
       <span
         aria-hidden
         className="absolute inset-x-0 top-0 h-1.5 origin-left scale-x-0 bg-accent transition-transform duration-500 group-hover:scale-x-100"
       />
       <span
         aria-hidden
-        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-accent/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-white/10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
       />
 
-      <span className="relative z-10 mb-6 inline-flex w-fit rounded-2xl bg-accent/15 p-4 text-accent transition-all duration-300 group-hover:bg-accent/20">
-        <Icon className="size-8" />
-      </span>
+      <div className="relative z-10 flex h-full flex-col p-7 sm:p-8">
+        <span className="mb-6 inline-flex w-fit rounded-2xl bg-accent/20 p-4 text-accent transition-all duration-300 group-hover:bg-accent/30 backdrop-blur-sm">
+          <Icon className="size-8" />
+        </span>
 
-      <h3 className="relative z-10 text-lg font-bold tracking-tight text-primary leading-snug">{title}</h3>
-      <p className="relative z-10 mt-3 flex-1 text-sm leading-7 text-muted-foreground">{description}</p>
+        <h3 className="text-lg font-bold tracking-tight text-white leading-snug">{title}</h3>
+        <p className="mt-3 flex-1 text-sm leading-7 text-white/90">{description}</p>
+      </div>
 
       <span
         aria-hidden
-        className="absolute -left-4 -bottom-4 h-24 w-24 rounded-full bg-accent/3 transition-all duration-500 group-hover:scale-150"
+        className="absolute -left-4 -bottom-4 h-24 w-24 rounded-full bg-white/5 transition-all duration-500 group-hover:scale-150"
       />
     </motion.div>
   );
