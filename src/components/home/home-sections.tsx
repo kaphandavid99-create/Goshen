@@ -442,21 +442,29 @@ function WhyShopCard({
       className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-border/50 transition-all duration-500 hover:border-accent/50 hover:shadow-[0_16px_40px_rgb(0_0_0/0.12)] dark:hover:shadow-[0_16px_40px_rgb(0_0_0/0.4)]"
       whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
-      {/* Left edge stripes - Bold visible */}
-      <span aria-hidden className="absolute left-0 top-0 h-full w-2.5 bg-accent z-50 pointer-events-none" />
-      <span aria-hidden className="absolute left-3.5 top-0 h-full w-1.5 bg-accent/70 z-50 pointer-events-none" />
+      {/* Left edge stripes - Orange and Green alternating */}
+      <span aria-hidden className="absolute left-0 top-0 h-full w-3 bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute left-3 top-0 h-full w-2.5 bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute left-5.5 top-0 h-full w-1.5 bg-orange-400 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute left-7 top-0 h-full w-1 bg-green-400 z-50 pointer-events-none" />
 
-      {/* Right edge stripes - Bold visible */}
-      <span aria-hidden className="absolute right-0 top-0 h-full w-2.5 bg-accent z-50 pointer-events-none" />
-      <span aria-hidden className="absolute right-3.5 top-0 h-full w-1.5 bg-accent/70 z-50 pointer-events-none" />
+      {/* Right edge stripes - Green and Orange alternating */}
+      <span aria-hidden className="absolute right-0 top-0 h-full w-3 bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute right-3 top-0 h-full w-2.5 bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute right-5.5 top-0 h-full w-1.5 bg-green-400 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute right-7 top-0 h-full w-1 bg-orange-400 z-50 pointer-events-none" />
 
-      {/* Top edge stripes - Bold visible */}
-      <span aria-hidden className="absolute top-0 left-0 h-2.5 w-full bg-accent z-50 pointer-events-none" />
-      <span aria-hidden className="absolute top-3.5 left-0 h-1.5 w-full bg-accent/70 z-50 pointer-events-none" />
+      {/* Top edge stripes - Orange to Green gradient effect */}
+      <span aria-hidden className="absolute top-0 left-0 h-3 w-full bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-3 left-0 h-2.5 w-full bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-5.5 left-0 h-1.5 w-full bg-orange-400 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute top-7 left-0 h-1 w-full bg-green-400 z-50 pointer-events-none" />
 
-      {/* Bottom edge stripes - Bold visible */}
-      <span aria-hidden className="absolute bottom-0 left-0 h-2.5 w-full bg-accent z-50 pointer-events-none" />
-      <span aria-hidden className="absolute bottom-3.5 left-0 h-1.5 w-full bg-accent/70 z-50 pointer-events-none" />
+      {/* Bottom edge stripes - Green to Orange gradient effect */}
+      <span aria-hidden className="absolute bottom-0 left-0 h-3 w-full bg-green-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-3 left-0 h-2.5 w-full bg-orange-500 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-5.5 left-0 h-1.5 w-full bg-green-400 z-50 pointer-events-none" />
+      <span aria-hidden className="absolute bottom-7 left-0 h-1 w-full bg-orange-400 z-50 pointer-events-none" />
       <div
         className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
         style={{
