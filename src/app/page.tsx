@@ -6,6 +6,7 @@ import {
   RewardsBar,
   ShopByCategory,
   TodaysDeals,
+  WhyShopWithGoshen,
 } from "@/components/home/home-sections";
 import { HomeTestimonials } from "@/components/home/home-testimonials";
 import { InfoRibbon } from "@/components/home/info-ribbon";
@@ -43,6 +44,7 @@ export default async function HomePage() {
       </section>
       <NipzTeaser items={cakeItems} />
       <HomeTestimonials />
+      <WhyShopWithGoshen />
       <RewardsBar />
     </main>
   );

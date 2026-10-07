@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/shop/product-card";
 import { primaryMedia } from "@/components/shop/product-media";
-import { IconArrowRight, IconGift, IconTag, IconTruck } from "@/components/icons";
+import { IconArrowRight, IconCheck, IconGift, IconLeaf, IconShield, IconTag, IconTruck, IconUsers } from "@/components/icons";
 import { Reveal, Stagger, StaggerItem } from "@/components/motion/reveal";
 import {
   MAX_REDEEM_POINTS_PER_ORDER,
@@ -358,5 +358,91 @@ function Perk({
         <p className="mt-1 text-sm leading-6 text-muted-foreground">{body}</p>
       </div>
     </div>
+  );
+}
+
+export function WhyShopWithGoshen() {
+  const t = useT();
+  const benefits = [
+    {
+      icon: IconTruck,
+      title: t.home.whyShop?.fastDelivery || "Fast & Reliable Delivery",
+      description: t.home.whyShop?.fastDeliveryDesc || "Same-day and next-day delivery options available for your convenience",
+    },
+    {
+      icon: IconLeaf,
+      title: t.home.whyShop?.premium || "Premium Quality Products",
+      description: t.home.whyShop?.premiumDesc || "Carefully selected and curated items to meet the highest standards",
+    },
+    {
+      icon: IconShield,
+      title: t.home.whyShop?.secure || "Secure & Trusted",
+      description: t.home.whyShop?.secureDesc || "100% secure transactions with buyer protection on every purchase",
+    },
+    {
+      icon: IconUsers,
+      title: t.home.whyShop?.community || "Loyal Community",
+      description: t.home.whyShop?.communityDesc || "Join thousands of satisfied customers and earn rewards on every order",
+    },
+    {
+      icon: IconCheck,
+      title: t.home.whyShop?.support || "Expert Support",
+      description: t.home.whyShop?.supportDesc || "Dedicated customer service team ready to help you 24/7",
+    },
+  ];
+
+  return (
+    <Reveal>
+      <section className="page-wrap py-6 sm:py-10">
+        <div className="mb-6 sm:mb-8">
+          <p className="kicker">{t.home.whyShop?.kicker || "Why Choose Us"}</p>
+          <h2 className="section-title mt-1">{t.home.whyShop?.title || "Why You Should Shop With Goshen"}</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
+            {t.home.whyShop?.description || "Discover what makes Goshen your favorite destination for quality products and exceptional service"}
+          </p>
+        </div>
+
+        <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {benefits.map((benefit, index) => (
+            <StaggerItem key={index} className="h-full">
+              <WhyShopCard
+                icon={benefit.icon}
+                title={benefit.title}
+                description={benefit.description}
+              />
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </section>
+    </Reveal>
+  );
+}
+
+function WhyShopCard({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: typeof IconTruck;
+  title: string;
+  description: string;
+}) {
+  const reduce = useReducedMotion();
+
+  return (
+    <motion.div
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:border-accent/40 hover:shadow-[0_8px_20px_rgb(0_0_0/0.08)] dark:hover:shadow-[0_8px_20px_rgb(0_0_0/0.32)]"
+      whileHover={reduce ? undefined : { y: -4 }}
+    >
+      <span
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100"
+      />
+      <span className="icon-well mb-4 inline-flex w-fit rounded-full bg-accent/10 text-accent">
+        <Icon className="size-6" />
+      </span>
+      <h3 className="font-semibold text-primary">{title}</h3>
+      <p className="mt-2 flex-1 text-sm leading-6 text-muted-foreground">{description}</p>
+    </motion.div>
   );
 }

@@ -202,6 +202,22 @@ export const fr: Dictionary = {
       starsOutOf5: (n: number) => `${n} étoiles sur 5`,
       verifiedOn: (date: string) => `Client vérifié · ${date}`,
     },
+    whyShop: {
+      kicker: "Pourquoi nous choisir",
+      title: "Pourquoi acheter chez Goshen",
+      description:
+        "Découvrez ce qui fait de Goshen votre destination préférée pour des produits de qualité et un service exceptionnel",
+      fastDelivery: "Livraison rapide et fiable",
+      fastDeliveryDesc: "Options de livraison le jour même ou le lendemain disponibles dans toute Bamenda pour votre commodité",
+      premium: "Produits de qualité supérieure",
+      premiumDesc: "Articles soigneusement sélectionnés et curés pour répondre aux normes les plus élevées",
+      secure: "Sécurisé et de confiance",
+      secureDesc: "Transactions 100% sécurisées avec protection acheteur et confiance sur chaque achat",
+      community: "Communauté fidèle",
+      communityDesc: "Rejoignez des milliers de clients satisfaits et gagnez des points à chaque commande",
+      support: "Support expert",
+      supportDesc: "Équipe de service à la clientèle dévouée prête à vous aider 24h/24, 7j/7",
+    },
   },
 
   bundles: {

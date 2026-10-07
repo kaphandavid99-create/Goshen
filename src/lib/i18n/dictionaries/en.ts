@@ -204,6 +204,22 @@ export const en = {
       starsOutOf5: (n: number) => `${n} out of 5 stars`,
       verifiedOn: (date: string) => `Verified customer · ${date}`,
     },
+    whyShop: {
+      kicker: "Why Choose Us",
+      title: "Why You Should Shop With Goshen",
+      description:
+        "Discover what makes Goshen your favorite destination for quality products and exceptional service",
+      fastDelivery: "Fast & Reliable Delivery",
+      fastDeliveryDesc: "Same-day and next-day delivery options available across Bamenda for your convenience",
+      premium: "Premium Quality Products",
+      premiumDesc: "Carefully selected and curated items to meet the highest standards and satisfy your needs",
+      secure: "Secure & Trusted",
+      secureDesc: "100% secure transactions with buyer protection and confidence on every purchase",
+      community: "Loyal Community",
+      communityDesc: "Join thousands of satisfied customers and earn rewards on every order you place",
+      support: "Expert Support",
+      supportDesc: "Dedicated customer service team ready to help you 24/7 with any questions or concerns",
+    },
   },
 
   bundles: {
