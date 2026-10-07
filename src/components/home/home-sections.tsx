@@ -368,31 +368,31 @@ export function WhyShopWithGoshen() {
       icon: IconTruck,
       title: t.home.whyShop?.fastDelivery || "Fast & Reliable Delivery",
       description: t.home.whyShop?.fastDeliveryDesc || "Same-day and next-day delivery options available for your convenience",
-      backgroundImage: "https://images.unsplash.com/photo-1599599810694-b5ac4dd0b23f?w=800&q=80&crop=entropy&cs=tinysrgb&fit=max",
+      backgroundImage: "/one.jpeg",
     },
     {
       icon: IconLeaf,
       title: t.home.whyShop?.premium || "Premium Quality Products",
       description: t.home.whyShop?.premiumDesc || "Carefully selected and curated items to meet the highest standards",
-      backgroundImage: "https://images.unsplash.com/photo-1488551132207-3611afe12e3e?w=800&q=80&crop=entropy&cs=tinysrgb&fit=max",
+      backgroundImage: "/two.jpeg",
     },
     {
       icon: IconShield,
       title: t.home.whyShop?.secure || "Secure & Trusted",
       description: t.home.whyShop?.secureDesc || "100% secure transactions with buyer protection on every purchase",
-      backgroundImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80&crop=entropy&cs=tinysrgb&fit=max",
+      backgroundImage: "/three.jpeg",
     },
     {
       icon: IconUsers,
       title: t.home.whyShop?.community || "Loyal Community",
       description: t.home.whyShop?.communityDesc || "Join thousands of satisfied customers and earn rewards on every order",
-      backgroundImage: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80&crop=entropy&cs=tinysrgb&fit=max",
+      backgroundImage: "/four.jpeg",
     },
     {
       icon: IconCheck,
       title: t.home.whyShop?.support || "Expert Support",
       description: t.home.whyShop?.supportDesc || "Dedicated customer service team ready to help you 24/7",
-      backgroundImage: "https://images.unsplash.com/photo-1595080876186-a8e2a1b95d0f?w=800&q=80&crop=entropy&cs=tinysrgb&fit=max",
+      backgroundImage: "/five.jpeg",
     },
   ];
 
@@ -443,8 +443,13 @@ function WhyShopCard({
       whileHover={reduce ? undefined : { y: -6, scale: 1.02 }}
     >
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-110"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
+        className="absolute inset-0 transition-transform duration-500 group-hover:scale-110"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       />
 
       <div className="absolute inset-0 bg-black/25 transition-all duration-500 group-hover:bg-black/30" />
